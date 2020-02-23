@@ -657,42 +657,12 @@ void CheckCollisionsWithWalls()
 
 void EndGame()
 {
-	CheckClearToGo();
-	if (g_clearToGo)
-	{
-		Overlay_Show( "Menu");
-		Overlay_Hide( "InGame");
-		OverlayElement_GetByName( "Menu/Jouer")->Hide();
-		OverlayElement_GetByName( "Menu/Continuer")->Hide();
-		OverlayElement_GetByName( "Menu/Recommencer")->Show();
-		Overlay_Hide( "MenuInGame");
-	}
-	else
-	{
-		Overlay_Hide( "MenuInGame");
-		Overlay_Hide( "Menu");
-		string l_endCaption;
-		l_endCaption->clear();
-		real l_lineWidth;
-		l_lineWidth = 0.0;
-		Echo( "End - not instant - " + l_infos);
-		if (l_infos == "no more free")
-		{
-			Echo( "End - not instant - not free");
-			l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
-			l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-		}
-		else
-		{
-			Echo( "End - not instant - no money");
-			l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
-			l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-			l_endCaption += endl + "Vous ne disposez pas de ce montant";
-		}
-		OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
-		OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
-		Overlay_Show( "FinMiniGame");
-	}
+	Overlay_Show( "Menu");
+	Overlay_Hide( "InGame");
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Show();
+	Overlay_Hide( "MenuInGame");
 }
 
 void StopGame()
