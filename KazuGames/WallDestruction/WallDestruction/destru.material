@@ -23,7 +23,7 @@ material destru/immeuble_mur
 
 			texture_unit
 			{
-				texture buildingshighrise0060_l.jpg
+				texture BuildingsHighRise0060_L.jpg
 				max_anisotropy 8
 				filtering anisotropic anisotropic linear
 			}

@@ -84,60 +84,11 @@ void EndGame()
 {
 	Overlay_Hide( "WinGame");
 	Overlay_Hide( "LoseGame");
-	CheckClearToGo();
-	if (g_clearToGo)
-	{
-		Overlay_Show( "Menu");
-		Overlay_Hide( "Score");
-		OverlayElement_GetByName( "Menu/Jouer")->Hide();
-		OverlayElement_GetByName( "Menu/Continuer")->Hide();
-		OverlayElement_GetByName( "Menu/Recommencer")->Show();
-		OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
-		if (g_free)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
-		}
-		elseif (g_freeLimited)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
-		}
-		elseif (g_priced)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
-		}
-		elseif (g_abonne)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
-		};
-	}
-	else
-	{
-		Overlay_Hide( "Menu");
-		if ( ! c_modeInstant)
-		{
-			string l_endCaption;
-			l_endCaption->clear();
-			real l_lineWidth;
-			l_lineWidth = 0.0;
-			Echo( "End - not instant - " + l_infos);
-			if (l_infos == "no more free")
-			{
-				Echo( "End - not instant - not free");
-				l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
-				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-			}
-			else
-			{
-				Echo( "End - not instant - no money");
-				l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
-				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-				l_endCaption += endl + "Vous ne disposez pas de ce montant";
-			};
-			OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
-			OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
-			Overlay_Show( "FinMiniGame");
-		};
-	};
+	Overlay_Show( "Menu");
+	Overlay_Hide( "Score");
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Show();
 };
 
 void WinGame()
@@ -207,8 +158,6 @@ void DestroyWall()
 			};
 		};
 	};
-
-//	Echo( "Nb Briques détruites : " + itoa( l_nbBriques) + " - Nb Coups : " + itoa( g_nbCoups));
 
 	g_score = l_nbBriques * 500;
 	UpdateScore();
@@ -619,7 +568,7 @@ void InitialiseWallDestruction()
 
 	l_maxLines = 12;
 	l_maxBriques = 10;
-	l_maxTries = 100;
+	l_maxTries = 50;
 
 	l_initBallPower = SetVector3( 0.0, 0.0, 40000.0);
 	l_initBattePos = SetVector3( 0.0, 0.0, 600.0);
@@ -663,18 +612,6 @@ void InitialiseWallDestruction()
 	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
 	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
 	Overlay_Hide( "FinMiniGame");
-
-	if (c_modeConcours)
-	{
-		OverlayElement_GetByName( "Menu/Scores")->Hide();
-		OverlayElement_GetByName( "Menu/Jouer")->SetTop( 10.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-		OverlayElement_GetByName( "Menu/Continuer")->SetTop( 10.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-		OverlayElement_GetByName( "Menu/Recommencer")->SetTop( 10.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-		OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetTop( 20.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-		OverlayElement_GetByName( "Menu/Commandes")->SetTop( 32.5 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-		OverlayElement_GetByName( "Menu/Regles")->SetTop( 57.5 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-		OverlayElement_GetByName( "Menu/Options")->SetTop( 80.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
-	};
 };
 
 InitialiseWallDestruction();

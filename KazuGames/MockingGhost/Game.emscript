@@ -68,34 +68,10 @@ void EndGame()
 		{
 			Overlay_Hide( "Fin");
 			CheckClearToGo();
-			if (g_clearToGo)
-			{
-				Overlay_Show( "Menu");
-				OverlayElement_GetByName( "Menu/Jouer")->Hide();
-				OverlayElement_GetByName( "Menu/Continuer")->Hide();
-				OverlayElement_GetByName( "Menu/Recommencer")->Show();
-				OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
-				if (g_free)
-				{
-					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
-				}
-				elseif (g_freeLimited)
-				{
-					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
-				}
-				elseif (g_priced)
-				{
-					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
-				}
-				elseif (g_abonne)
-				{
-					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
-				};
-			}
-			else
-			{
-				Overlay_Hide( "Menu");
-			};
+			Overlay_Show( "Menu");
+			OverlayElement_GetByName( "Menu/Jouer")->Hide();
+			OverlayElement_GetByName( "Menu/Continuer")->Hide();
+			OverlayElement_GetByName( "Menu/Recommencer")->Show();
 		};
 	};
 };

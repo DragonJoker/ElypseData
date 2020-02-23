@@ -18,6 +18,8 @@ string l_names;
 string l_muses;
 string l_name;
 string l_muse;
+string l_lastName;
+string l_lastMuse;
 bool l_first;
 
 void KazuPlayGame()
@@ -73,12 +75,10 @@ void CheckClearToGo()
 			l_name = strSplitOne( l_names, "|");
 			l_muse = strSplitOne( l_muses, "|");
 			Echo( "Muse file: (" + l_name + ")" + l_muse);
-			if (l_first)
+			if (l_muse != "" || l_name != "")
 			{
-				Echo( "  Loading : (" + l_name + ")" + l_muse);
-				c_sceneName = l_name;
-				DownloadSeparateMuseFile( l_muse, LaunchGame() );
-				l_first = false;
+				l_lastName = l_name;
+				l_lastMuse = l_muse;
 			}
 		}
 
@@ -90,7 +90,13 @@ void CheckClearToGo()
 		}
 		else
 		{
-			l_splashtext->SetCaption( "Jeux récupérés.");
+			if (l_lastName != "" && l_lastMuse != "")
+			{
+				Echo( "  Loading : (" + l_lastName + ")" + l_lastMuse);
+				c_sceneName = l_lastName;
+				DownloadSeparateMuseFile( l_lastMuse, LaunchGame() );
+				l_first = false;
+			}
 		}
 	}
 	else

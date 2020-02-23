@@ -100,4 +100,31 @@ project Kazugames
 			kazu
 		}
 	}
+	scene WallDestruction
+	{
+		scene_files
+		{
+			Wall.emscene
+			Interface.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Wall.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Interface
+			WallDestruction
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			kazu
+		}
+	}
 }

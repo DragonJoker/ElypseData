@@ -272,7 +272,6 @@ void InitialiseGame()
 	Overlay_Hide( "Scores");
 	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
 
 	Sound_Play_Global( "Ambiance");
 
