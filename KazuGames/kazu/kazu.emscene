@@ -21,12 +21,12 @@ overlay Splash/Status
 	text_colour 0 0 0 1
 	z_index 102
 }
-overlay Splash/Jouer
+overlay Splash/GamesList
 {
 	class PanelZone
 	align bottom center
-	size 128 32
-	position -64 -68
-	material Splashscreen/Jouer
+	size 640 480
+	position -320 -240
+	material Base/LowAlphaBlack
 	z_index 103
 }

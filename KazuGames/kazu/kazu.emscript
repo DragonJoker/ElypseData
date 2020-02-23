@@ -33,15 +33,10 @@ void LaunchGame()
 {
 	Echo( "LaunchGame" );
 	KazuPlayGame();
-	Overlay_Hide( "Splash/Jouer" );
+	Overlay_Hide( "Splash/GamesList" );
 	Overlay_Hide( "Splash/Kazu" );
 	Overlay_Hide( "Splash/Status" );
 	Scene_Load( c_sceneName );
-};
-
-Overlay_SetAction( "Splash/Jouer")
-{
-	LaunchGame();
 };
 
 void CheckClearToGo()
@@ -119,7 +114,6 @@ void InitialiseKazuSplash()
 	if (g_clearToGo)
 	{
 		c_highscorePage = c_baseSite + "/score.php";
-		Overlay_Show("Splash/Jouer");
 	};
 };
 

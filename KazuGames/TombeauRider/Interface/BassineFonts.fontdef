@@ -1,0 +1,7 @@
+font Egyptian
+{
+	type truetype
+	size 32
+	resolution 55
+	source Egyptian.ttf
+}

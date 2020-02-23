@@ -79,6 +79,21 @@ physics_object l_wallPhys;
 physics_object l_currentBriquePhys;
 
 string l_infos;
+int g_nbCoups;
+
+void UpdateScore()
+{
+	if (g_score < 0)
+	{
+		g_score = 500;
+	}
+	OverlayElement_GetByName("Score/Text")->SetCaption( itoa( g_score));
+}
+
+void UpdateNbCoups()
+{
+	OverlayElement_GetByName("Score/NbCoupsText")->SetCaption( itoa( g_nbCoups));
+}
 
 void EndGame()
 {
@@ -89,7 +104,7 @@ void EndGame()
 	OverlayElement_GetByName( "Menu/Jouer")->Hide();
 	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer")->Show();
-};
+}
 
 void WinGame()
 {
@@ -100,7 +115,7 @@ void WinGame()
 	l_inGame = false;
 	Overlay_Hide( "Menu");
 	Overlay_Hide( "MenuInGame");
-};
+}
 
 void LoseGame()
 {
@@ -111,7 +126,7 @@ void LoseGame()
 	l_inGame = false;
 	Overlay_Hide( "Menu");
 	Overlay_Hide( "MenuInGame");
-};
+}
 
 void DestroyWall()
 {
@@ -125,22 +140,22 @@ void DestroyWall()
 	if (l_minWallLine < 0)
 	{
 		l_minWallLine = 0;
-	};
+	}
 	l_maxWallLine = l_wallLine + 2;
 	if (l_maxWallLine > l_maxLines)
 	{
 		l_maxWallLine = l_maxLines;
-	};
+	}
 	l_minWallBrique = l_wallBrique - 2;
 	if (l_minWallBrique < 0)
 	{
 		l_minWallBrique = 0;
-	};
+	}
 	l_maxWallBrique = l_wallBrique + 2;
 	if (l_maxWallBrique > l_maxBriques)
 	{
 		l_maxWallBrique = l_maxBriques;
-	};
+	}
 	l_bricksFlowing = true;
 	for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
 	{
@@ -155,9 +170,9 @@ void DestroyWall()
 				l_currentBriquePhys->AddForce( SetVector3( 0.0, 0.0, -200.0));
 				l_currentBriquePhys->AddTorque( SetVector3( 10.0, 20.0, 50.0));
 				l_nbBriques = l_nbBriques + 1;
-			};
-		};
-	};
+			}
+		}
+	}
 
 	g_score = l_nbBriques * 500;
 	UpdateScore();
@@ -180,12 +195,12 @@ void DestroyWall()
 					PhysicsObject_Destroy( l_name);
 					Object_Destroy( Object_GetByName( l_name));
 					SceneNode_Destroy( l_name);
-				};
-			};
-		};
+				}
+			}
+		}
 //		Echo( "DestroyWall - Bricks unphysicallised");
-	};
-};
+	}
+}
 
 void ResetBallPhys()
 {
@@ -193,20 +208,20 @@ void ResetBallPhys()
 	l_ballePhys->SetSpeed( VECTOR3_ZERO);
 	l_ballePhys->SetAngularSpeed( VECTOR3_ZERO);
 	l_ballePhys->SetTorque( VECTOR3_ZERO);
-};
+}
 
 void ResetBall()
 {
 	l_balleNode->SetPosition( SetVector3( -350.0, 50.0, 0.0));
 	l_ballePhys->ReassertPosition();
 	ResetBallPhys();
-};
+}
 
 void ResetBatte()
 {
 	l_batteNode->SetPosition( l_initBattePos);
 	l_batteNode->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
-};
+}
 
 void ResetBallAndBatte()
 {
@@ -219,7 +234,7 @@ void ResetBallAndBatte()
 	ResetBatte();
 	Timer_Kill( "MoveBatte");
 	l_shootingBall = false;
-};
+}
 
 void ShootBall()
 {
@@ -236,9 +251,9 @@ void ShootBall()
 			l_ballDirection = l_batteNode->GetOrientation() * SetQuaternion( SetVector3( 1.0, 0.0, 0.0), 150.0);
 			l_speed = l_speed * l_ballDirection;
 			l_ballePhys->AddForce( l_speed);
-		};
-	};
-};
+		}
+	}
+}
 
 void CheckBallOutOfBounds()
 {
@@ -257,8 +272,8 @@ void CheckBallOutOfBounds()
 	else
 	{
 		l_ballOutOfBounds = false;
-	};
-};
+	}
+}
 
 void CheckBallOnFloor()
 {
@@ -271,13 +286,13 @@ void CheckBallOnFloor()
 		else
 		{
 			l_ballOnFloor = true;
-		};
+		}
 	}
 	else
 	{
 		l_ballOnFloor = false;
-	};
-};
+	}
+}
 
 void UpdateShootInfo()
 {
@@ -286,13 +301,13 @@ void UpdateShootInfo()
 		if ((l_ballPosition[2]) > 370.0)
 		{
 			l_batte->SetMaterial( "Batte/OK");
-		};
+		}
 		if ((l_ballPosition[2]) > 600.0)
 		{
 			l_batte->SetMaterial( "destrubatte/metal");
-		};
-	};
-};
+		}
+	}
+}
 
 void UpdateBall()
 {
@@ -313,7 +328,7 @@ void UpdateBall()
 			elseif (g_nbCoups == l_maxTries)
 			{
 				LoseGame();
-			};
+			}
 		}
 		elseif (l_ballePhys->GetNumCollisions() > 0 || l_battePhys->GetNumCollisions() > 0)
 		{
@@ -322,9 +337,9 @@ void UpdateBall()
 		elseif (l_ballShot && ! l_hurtingWall && l_hurtObject->GetName()->find( "Brique_") != npos)
 		{
 			DestroyWall();
-		};
-	};
-};
+		}
+	}
+}
 
 void LaunchBall()
 {
@@ -360,14 +375,14 @@ void LaunchBall()
 			l_batteNode->SetOrientation( l_batteOrientation);
 			l_batteNode->Yaw( 180.0);
 			l_battePhys->ReassertPosition();
-		};
+		}
 	
 		timer( "LaunchBall", TIMERTYPE_PERMANENT, 0.0)
 		{
 			UpdateBall();
-		};
-	};
-};
+		}
+	}
+}
 
 void ShootBatte()
 {
@@ -384,14 +399,14 @@ void ShootBatte()
 			l_batteNode->SetOrientation( l_batteOrientation * SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_batteCurrentAngle[0]));
 			l_batteNode->Yaw( 180.0);
 			l_battePhys->ReassertPosition();
-		};
+		}
 		timer( "EndShootBatte", TIMERTYPE_ONCE, 0.2)
 		{
 			l_batte->SetMaterial( "destrubatte/metal");
 			l_endShoot = true;
-		};
-	};
-};
+		}
+	}
+}
 
 void BuildWall()
 {
@@ -405,7 +420,7 @@ void BuildWall()
 		if ( ! l_odd)
 		{
 			l_offset = 20.0;
-		};
+		}
 		l_briqueYPos = 20.0 * l_wallLine;
 		for (l_wallBrique = 0 ; l_wallBrique <= l_maxBriques ; l_wallBrique = l_wallBrique + 1)
 		{
@@ -425,8 +440,8 @@ void BuildWall()
 				else
 				{
 					l_currentBrique = Object_Create( l_name, "brique.mesh");
-				};
-			};
+				}
+			}
 			l_currentBrique->SetParent( l_currentBriqueNode);
 //			Echo( "BuildWall - Brique : " + l_name);
 			l_currentBrique->Show();
@@ -435,9 +450,9 @@ void BuildWall()
 			l_currentBriqueNode->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
 			l_nbMaxBriques = l_nbMaxBriques + 1;
 //			Echo( "BuildWall - Brique : " + l_name + " - End");
-		};
-	};
-};
+		}
+	}
+}
 
 void StopGame()
 {
@@ -454,9 +469,9 @@ void StopGame()
 			{
 				Object_GetByName( l_name)->Hide();
 				PhysicsObject_Destroy( l_name);
-			};
-		};
-	};
+			}
+		}
+	}
 	BuildWall();
 	Overlay_Show( "Menu");
 	Overlay_Hide( "MenuInGame");
@@ -465,7 +480,7 @@ void StopGame()
 	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
-};
+}
 
 void PauseGame()
 {
@@ -481,18 +496,18 @@ void PauseGame()
 				if (Object_GetByName( l_name)->IsVisible())
 				{
 					Object_GetByName( l_name)->GetPhysicsObject()->SetEnabled( false);
-				};
-			};
-		};
-	};
+				}
+			}
+		}
+	}
 	if (l_ballLaunched)
 	{
 		l_ballePhys->SetEnabled( false);
-	};
+	}
 	Overlay_Show( "Menu");
 	Overlay_Hide( "MenuInGame");
 	Overlay_Hide( "Score");
-};
+}
 
 void ContinueGame()
 {
@@ -507,22 +522,22 @@ void ContinueGame()
 				if (Object_GetByName( l_name)->IsVisible())
 				{
 					Object_GetByName( l_name)->GetPhysicsObject()->SetEnabled( true);
-				};
-			};
-		};
-	};
+				}
+			}
+		}
+	}
 	if (l_ballLaunched)
 	{
 		l_ballePhys->SetEnabled( true);
-	};
+	}
 	Overlay_Hide( "Menu");
 	Overlay_Show( "MenuInGame");
 	Overlay_Show( "Score");
 	timer( "StartGame", TIMERTYPE_ONCE, 0.1)
 	{
 		l_inGame = true;
-	};
-};
+	}
+}
 
 void BeginGame()
 {
@@ -549,8 +564,8 @@ void BeginGame()
 	timer( "StartGame", TIMERTYPE_ONCE, 0.1)
 	{
 		l_inGame = true;
-	};
-};
+	}
+}
 
 void InitialiseWallDestruction()
 {
@@ -612,7 +627,7 @@ void InitialiseWallDestruction()
 	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
 	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
 	Overlay_Hide( "FinMiniGame");
-};
+}
 
 InitialiseWallDestruction();
 BuildWall();

@@ -9,10 +9,12 @@ project Kazugames
 		scene_files
 		{
 			kazu.emscene
+			scores.emscene
 		}
 		load_script_files
 		{
 			kazu.emscript
+			scores.emscript
 		}
 		data_files_3d
 		{
@@ -28,7 +30,6 @@ project Kazugames
 		}
 		load_script_files
 		{
-			Scores.emscript
 			Game.emscript
 			Interface.emscript
 		}
@@ -55,7 +56,6 @@ project Kazugames
 		}
 		load_script_files
 		{
-			Scores.emscript
 			Game.emscript
 			Interface.emscript
 		}
@@ -82,7 +82,6 @@ project Kazugames
 		}
 		load_script_files
 		{
-			Scores.emscript
 			Game.emscript
 			Interface.emscript
 		}
@@ -109,7 +108,6 @@ project Kazugames
 		}
 		load_script_files
 		{
-			Scores.emscript
 			Wall.emscript
 			Interface.emscript
 		}
@@ -138,7 +136,6 @@ project Kazugames
 		}
 		load_script_files
 		{
-			Scores.emscript
 			Bassine-Jump.emscript
 			Interface.emscript
 		}
@@ -146,6 +143,32 @@ project Kazugames
 		{
 			Interfaces
 			Bassine-Jump
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			kazu
+		}
+	}
+	scene TombeauRider
+	{
+		scene_files
+		{
+			Interface.emscene
+			Game.emscene
+		}
+		load_script_files
+		{
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Game
+			Interface
 		}
 		data_files_other
 		{
