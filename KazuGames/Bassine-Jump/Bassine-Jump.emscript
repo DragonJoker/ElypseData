@@ -73,30 +73,6 @@ scene_node l_charNode;
 scene_node l_rootNode;
 scene_node l_tempNode;
 
-real min( real a, real b)
-{
-	if (a < b)
-	{
-		return( a);
-	}
-	else
-	{
-		return( b);
-	};
-};
-
-real max( real c, real d)
-{
-	if (c > d)
-	{
-		return( c);
-	}
-	else
-	{
-		return( d);
-	};
-};
-
 void ToggleMenu()
 {
 	Echo( "ToggleMenu");
@@ -113,45 +89,45 @@ void ToggleMenu()
 		Overlay_Hide( "InGame/Menu");
 		OverlayElement_GetByName( "InGame/TopLeft")->Hide();
 		OverlayElement_GetByName( "InGame/TopRight")->Hide();
-	};
+	}
 
 	l_menuShown = ! l_menuShown;
-};
+}
 
 void ShowTitle()
 {
 	if (l_titleShown)
 	{
 		Overlay_Show( "Title");
-	};
-};
+	}
+}
 
 void HideTitle()
 {
 	if (l_titleShown)
 	{
 		Overlay_Hide( "Title");
-	};
-};
+	}
+}
 
 void HideMenu()
 {
 	l_menuShown = true;
 	ToggleMenu();
-};
+}
 
 void ShowMenu()
 {
 	l_menuShown = false;
 	ToggleMenu();
-};
+}
 
 void PauseGame()
 {
 	l_paused = true;
 	Timer_PauseAll();
 	ShowMenu();
-};
+}
 
 void ContinueGame()
 {
@@ -159,7 +135,7 @@ void ContinueGame()
 	Timer_PlayAll();
 
 	HideMenu();
-};
+}
 
 void ClearRace()
 {
@@ -169,12 +145,12 @@ void ClearRace()
 		{
 			Object_Destroy( Object_GetByName( "Balcon" + itoa( i)));
 			SceneNode_Destroy( "BalconNode" + itoa( i));
-		};
+		}
 
 		l_maxBalcon = 0;
 		l_balconTaken = "";
-	};
-};
+	}
+}
 
 void SetupBalcon( vector3 p_balconPos)
 {
@@ -187,7 +163,7 @@ void SetupBalcon( vector3 p_balconPos)
 
 	l_maxBalcon ++;
 	l_balconTaken = l_balconTaken + "f";
-};
+}
 
 void SetupRace()
 {
@@ -233,11 +209,11 @@ void SetupRace()
 		{
 			SetupBalcon( SetVector3( l_leftPos, itor( i), 0.0));
 			SetupBalcon( SetVector3( l_rightPos, itor( i), 0.0));
-		};
-	};
+		}
+	}
 
 	l_setupRace = true;
-};
+}
 
 void ResetInclinaison()
 {
@@ -248,8 +224,8 @@ void ResetInclinaison()
 		l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
 		l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
 		l_inclinaison = 0.0;
-	};
-};
+	}
+}
 
 void StopGame( bool p_gagne)
 {
@@ -270,70 +246,17 @@ void StopGame( bool p_gagne)
 	{
 		OverlayElement_GetByName( "InGame/Result")->SetMaterial( "Perdu");
 		g_score = 0;
-	};
+	}
 
 	OverlayElement_GetByName( "InGame/BottomLeft/Jouer")->Hide();
 	OverlayElement_GetByName( "InGame/BottomLeft/Continuer")->Hide();
 	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer")->Show();
-	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->Show();
 	Overlay_Show( "InGame/BottomLeft");
 	Overlay_Show( "InGame/Result");
 
 	ShowMenu();
-
-	CheckClearToGo();
-	if (g_clearToGo)
-	{
-		if (g_free)
-		{
-			OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->SetCaption( "gratuit");
-		}
-		elseif (g_freeLimited)
-		{
-			OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
-		}
-		elseif (g_priced)
-		{
-			OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
-		}
-		elseif (g_abonne)
-		{
-			OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->SetCaption( "abonne");
-		};
-		l_finished = false;
-	}
-	else
-	{
-		Overlay_Hide( "InGame/BottomLeft");
-		Overlay_Hide( "InGame/Menu");
-		OverlayElement_GetByName( "InGame/TopLeft")->Hide();
-		OverlayElement_GetByName( "InGame/TopRight")->Hide();
-		if ( ! c_modeInstant)
-		{
-			string l_endCaption;
-			l_endCaption->clear();
-			real l_lineWidth;
-			l_lineWidth = 0.0;
-			Echo( "End - not instant - " + l_infos);
-			if (l_infos == "no more free")
-			{
-				Echo( "End - not instant - not free");
-				l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
-				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-			}
-			else
-			{
-				Echo( "End - not instant - no money");
-				l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
-				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-				l_endCaption += endl + "Vous ne disposez pas de ce montant";
-			};
-			OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
-			OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
-			Overlay_Show( "FinMiniGame");
-		};
-	};
-};
+	l_finished = false;
+}
 
 void HidePerso()
 {
@@ -342,7 +265,7 @@ void HidePerso()
 	Object_GetByName( "OeilG")->Hide();
 	Object_GetByName( "Blouzon")->Hide();
 	Object_GetByName( "Hair")->Hide();
-};
+}
 
 void ShowPerso()
 {
@@ -351,7 +274,7 @@ void ShowPerso()
 	Object_GetByName( "OeilG")->Show();
 	Object_GetByName( "Blouzon")->Show();
 	Object_GetByName( "Hair")->Show();
-};
+}
 
 void Clignotement()
 {
@@ -366,10 +289,10 @@ void Clignotement()
 		else
 		{
 			HidePerso();
-		};
+		}
 
 		l_displayChar = ! l_displayChar;
-	};
+	}
 
 	timer( "ClignotEnd", TIMERTYPE_ONCE, 2.0)
 	{
@@ -378,13 +301,13 @@ void Clignotement()
 		ShowPerso();
 
 		l_indexBalconTaken = -1;
-	};
-};
+	}
+}
 
 real Frottement()
 {
 	return( (((l_inclinaison / 30.0) + 0.5) * l_currentVelocity->Length() / 1000.0));
-};
+}
 
 void BeginGame()
 {
@@ -428,8 +351,8 @@ void BeginGame()
 		else
 		{
 			l_rootCamera->GetParent()->Yaw( 1.0);
-		};
-	};
+		}
+	}
 
 	Overlay_Show( "InGame/TopLeft");
 	Overlay_Show( "InGame/TopRight");
@@ -458,12 +381,12 @@ void BeginGame()
 	timer( "Pret-3", TIMERTYPE_ONCE, 1.0)
 	{
 		l_display->SetCaption( "3");
-	};
+	}
 
 	timer( "Pret-2", TIMERTYPE_ONCE, 2.0)
 	{
 		l_display->SetCaption( "2");
-	};
+	}
 
 	timer( "Pret-1", TIMERTYPE_ONCE, 3.0)
 	{
@@ -477,13 +400,13 @@ void BeginGame()
 			if (CURRENTTIMER_NUMEXECS == 200)
 			{
 				Timer_Kill( "PlaceCamera");
-			};
+			}
 
 			l_currentZoom += 5.0;
 			l_rootCamera->GetParent()->Pitch( -90.0 / 200.0);
 			l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (l_currentZoom / V3_GetLength( l_rootCamera->GetPosition())));
-		};
-	};
+		}
+	}
 
 	timer( "Pret-go", TIMERTYPE_ONCE, 4.0)
 	{
@@ -507,16 +430,16 @@ void BeginGame()
 				if (l_currentVelocity[0] < 0.1 && l_currentVelocity[0] > -0.1)
 				{
 					l_currentVelocity = SetVector3( 0.0, l_currentVelocity[1], 0.0);
-				};
+				}
 
 				if (l_currentVelocity[1] < 0.1)
 				{
 					l_currentVelocity = SetVector3( l_currentVelocity[0], 0.0, 0.0);
-				};
-			};
+				}
+			}
 
 			g_score += rtoi( 10.0 * (45.0 - l_inclinaison) * l_currentVelocity->Length());
-		};
+		}
 
 		timer( "Gaming", TIMERTYPE_PERMANENT, 0.0)
 		{
@@ -529,7 +452,7 @@ void BeginGame()
 			else
 			{
 				l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
-			};
+			}
 
 			l_position = l_charNode->GetPosition();
 
@@ -542,12 +465,12 @@ void BeginGame()
 			{
 				l_currentVelocity = SetVector3( 0.0, l_currentVelocity[1], 0.0);
 				l_charNode->SetPosition( SetVector3( l_rightBorder, l_position[1], l_position[2]));
-			};
+			}
 
 			if (l_currentVelocity->Length() > 0.0)
 			{
 				l_charNode->Translate( SetVector3( 100.0 * l_currentVelocity[0] * GENERAL_ELAPSED_TIME, -100.0 * l_currentVelocity[1] * GENERAL_ELAPSED_TIME, 0.0));
-			};
+			}
 
 			if (l_inGame && ! l_inBalcon)
 			{
@@ -558,7 +481,7 @@ void BeginGame()
 					if (l_indexBalconTaken == i || strGetChar( l_balconTaken, i) == 't')
 					{
 						continue();
-					};
+					}
 
 					l_tempNode = SceneNode_GetByName( "BalconNode" + itoa( i));
 					l_balconPos = l_tempNode->GetPosition();
@@ -588,7 +511,7 @@ void BeginGame()
 							if (g_score < 0)
 							{
 								g_score = 0;
-							};
+							}
 
 							AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
 							AnimationGroup_GetByName( "Perso")->StartAnimation( "crash");
@@ -602,8 +525,8 @@ void BeginGame()
 								AnimationGroup_GetByName( "Perso")->StartAnimation( "move");
 
 								Clignotement();
-							};
-						};
+							}
+						}
 					}
 					elseif (l_balconLevel && ! l_balconPreviousLevel && ! l_inBalcon)
 					{
@@ -614,22 +537,22 @@ void BeginGame()
 							l_tmpReal = -(l_floorLevel - l_balconPos[1]) * 0.1;
 							g_score += rtoi( l_tmpReal * l_currentVelocity->Length());
 							l_scoreIndexLastIncrease = l_balconPos[1];
-						};
+						}
 					}
 					else
 					{
 						if ( ! l_balconLevel && l_balconPreviousLevel)
 						{
 							l_balconPreviousLevel = false;
-						};
-					};
-				};
-			};
+						}
+					}
+				}
+			}
 
 			if (l_inGame)
 			{
 				l_runTime = CURRENTTIMER_TIME_ELAPSED;
-			};
+			}
 
 			l_nbSeconde = rtoi( l_runTime);
 			l_runTime = l_runTime - itor( l_nbSeconde);
@@ -663,12 +586,12 @@ void BeginGame()
 					timer( "CrashPause", TIMERTYPE_ONCE, AnimationGroup_GetByName( "Perso")->GetObject( "Character")->GetAnimation( "crash")->GetLength() - 0.1)
 					{
 						AnimationGroup_GetByName( "Perso")->PauseAnimation( "crash");
-					};
-				};
-			};
-		};
-	};
-};
+					}
+				}
+			}
+		}
+	}
+}
 
 void Initialise()
 {
@@ -759,4 +682,4 @@ void Initialise()
 	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
 	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
 	Overlay_Hide( "FinMiniGame");
-};
+}

@@ -1,5 +1,5 @@
 
-material basejump/07 - Default
+material "basejump/07 - Default"
 {
 	technique
 	{
@@ -11,7 +11,7 @@ material basejump/07 - Default
 
 			texture_unit
 			{
-				texture buildingshighrise0060_l.jpg
+				texture BuildingsHighRise0060_L.jpg
 				max_anisotropy 8
 				filtering anisotropic anisotropic linear
 			}
@@ -21,7 +21,7 @@ material basejump/07 - Default
 
 }
 
-material basejump/09 - Default
+material "basejump/09 - Default"
 {
 	technique
 	{
@@ -36,7 +36,7 @@ material basejump/09 - Default
 
 }
 
-material basejump/15 - Default
+material "basejump/15 - Default"
 {
 	technique
 	{
@@ -61,7 +61,7 @@ material basejump/15 - Default
 
 }
 
-material basejump/Material #63
+material "basejump/Material #63"
 {
 	technique
 	{
@@ -84,7 +84,7 @@ material basejump/Material #63
 
 }
 
-material basejump/Material #65
+material "basejump/Material #65"
 {
 	technique
 	{

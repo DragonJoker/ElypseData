@@ -5,13 +5,11 @@ int g_score;
 
 int l_index;
 
-string c_highscorePage = "http://www.kazugame.com/score.php";
-string l_gameName = "Bassine-Jump";
-//Oin !!
+c_highscorePage = c_baseSite + "/score.php";
 
 void _retrieveHighScores()
 {
-	l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + l_gameName, EMPTY_STRING);
+	l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + c_gameName, EMPTY_STRING);
 	l_index = strFind( l_namesAndScores, "<br>");
 
 	l_names = substr( l_namesAndScores, 0, l_index);
@@ -22,9 +20,9 @@ void _retrieveHighScores()
 
 	OverlayElement_GetByName( "Zcore/Names")->SetCaption( l_names);
 	OverlayElement_GetByName( "Zcore/Scores")->SetCaption( l_scores);
-};
+}
 
 void _submitHighscore()
 {
-		l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + l_gameName);
-};
+	l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + c_gameName);
+}

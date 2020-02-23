@@ -1,5 +1,5 @@
 
-material basejumpperso/10- Default
+material "basejumpperso/10- Default"
 {
 	technique
 	{
