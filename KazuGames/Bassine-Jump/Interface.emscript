@@ -87,14 +87,14 @@ Overlay_SetAction( "InGame/BottomLeft/Scores")
 	_retrieveHighScores();
 	Overlay_Hide( "InGame/BottomLeft");
 	HideTitle();
-	Overlay_Show( "Zcore");
+	Overlay_Show( "Scores");
 };
 
-Overlay_SetAction( "Zcore/Retour")
+Overlay_SetAction( "Scores/Retour")
 {
 	Overlay_Show( "InGame/BottomLeft");
 	ShowTitle();
-	Overlay_Hide( "Zcore");
+	Overlay_Hide( "Scores");
 };
 
 Overlay_SetAction( "InGame/SubmitScore")

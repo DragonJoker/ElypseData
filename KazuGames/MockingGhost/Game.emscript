@@ -370,14 +370,7 @@ void BeginGame()
 	l_selected = false;
 	g_score = 0;
 	l_nbTries = 0;
-	if (c_modeInstant)
-	{
-		l_maxTries = 1;
-	}
-	else
-	{
-		l_maxTries = 3;
-	};
+	l_maxTries = 3;
 	ShowPiece();
 };
 

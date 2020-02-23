@@ -169,7 +169,7 @@ material ghost_moqueur_decor/sol
 
 			texture_unit
 			{
-				texture terrecalciné.jpg
+				texture terrecalcinee.jpg
 				max_anisotropy 8
 				filtering anisotropic anisotropic linear
 			}

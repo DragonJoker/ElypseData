@@ -122,7 +122,6 @@ void BeginGame()
 	OverlayElement_GetByName( "Menu/Jouer")->Hide();
 	OverlayElement_GetByName( "Menu/Continuer")->Show();
 	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
 	Overlay_Hide( "Menu");
 	Overlay_Show( "MenuInGame");
 	Overlay_Hide( "Title");
@@ -191,7 +190,7 @@ void RevealCard()
 					{
 						g_score = (l_nbMaxErrors - l_nbTries) * 1000;
 						Echo( itoa( g_score));
-						UpdateScore();
+						Overlay_Show( "WinGame");
 						EndGame();
 					};
 				}

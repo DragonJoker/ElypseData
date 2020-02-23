@@ -666,7 +666,7 @@ void Initialise()
 	Overlay_Hide( "Options");
 	Overlay_Hide( "Regles");
 	Overlay_Hide( "Start");
-	Overlay_Hide( "Zcore");
+	Overlay_Hide( "Scores");
 	Overlay_Hide( "InGame/TopLeft");
 	Overlay_Hide( "InGame/TopRight");
 	Overlay_Hide( "InGame/Result");

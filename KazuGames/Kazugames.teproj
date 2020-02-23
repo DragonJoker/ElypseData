@@ -3,7 +3,7 @@ project Kazugames
 	resolution 800 600
 	colour 1 1 1
 	separable true
-	startup_script bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "www.dragonjoker.org/Elypse";
+	startup_script string c_baseSite = "www.dragonjoker.org/Elypse";
 	scene kazu
 	{
 		scene_files
@@ -132,7 +132,6 @@ project Kazugames
 			Menu.emscene
 			Bassine-Jump.emscene
 			InGame.emscene
-			Scores.emscene
 		}
 		load_script_files
 		{

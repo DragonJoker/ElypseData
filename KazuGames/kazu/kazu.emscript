@@ -107,8 +107,6 @@ void InitialiseKazuSplash()
 	Echo( "InitialiseKazuSplash");
 	l_splashtext = OverlayElement_GetByName( "Splash/Status");
 
-	Overlay_Hide("Splash/Jouer");
-
 	CheckClearToGo();
 
 	if (g_clearToGo)

@@ -44,6 +44,7 @@ Overlay_SetAction( "Menu/Continuer")
 
 Overlay_SetAction( "Menu/Recommencer")
 {
+	StopGame();
 	BeginGame();
 };
 
