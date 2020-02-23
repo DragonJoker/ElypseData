@@ -1,0 +1,27 @@
+string c_gameName;
+string c_sceneName;
+
+void KazuPlayGame()
+{
+};
+
+void LaunchGame()
+{
+	KazuPlayGame();
+	Overlay_Hide( "Splash/Jouer");
+	Overlay_Hide( "Splash/Kazu");
+	Overlay_Hide( "Splash/Status");
+	Scene_Load( c_sceneName);
+};
+
+Overlay_SetAction( "Splash/Jouer")
+{
+	LaunchGame();
+};
+
+void InitialiseKazuSplash()
+{
+	Overlay_Show("Splash/Jouer");
+};
+
+InitialiseKazuSplash();

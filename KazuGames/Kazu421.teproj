@@ -1,0 +1,53 @@
+project Kazugames
+{
+	resolution 640 480
+	colour 1 1 1
+	startup_script string c_gameName = "421";string c_sceneName = "421";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "https://www.dragonjoker.org/Elypse";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	scene kazu
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+		data_files_other
+		{
+			kazu
+		}
+	}
+	scene 421
+	{
+		scene_files
+		{
+			Game.emscene
+			Interface.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			421
+			Interface
+		}
+		data_files_other
+		{
+			421
+			Interface
+		}
+		dependencies
+		{
+			kazu
+		}
+	}
+}

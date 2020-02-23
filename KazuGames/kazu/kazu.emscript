@@ -1,0 +1,120 @@
+overlay l_splashtext;
+
+string l_return;
+string l_infos;
+string l_caption;
+string l_stringnum;
+string c_highscorePage;
+
+bool g_clearToGo;
+bool g_fucked;
+
+string c_baseSite;
+string c_gameName;
+string c_sceneName;
+
+int l_index;
+string l_names;
+string l_muses;
+string l_name;
+string l_muse;
+bool l_first;
+
+void KazuPlayGame()
+{
+	Echo( "KazuPlayGame");
+	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=confirm&gamename=" + c_gameName, "");
+	ExecuteJavaScript( "RefreshCredits();");
+};
+
+void LaunchGame()
+{
+	Echo( "LaunchGame" );
+	KazuPlayGame();
+	Overlay_Hide( "Splash/Jouer" );
+	Overlay_Hide( "Splash/Kazu" );
+	Overlay_Hide( "Splash/Status" );
+	Scene_Load( c_sceneName );
+};
+
+Overlay_SetAction( "Splash/Jouer")
+{
+	LaunchGame();
+};
+
+void CheckClearToGo()
+{
+	Echo( "CheckClearToGo");
+	g_clearToGo = false;
+	g_fucked = false;
+	l_first = true;
+	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=info", "");
+	Echo( "Retour du script de connection : " + l_infos);
+	
+	if (l_infos == "tech error")
+	{
+		l_splashtext->SetCaption( "Une erreur technique est survenue.");
+		g_clearToGo = true;
+		g_fucked = true;
+	}
+	elseif (strFind(l_infos, "<br>") != -1)
+	{
+		l_index = strFind( l_infos, "<br>");
+		l_names = substr( l_infos, 0, l_index);
+		l_muses = substr( l_infos, l_index + 4, strlen( l_infos));
+		Echo( "muse files: " + l_muses);
+		Echo( "muse names: " + l_names);
+		l_name = strSplitOne( l_names, "|");
+		l_muse = strSplitOne( l_muses, "|");
+		Echo( "First muse file: (" + l_name + ")" + l_muse);
+
+		while (l_muse != "" && l_name != "")
+		{
+			l_name = strSplitOne( l_names, "|");
+			l_muse = strSplitOne( l_muses, "|");
+			Echo( "Muse file: (" + l_name + ")" + l_muse);
+			if (l_first)
+			{
+				Echo( "  Loading : (" + l_name + ")" + l_muse);
+				c_sceneName = l_name;
+				DownloadSeparateMuseFile( l_muse, LaunchGame() );
+				l_first = false;
+			}
+		}
+
+		if (l_muse != "" || l_name != "")
+		{
+			l_splashtext->SetCaption( "Erreur de récupération des jeux.");
+			g_clearToGo = true;
+			g_fucked = true;
+		}
+		else
+		{
+			l_splashtext->SetCaption( "Jeux récupérés.");
+		}
+	}
+	else
+	{
+		l_splashtext->SetCaption( l_infos);
+		g_clearToGo = true;
+		g_fucked = true;
+	};
+};
+
+void InitialiseKazuSplash()
+{
+	Echo( "InitialiseKazuSplash");
+	l_splashtext = OverlayElement_GetByName( "Splash/Status");
+
+	Overlay_Hide("Splash/Jouer");
+
+	CheckClearToGo();
+
+	if (g_clearToGo)
+	{
+		c_highscorePage = c_baseSite + "/score.php";
+		Overlay_Show("Splash/Jouer");
+	};
+};
+
+InitialiseKazuSplash();
