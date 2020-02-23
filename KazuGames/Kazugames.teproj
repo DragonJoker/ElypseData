@@ -178,4 +178,30 @@ project Kazugames
 			kazu
 		}
 	}
+	scene Flipper
+	{
+		scene_files
+		{
+			Flipper.emscene
+			Interface.emscene
+		}
+		load_script_files
+		{
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Flipper
+			Interface
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			kazu
+		}
+	}
 }

@@ -180,7 +180,7 @@ material flipper/mur
 
 			texture_unit
 			{
-				texture pavéscutoutmanoir.jpg
+				texture pavescutoutmanoir.jpg
 				max_anisotropy 8
 				filtering anisotropic anisotropic linear
 			}

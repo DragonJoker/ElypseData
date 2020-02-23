@@ -5,15 +5,10 @@ Overlay_SetAction( "Menu/Jouer")
 
 Overlay_SetAction( "Menu/Recommencer")
 {
-	KazuPlayGame();
-	if (l_infos == "ok" || g_fucked || l_infos == "tech error")
-	{
-		StopGame();
-		BeginGame();
-		OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-		OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
-		OverlayElement_GetByName( "Menu/Continuer")->Show();
-	};
+	StopGame();
+	BeginGame();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
 };
 
 Overlay_SetAction( "Menu/Continuer")

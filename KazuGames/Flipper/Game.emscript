@@ -64,6 +64,7 @@ string l_plateToChangeStr;
 animation_group l_groupAnim;
 animation l_anim;
 
+real g_distance;
 
 real l_relativeRegletteWidth;
 real l_soundVol;
@@ -80,14 +81,26 @@ bool l_collideWithWall;
 overlay l_ticSound;
 overlay l_ticMusic;
 
+void UpdateScore()
+{
+	OverlayElement_GetByName("InGame/Score/Text")->SetCaption( itoa( g_score));
+	OverlayElement_GetByName("Fin/Score/Text")->SetCaption( itoa( g_score + rtoi( g_distance)));
+}
+
+void UpdateDistance()
+{
+	OverlayElement_GetByName("InGame/Hauteur/Text")->SetCaption( itoa( rtoi( g_distance)));
+	OverlayElement_GetByName("Fin/Score/Text")->SetCaption( itoa( g_score + rtoi( g_distance)));
+}
+
 void HideFlipper( string p_hFlipperName)
 {
 	if (Object_GetByName( p_hFlipperName)->IsVisible())
 	{
 		Object_GetByName( p_hFlipperName)->Hide();
 		SceneNode_GetByName( p_hFlipperName + "Node")->Translate( SetVector3( 0.0, 200.0, 0.0));
-	};
-};
+	}
+}
 
 void HideFlippers( string p_thFlip)
 {
@@ -99,7 +112,7 @@ void HideFlippers( string p_thFlip)
 	HideFlipper( "Flipper" + p_thFlip + "Right2");
 	HideFlipper( "Flipper" + p_thFlip + "Center2");
 	HideFlipper( "Flipper" + p_thFlip + "Center4");
-};
+}
 
 void ShowFlipper( string p_sFlipperName)
 {
@@ -107,8 +120,8 @@ void ShowFlipper( string p_sFlipperName)
 	{
 		SceneNode_GetByName( p_sFlipperName + "Node")->Translate( SetVector3( 0.0, -200.0, 0.0));
 		Object_GetByName( p_sFlipperName)->Show();
-	};
-};
+	}
+}
 
 void ShowFlipperI( string p_sfiTable, int p_sfi)
 {
@@ -123,8 +136,8 @@ void ShowFlipperI( string p_sfiTable, int p_sfi)
 	else
 	{
 		ShowFlipper( "Flipper" + p_sfiTable + "Center" + itoa( p_sfi-4));
-	};
-};
+	}
+}
 
 void ShowFlippers( string p_tsFlip)
 {
@@ -135,14 +148,14 @@ void ShowFlippers( string p_tsFlip)
 		for (i = 1 ; i <= l_nbFlippersShown ; i++)
 		{
 			ShowFlipperI( p_tsFlip, i);
-		};
+		}
 	}
 	else
 	{
 		i = rtoi( rand( 1.0, 8.0));
 		ShowFlipperI( p_tsFlip, i);
-	};
-};
+	}
+}
 
 void HideBumper( string p_hBumperName)
 {
@@ -151,8 +164,8 @@ void HideBumper( string p_hBumperName)
 		Object_GetByName( p_hBumperName)->Hide();
 		SceneNode_GetByName( p_hBumperName + "Node")->Translate( SetVector3( 0.0, 200.0, 0.0));
 		Object_GetByName( p_hBumperName)->GetPhysicsObject()->ReassertPosition();
-	};
-};
+	}
+}
 
 void HideBumpers( string p_thBump)
 {
@@ -164,7 +177,7 @@ void HideBumpers( string p_thBump)
 	HideBumper( "Bumper" + p_thBump + "Center2");
 	HideBumper( "Bumper" + p_thBump + "Center3");
 	HideBumper( "Bumper" + p_thBump + "Center4");
-};
+}
 
 void ShowBumper( string p_sBumperName)
 {
@@ -173,8 +186,8 @@ void ShowBumper( string p_sBumperName)
 		SceneNode_GetByName( p_sBumperName + "Node")->Translate( SetVector3( 0.0, -200.0, 0.0));
 		Object_GetByName( p_sBumperName)->Show();
 		Object_GetByName( p_sBumperName)->GetPhysicsObject()->ReassertPosition();
-	};
-};
+	}
+}
 
 void ShowBumperI( string p_sbiTable, int p_sbi)
 {
@@ -189,8 +202,8 @@ void ShowBumperI( string p_sbiTable, int p_sbi)
 	else
 	{
 		ShowBumper( "Bumper" + p_sbiTable + "Center" + itoa( p_sbi-4));
-	};
-};
+	}
+}
 
 void ShowBumpers( string p_tsBump)
 {
@@ -200,14 +213,14 @@ void ShowBumpers( string p_tsBump)
 		for (i = 1 ; i <= l_nbBumpersShown ; i++)
 		{
 			ShowBumperI( p_tsBump, i);
-		};
+		}
 	}
 	else
 	{
 		i = rtoi( rand( 1.0, 8.0));
 		ShowBumperI( p_tsBump, i);
-	};
-};
+	}
+}
 
 void UpdateBumpersPhysics( string p_ubpTable)
 {
@@ -219,7 +232,7 @@ void UpdateBumpersPhysics( string p_ubpTable)
 	Object_GetByName( "Bumper" + p_ubpTable + "Center2")->GetPhysicsObject()->ReassertPosition();
 	Object_GetByName( "Bumper" + p_ubpTable + "Center3")->GetPhysicsObject()->ReassertPosition();
 	Object_GetByName( "Bumper" + p_ubpTable + "Center4")->GetPhysicsObject()->ReassertPosition();
-};
+}
 
 void UpdateRightFlippersPhysics( string p_tRight)
 {
@@ -227,7 +240,7 @@ void UpdateRightFlippersPhysics( string p_tRight)
 	Object_GetByName( "Flipper" + p_tRight + "Right2")->GetPhysicsObject()->ReassertPosition();
 	Object_GetByName( "Flipper" + p_tRight + "Center2")->GetPhysicsObject()->ReassertPosition();
 	Object_GetByName( "Flipper" + p_tRight + "Center4")->GetPhysicsObject()->ReassertPosition();
-};
+}
 
 void UpdateLeftFlippersPhysics( string p_tLeft)
 {
@@ -235,7 +248,7 @@ void UpdateLeftFlippersPhysics( string p_tLeft)
 	Object_GetByName( "Flipper" + p_tLeft + "Left2")->GetPhysicsObject()->ReassertPosition();
 	Object_GetByName( "Flipper" + p_tLeft + "Center1")->GetPhysicsObject()->ReassertPosition();
 	Object_GetByName( "Flipper" + p_tLeft + "Center3")->GetPhysicsObject()->ReassertPosition();
-};
+}
 
 void OrientRightFlipper( string p_tRightN, real p_rAngleN)
 {
@@ -243,7 +256,7 @@ void OrientRightFlipper( string p_tRightN, real p_rAngleN)
 	SceneNode_GetByName( "Flipper" + p_tRightN + "Right2Node")->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_rAngleN));
 	SceneNode_GetByName( "Flipper" + p_tRightN + "Center2Node")->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_rAngleN));
 	SceneNode_GetByName( "Flipper" + p_tRightN + "Center4Node")->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_rAngleN));
-};
+}
 
 void OrientLefFlipper( string p_tLeftN, real p_lAngleN)
 {
@@ -251,7 +264,7 @@ void OrientLefFlipper( string p_tLeftN, real p_lAngleN)
 	SceneNode_GetByName( "Flipper" + p_tLeftN + "Left2Node")->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_lAngleN));
 	SceneNode_GetByName( "Flipper" + p_tLeftN + "Center1Node")->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_lAngleN));
 	SceneNode_GetByName( "Flipper" + p_tLeftN + "Center3Node")->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_lAngleN));
-};
+}
 
 void OrientRightFlippers( real p_rAngle)
 {
@@ -259,7 +272,7 @@ void OrientRightFlippers( real p_rAngle)
 	OrientRightFlipper( "2", p_rAngle);
 	UpdateRightFlippersPhysics( "1");
 	UpdateRightFlippersPhysics( "2");
-};
+}
 
 void OrientLeftFlippers( real p_lAngle)
 {
@@ -267,7 +280,7 @@ void OrientLeftFlippers( real p_lAngle)
 	OrientLefFlipper( "2", p_lAngle);
 	UpdateLeftFlippersPhysics( "1");
 	UpdateLeftFlippersPhysics( "2");
-};
+}
 
 bool CheckCollisionWithFlipper( string p_flipperName)
 {
@@ -277,10 +290,10 @@ bool CheckCollisionWithFlipper( string p_flipperName)
 	{
 		l_flipperNodeName = p_flipperName + "Node";
 		l_result = true;
-	};
+	}
 
 	return l_result;
-};
+}
 
 void CheckCollisionWithRightFlippers( string p_ccwrfTable)
 {
@@ -309,11 +322,11 @@ void CheckCollisionWithRightFlippers( string p_ccwrfTable)
 				if (l_result)
 				{
 					l_ballOnRightFlipper = true;
-				};
-			};
-		};
-	};
-};
+				}
+			}
+		}
+	}
+}
 
 void CheckCollisionWithLeftFlippers( string p_ccwlfTable)
 {
@@ -342,17 +355,17 @@ void CheckCollisionWithLeftFlippers( string p_ccwlfTable)
 				if (l_result)
 				{
 					l_ballOnLeftFlipper = true;
-				};
-			};
-		};
-	};
-};
+				}
+			}
+		}
+	}
+}
 
 void CheckCollisionsWithFlippers( string p_ccwfTable)
 {
 	CheckCollisionWithRightFlippers( p_ccwfTable);
 	CheckCollisionWithLeftFlippers( p_ccwfTable);
-};
+}
 
 void CollideWithRightFlipper( real p_cwrfAngle)
 {
@@ -367,9 +380,9 @@ void CollideWithRightFlipper( real p_cwrfAngle)
 			l_rAngle = SceneNode_GetByName( l_flipperNodeName)->GetOrientation() * SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_cwrfAngle);
 			l_flipperForce = SetVector3( 0.0, 0.0, l_distanceFromCenter * 100.0) * l_rAngle;
 			l_billePhys->AddForce( l_flipperForce);
-		};
-	};
-};
+		}
+	}
+}
 
 void CollideWithLeftFlipper( real p_cwlfAngle)
 {
@@ -384,9 +397,9 @@ void CollideWithLeftFlipper( real p_cwlfAngle)
 			l_lAngle = SceneNode_GetByName( l_flipperNodeName)->GetOrientation() * SetQuaternion( SetVector3( 0.0, 1.0, 0.0), p_cwlfAngle);
 			l_flipperForce = SetVector3( 0.0, 0.0, l_distanceFromCenter * 100.0) * l_lAngle;
 			l_billePhys->AddForce( l_flipperForce);
-		};
-	};
-};
+		}
+	}
+}
 
 void FlipRight()
 {
@@ -403,17 +416,17 @@ void FlipRight()
 				l_rightAngle = V3_LinearInterpolation( SetVector3( 30.0, 0.0, 0.0), SetVector3( -30.0, 0.0, 0.0), CURRENTTIMER_TIME_LEFT * 5.0);
 				l_currentRightAngle = (l_rightAngle[0]);
 				OrientRightFlippers( l_currentRightAngle);
-			};
+			}
 			timer( "EndFlipRight", TIMERTYPE_ONCE, 0.2)
 			{
 				CollideWithRightFlipper( -90.0);
 				l_currentRightAngle = -30.0;
 				OrientRightFlippers( l_currentRightAngle);
 				l_rightAtMax= true;
-			};
-		};
-	};
-};
+			}
+		}
+	}
+}
 
 void UnFlipRight()
 {
@@ -429,14 +442,14 @@ void UnFlipRight()
 			l_rightAngle = V3_LinearInterpolation( SetVector3( l_currentRightAngle, 0.0, 0.0), SetVector3( 30.0, 0.0, 0.0), CURRENTTIMER_TIME_LEFT * 5.0);
 			OrientRightFlippers( l_rightAngle[0]);
 
-		};
+		}
 		timer( "EndUnFlipRight", TIMERTYPE_ONCE, 0.2)
 		{
 			CollideWithRightFlipper( 90.0);
 			OrientRightFlippers( 30.0);
-		};
-	};
-};
+		}
+	}
+}
 
 void FlipLeft()
 {
@@ -453,17 +466,17 @@ void FlipLeft()
 				l_leftAngle = V3_LinearInterpolation( SetVector3( 150.0, 0.0, 0.0), SetVector3( 210.0, 0.0, 0.0), CURRENTTIMER_TIME_LEFT * 5.0);
 				l_currentLeftAngle = (l_leftAngle[0]);
 				OrientLeftFlippers( l_currentLeftAngle);
-			};
+			}
 			timer( "EndFlipLeft", TIMERTYPE_ONCE, 0.2)
 			{
 				CollideWithLeftFlipper( 90.0);
 				l_currentLeftAngle = 210.0;
 				OrientLeftFlippers( l_currentLeftAngle);
 				l_leftAtMax = true;
-			};
-		};
-	};
-};
+			}
+		}
+	}
+}
 
 void UnFlipLeft()
 {
@@ -478,14 +491,14 @@ void UnFlipLeft()
 			CollideWithLeftFlipper( -90.0);
 			l_leftAngle = V3_LinearInterpolation( SetVector3( l_currentLeftAngle, 0.0, 0.0), SetVector3( 150.0, 0.0, 0.0), CURRENTTIMER_TIME_LEFT * 5.0);
 			OrientLeftFlippers( l_leftAngle[0]);
-		};
+		}
 		timer( "EndUnFlipLeft", TIMERTYPE_ONCE, 0.2)
 		{
 			CollideWithLeftFlipper( -90.0);
 			OrientLeftFlippers( 150.0);
-		};
-	};
-};
+		}
+	}
+}
 
 void AnimBumper()
 {
@@ -495,20 +508,20 @@ void AnimBumper()
 	timer( "Bump", TIMERTYPE_CONTINUOUS, 0.2)
 	{
 		l_groupAnim->SetTimeAnimation( "bump", CURRENTTIMER_TIME_ELAPSED * 5.0);
-	};
+	}
 	timer( "EndBump", TIMERTYPE_ONCE, 0.2)
 	{
 		l_groupAnim->SetTimeAnimation( "bump", 1.0);
 		timer( "UnBump", TIMERTYPE_CONTINUOUS, 0.2)
 		{
 			l_groupAnim->SetTimeAnimation( "bump", CURRENTTIMER_TIME_LEFT * 5.0);
-		};
+		}
 		timer( "EndUnBump", TIMERTYPE_ONCE, 0.2)
 		{
 			l_groupAnim->StopAnimation( "bump");
-		};
-	};
-};
+		}
+	}
+}
 
 void SoundBumper( string p_sbBumperName)
 {
@@ -527,8 +540,8 @@ void SoundBumper( string p_sbBumperName)
 	elseif (Object_GetByName( p_sbBumperName)->GetMeshName()->find( "fantome") != npos)
 	{
 		Sound_Play_Global( "Bumper4");
-	};
-};
+	}
+}
 
 bool CheckCollisionWithBumper( string p_bumperName)
 {
@@ -547,8 +560,8 @@ bool CheckCollisionWithBumper( string p_bumperName)
 	else
 	{
 		return false;
-	};
-};
+	}
+}
 
 bool CheckCollisionWithBumpers( string p_bTable)
 {
@@ -585,10 +598,10 @@ bool CheckCollisionWithBumpers( string p_bTable)
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Center4"))
 	{
 		l_result = true;
-	};
+	}
 
 	return l_result;
-};
+}
 
 void CheckCollisionsWithBumpers()
 {
@@ -597,8 +610,8 @@ void CheckCollisionsWithBumpers()
 		l_speed = l_billePhys->GetSpeed();
 		CheckCollisionWithBumpers( "1");
 	 	CheckCollisionWithBumpers( "2");
-	};
-};
+	}
+}
 
 bool CheckCollisionWithWall( string p_ccwwWallName)
 {
@@ -607,7 +620,7 @@ bool CheckCollisionWithWall( string p_ccwwWallName)
 		if (l_timeSinceLastWall > 0.1 && ! l_collideWithWall)
 		{
 			Sound_Play_Global( "Wall");
-		};
+		}
 		l_timeSinceLastWall = 0.0;
 		l_collideWithWall = true;
 		return true;
@@ -616,8 +629,8 @@ bool CheckCollisionWithWall( string p_ccwwWallName)
 	{
 		l_collideWithWall = false;
 		return false;
-	};
-};
+	}
+}
 
 bool CheckCollisionWithWalls( string p_ccwwTable)
 {
@@ -630,17 +643,17 @@ bool CheckCollisionWithWalls( string p_ccwwTable)
 	elseif (CheckCollisionWithWall( "Cote" + p_ccwwTable + "Gauche"))
 	{
 		l_result = true;
-	};
+	}
 
 	return l_result;
-};
+}
 
 void CheckCollisionsWithWalls()
 {
 	CheckCollisionWithWalls( "1");
  	CheckCollisionWithWalls( "2");
 	CheckCollisionWithWall( "Bas");
-};
+}
 
 void EndGame()
 {
@@ -652,55 +665,35 @@ void EndGame()
 		OverlayElement_GetByName( "Menu/Jouer")->Hide();
 		OverlayElement_GetByName( "Menu/Continuer")->Hide();
 		OverlayElement_GetByName( "Menu/Recommencer")->Show();
-		OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
-		if (g_free)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
-		}
-		elseif (g_freeLimited)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
-		}
-		elseif (g_priced)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
-		}
-		elseif (g_abonne)
-		{
-			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
-		};
 		Overlay_Hide( "MenuInGame");
 	}
 	else
 	{
 		Overlay_Hide( "MenuInGame");
 		Overlay_Hide( "Menu");
-		if ( ! c_modeInstant)
+		string l_endCaption;
+		l_endCaption->clear();
+		real l_lineWidth;
+		l_lineWidth = 0.0;
+		Echo( "End - not instant - " + l_infos);
+		if (l_infos == "no more free")
 		{
-			string l_endCaption;
-			l_endCaption->clear();
-			real l_lineWidth;
-			l_lineWidth = 0.0;
-			Echo( "End - not instant - " + l_infos);
-			if (l_infos == "no more free")
-			{
-				Echo( "End - not instant - not free");
-				l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
-				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-			}
-			else
-			{
-				Echo( "End - not instant - no money");
-				l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
-				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
-				l_endCaption += endl + "Vous ne disposez pas de ce montant";
-			};
-			OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
-			OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
-			Overlay_Show( "FinMiniGame");
-		};
-	};
-};
+			Echo( "End - not instant - not free");
+			l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
+			l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+		}
+		else
+		{
+			Echo( "End - not instant - no money");
+			l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
+			l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+			l_endCaption += endl + "Vous ne disposez pas de ce montant";
+		}
+		OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
+		OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
+		Overlay_Show( "FinMiniGame");
+	}
+}
 
 void StopGame()
 {
@@ -727,7 +720,7 @@ void StopGame()
 	l_inGame = false;
 	l_gameStarted = false;
 	EndGame();
-};
+}
 
 void PauseGame()
 {
@@ -737,7 +730,7 @@ void PauseGame()
 	l_billePhys->SetEnabled( false);
 	Timer_PauseAll();
 	l_inGame = false;
-};
+}
 
 void ContinueGame()
 {
@@ -748,12 +741,12 @@ void ContinueGame()
 	if (l_gameStarted)
 	{
 		l_billePhys->SetEnabled( true);
-	};
+	}
 	timer( "Start", TIMERTYPE_ONCE, 0.2)
 	{
 		l_inGame = true;
-	};
-};
+	}
+}
 
 void LoseGame()
 {
@@ -766,8 +759,8 @@ void LoseGame()
 	{
 		Overlay_Hide( "Fin");
 		StopGame();
-	};
-};
+	}
+}
 
 void UpdateBille()
 {
@@ -777,12 +770,12 @@ void UpdateBille()
 	{
 		g_distance = l_currentPosition[2] + 400.0;
 		UpdateDistance();
-	};	
+	}	
 
 	if ((l_currentPosition[2]) <= (l_platePosition[2]) - 457.5 || (l_currentPosition[2]) < -400.0)
 	{
 		LoseGame();
-	};
+	}
 
 	l_timeSinceLastWall = l_timeSinceLastWall + GENERAL_ELAPSED_TIME;
 
@@ -792,13 +785,13 @@ void UpdateBille()
 		CheckCollisionsWithFlippers( "2");
 		CheckCollisionsWithBumpers();
 		CheckCollisionsWithWalls();
-	};
+	}
 
 	l_speed = l_billePhys->GetSpeed();
 	l_billePhys->SetSpeed( SetVector3( l_speed[0], 0.0, l_speed[2]));
 	l_billePhys->SetTorque( VECTOR3_ZERO);
 	l_billePhys->SetAngularSpeed( VECTOR3_ZERO);
-};
+}
 
 void UpdatePhysics()
 {
@@ -808,7 +801,7 @@ void UpdatePhysics()
 
 	UpdateLeftFlippersPhysics( l_plateToChangeStr);
 	UpdateRightFlippersPhysics( l_plateToChangeStr);
-};
+}
 
 void UpdatePlateau( real p_change)
 {
@@ -839,7 +832,7 @@ void UpdatePlateau( real p_change)
 	ShowBumpers( l_plateToChangeStr);
 
 	UpdatePhysics();
-};
+}
 
 void ChangePlateau()
 {
@@ -847,11 +840,11 @@ void ChangePlateau()
 	if (l_plateToChange > 2)
 	{
 		l_plateToChange = 1;
-	};
+	}
 	l_plateToChangeStr = itoa( l_plateToChange);
 	l_plateNode = SceneNode_GetByName("Plateau" + l_plateToChangeStr + "Node");
 	l_platePosition = l_plateNode->GetPosition();
-};
+}
 
 void UpdateCamera()
 {
@@ -859,15 +852,15 @@ void UpdateCamera()
 	if ( ! l_shaking)
 	{
 		g_rootCamera->GetParent()->SetPosition( l_currentCamPos);
-	};
+	}
 	l_previousPosition = l_currentPosition;
 	if ((l_currentPosition[2]) > (l_platePosition[2]) + 650.0)
 	{
 		l_level = l_level + 1;
 		UpdatePlateau( 1830.0);
 		ChangePlateau();
-	};
-};
+	}
+}
 
 void LaunchBall()
 {
@@ -884,8 +877,8 @@ void LaunchBall()
 	{
 		UpdateBille();
 		UpdateCamera();
-	};
-};
+	}
+}
 
 void ShakeFlipper()
 {
@@ -917,12 +910,12 @@ void ShakeFlipper()
 			{
 				g_rootCamera->GetParent()->SetPosition( V3_LinearInterpolation( l_currentCamPos, l_leftCamPos, CURRENTTIMER_TIME_LEFT));
 				l_billePhys->AddForce( SetVector3( 200.0, 0.0, 0.0));
-			};
-		};
+			}
+		}
 		timer( "StopShaking", TIMERTYPE_ONCE, 1.0)
 		{
 			l_shaking = false;
-		};
+		}
 		if (abs( l_shake - l_tiltValue) <= 0.1)
 		{
 			Overlay_Show( "Tilt");
@@ -931,10 +924,10 @@ void ShakeFlipper()
 			{
 				l_tilted = false;
 				Overlay_Hide( "Tilt");
-			};
-		};
-	};
-};
+			}
+		}
+	}
+}
 
 void InitialiseFlipper()
 {
@@ -1004,7 +997,7 @@ void InitialiseFlipper()
 	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
-};
+}
 
 void BeginGame()
 {
@@ -1076,13 +1069,13 @@ void BeginGame()
 	timer( "Start", TIMERTYPE_ONCE, 0.2)
 	{
 		l_inGame = true;
-	};
+	}
 	Overlay_Hide( "FinMiniGame");
-};
+}
 
 void ResetGame()
 {
 	InitialiseFlipper();
-};
+}
 
 InitialiseFlipper();
