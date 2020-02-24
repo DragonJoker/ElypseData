@@ -1,10 +1,8 @@
 project Dames
 {
-	resolution		640 480
-	colour			1 1 1
-	show_debug		false
-	show_fps		false
-	startup_script	string c_gameName = "Dames";string c_sceneName = "Dames";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "localhost/Kazugame";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	resolution 640 480
+	colour 1 1 1
+	startup_script string c_gameName = "Dames";string c_sceneName = "Dames";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "https://www.dragonjoker.org/Elypse";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
 	scene kazu
 	{
 		scene_files

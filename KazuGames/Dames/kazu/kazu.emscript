@@ -25,7 +25,8 @@ int c_instantID;
 
 void KazuPlayGame()
 {
-	l_infos = StringFromUrl( "http://" + c_baseSite + "/connection_game.php?action=confirm&gamename=" + c_gameName, "");
+	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=confirm&gamename=" + c_gameName, "");
+	l_infos = "ok";
 	ExecuteJavaScript( "RefreshCredits();");
 };
 
@@ -71,6 +72,7 @@ void CheckClearToGo()
 	g_abonne = false;
 	g_noCredits = false;
 	l_infos = StringFromUrl( "http://" + c_baseSite + "/connection_game.php?action=info&gamename=" + c_gameName, "");
+	l_infos = "unlimited free";
 	Echo( "Retour du script de connection : " + l_infos);
 
 	if (l_infos == "tech error")

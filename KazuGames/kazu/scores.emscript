@@ -1,6 +1,7 @@
 string l_namesAndScores;
 string l_names;
 string l_scores;
+string c_playerName;
 
 int l_index;
 int g_score;
@@ -27,6 +28,6 @@ void _retrieveHighScores()
 
 void _submitHighscore()
 {
-	l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + c_gameName);
+	l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + c_gameName + "&player=" + c_playerName);
 }
 

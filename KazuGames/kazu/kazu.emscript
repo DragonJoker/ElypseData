@@ -1,5 +1,3 @@
-overlay l_splashtext;
-
 string l_return;
 string l_infos;
 string l_caption;
@@ -18,9 +16,8 @@ string l_names;
 string l_muses;
 string l_name;
 string l_muse;
-string l_lastName;
-string l_lastMuse;
-bool l_first;
+overlay l_gameOverlay;
+vector3 l_gameOverlayPosition;
 
 void KazuPlayGame()
 {
@@ -35,7 +32,6 @@ void LaunchGame()
 	KazuPlayGame();
 	Overlay_Hide( "Splash/GamesList" );
 	Overlay_Hide( "Splash/Kazu" );
-	Overlay_Hide( "Splash/Status" );
 	Scene_Load( c_sceneName );
 };
 
@@ -44,13 +40,11 @@ void CheckClearToGo()
 	Echo( "CheckClearToGo");
 	g_clearToGo = false;
 	g_fucked = false;
-	l_first = true;
 	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=info", "");
 	Echo( "Retour du script de connection : " + l_infos);
 	
 	if (l_infos == "tech error")
 	{
-		l_splashtext->SetCaption( "Une erreur technique est survenue.");
 		g_clearToGo = true;
 		g_fucked = true;
 	}
@@ -64,6 +58,7 @@ void CheckClearToGo()
 		l_name = strSplitOne( l_names, "|");
 		l_muse = strSplitOne( l_muses, "|");
 		Echo( "First muse file: (" + l_name + ")" + l_muse);
+		l_gameOverlayPosition = SetVector3( 20.0, 20.0, 104.0 );
 
 		while (l_muse != "" && l_name != "")
 		{
@@ -72,31 +67,41 @@ void CheckClearToGo()
 			Echo( "Muse file: (" + l_name + ")" + l_muse);
 			if (l_muse != "" || l_name != "")
 			{
-				l_lastName = l_name;
-				l_lastMuse = l_muse;
+				l_gameOverlay = OverlayElement_Create("GamePanel/" + l_muse, "MinigameNamePanel", "GamesList/Games");
+				l_gameOverlay->SetPosition( l_gameOverlayPosition );
+				l_gameOverlay = OverlayElement_Create("Game/" + l_muse, "MinigameName", "GamePanel/" + l_muse);
+				l_gameOverlay->SetCaption( l_name );
+				l_gameOverlay->SetFontSize( 25.0 );
+				Overlay_SetAction( "GamePanel/" + l_muse )
+				{
+					l_gameOverlay = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y );
+					l_muse = l_gameOverlay->GetName();
+					l_muse = l_muse->replace( "Panel", "" );
+					l_gameOverlay = OverlayElement_GetByName( l_muse );
+					l_muse = l_gameOverlay->GetName();
+					Echo( "Clicked on " + l_muse);
+
+					if ( l_muse->find( "Game/" ) == 0 )
+					{
+						l_name = l_gameOverlay->GetCaption();
+						l_muse = l_muse->replace( "Game/", "" );
+						Echo( "  Loading : (" + l_name + ")" + l_muse);
+						c_sceneName = l_name;
+						DownloadSeparateMuseFile( l_muse, LaunchGame() );
+					}
+				}
+				l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );
 			}
 		}
 
 		if (l_muse != "" || l_name != "")
 		{
-			l_splashtext->SetCaption( "Erreur de récupération des jeux.");
 			g_clearToGo = true;
 			g_fucked = true;
-		}
-		else
-		{
-			if (l_lastName != "" && l_lastMuse != "")
-			{
-				Echo( "  Loading : (" + l_lastName + ")" + l_lastMuse);
-				c_sceneName = l_lastName;
-				DownloadSeparateMuseFile( l_lastMuse, LaunchGame() );
-				l_first = false;
-			}
 		}
 	}
 	else
 	{
-		l_splashtext->SetCaption( l_infos);
 		g_clearToGo = true;
 		g_fucked = true;
 	};
@@ -105,7 +110,6 @@ void CheckClearToGo()
 void InitialiseKazuSplash()
 {
 	Echo( "InitialiseKazuSplash");
-	l_splashtext = OverlayElement_GetByName( "Splash/Status");
 
 	CheckClearToGo();
 

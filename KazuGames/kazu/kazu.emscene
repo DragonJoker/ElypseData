@@ -8,25 +8,31 @@ overlay Splash/Kazu
 	z_index 101
 
 }
-overlay Splash/Status
-{
-	class TextZone
-	align bottom center
-	size 512 128
-	position -256 -104
-	font_size 16
-	font_name Arial
-	text Chargement ...
-	text_align center
-	text_colour 0 0 0 1
-	z_index 102
-}
+
 overlay Splash/GamesList
 {
-	class PanelZone
-	align bottom center
-	size 640 480
-	position -320 -240
-	material Base/LowAlphaBlack
+	class MinigameFrame
+	align top left
+	size 80% 80%
+	position 10% 10%
+	border_size 32.0 32.0 32.0 32.0
 	z_index 103
+
+	element GamesList/Title
+	{
+		class MinigameText
+		position 0% 5%
+		size 100% 10%
+		font_size 40.00
+		text Games
+		text_align center
+	}
+
+	element GamesList/Games
+	{
+		class NoBorderMenu
+		position 10% 17%
+		size 80% 71%
+		border_size 32.0 32.0 32.0 32.0
+	}
 }

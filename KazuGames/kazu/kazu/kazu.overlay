@@ -26,6 +26,24 @@ template element TextArea(MinigameText)
 	colour_bottom 0 0 0 1
 }
 
+template element Panel(MinigameNamePanel)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 256
+	height 25
+	material Base/Invisible
+}
+
+template element TextArea(MinigameName)
+{
+	metrics_mode pixels
+	font_name Minigame
+	colour_top 0 0 0 1
+	colour_bottom 0 0 0 1
+}
+
 template element BorderPanel(NoBorderMenu)
 {
 	metrics_mode pixels
