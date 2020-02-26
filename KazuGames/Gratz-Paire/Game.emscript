@@ -1,17 +1,6 @@
 bool l_gameStarted;
 bool l_inGame;
-bool l_titleShown;
-bool l_music;
-bool l_sound;
 bool l_endRevealed;
-
-real l_ticPos;
-real l_musicVol;
-real l_soundVol;
-real l_relativeRegletteWidth;
-
-overlay l_ticMusic;
-overlay l_ticSound;
 
 int l_nbRevealedCards;
 int l_revealedCard1;
@@ -82,6 +71,8 @@ void ShuffleCards()
 
 void StopGame()
 {
+	Overlay_Hide( "InGame/Score");
+	KazuGuiStop();
 	l_gameStarted = false;
 	l_inGame = false;
 	Timer_KillAll();
@@ -102,31 +93,23 @@ void StopGame()
 void PauseGame()
 {
 	Timer_PauseAll();
-	Overlay_Hide( "MenuInGame");
-	Overlay_Show( "Menu");
-	Overlay_Hide( "Score");
+	KazuGuiPause();
+	Overlay_Hide( "InGame/Score");
 	l_inGame = false;
 };
 
 void ContinueGame()
 {
 	Timer_PlayAll();
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
-	Overlay_Show( "Score");
+	KazuGuiResume();
+	Overlay_Show( "InGame/Score");
 	l_inGame = true;
 };
 
 void BeginGame()
 {
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
-	Overlay_Hide( "Title");
-	Overlay_Show( "Score");
-	l_titleShown = false;
+	KazuGuiBegin();
+	Overlay_Show( "InGame/Score");
 	l_gameStarted = true;
 	l_inGame = true;
 	l_nbTries = 0;
@@ -138,8 +121,8 @@ void BeginGame()
 
 void EndGame()
 {
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
+	KazuGuiStop();
+	Overlay_Hide( "InGame/Score");
 	l_gameStarted = false;
 	l_inGame = false;
 	_submitHighscore();
@@ -244,39 +227,21 @@ void ChooseCard()
 
 void InitialiseGame()
 {
-	l_titleShown = true;
 	l_endRevealed = true;
-	l_sound = false;
-	l_music = false;
 	l_nbMaxErrors = 5;
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
-	l_ticPos = 1.0;
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-
-
 	l_minPitch = VECTOR3_ZERO;
 	l_maxPitch = SetVector3( 180.0, 0.0, 0.0);
 
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "Regles");
-	Overlay_Hide( "Options");
+	Overlay_Hide( "InGame/Score");
 	Overlay_Hide( "WinGame");
 	Overlay_Hide( "LoseGame");
-	Overlay_Hide( "FinInstant");
-	Overlay_Hide( "Score");
-	Overlay_Hide( "Scores");
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
 
 	Sound_Play_Global( "Ambiance");
 
-	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
-	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
-	Overlay_Hide( "FinMiniGame");
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Cliquez sur les cartes que vous desirez retourner." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Retournez les cartes et essayez de trouver toutes les paires en commettant moins de 5 erreurs." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
 };
 
 InitialiseGame();

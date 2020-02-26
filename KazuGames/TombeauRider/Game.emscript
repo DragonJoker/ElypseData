@@ -1,5 +1,3 @@
-bool l_sound;
-bool l_music;
 bool l_inGame;
 bool l_paused;
 bool l_inZombie;
@@ -7,8 +5,6 @@ bool l_leftDown;
 bool l_rightDown;
 bool l_gameStarted;
 
-real l_musicVol;
-real l_soundVol;
 real l_acceleration;
 real l_gravity;
 real l_runTime;
@@ -79,14 +75,12 @@ object l_momieMasque;
 object l_momieTenue;
 object l_statue;
 
-real l_ticPos;
-real l_relativeRegletteWidth;
-real l_relativeTicWidth;
-
-overlay l_ticMusic;
-overlay l_ticSound;
-
 camera l_rootCamera;
+
+void UpdateScore()
+{
+	OverlayElement_GetByName("InGame/Score/Text")->SetCaption( itoa( g_score));
+}
 
 void PlaceCamera()
 {
@@ -299,6 +293,7 @@ void StartLevel()
 
 void StartGame()
 {
+	KazuGuiBegin();
 	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
 	l_previousVelocity = l_currentVelocity;
 	l_acceleration = 0.0;
@@ -313,10 +308,6 @@ void StartGame()
 	l_charAnims->StartAnimation( "ouverture");
 	l_charAnims->PauseAnimation( "ouverture");
 
-	Overlay_Hide( "Title");
-	Overlay_Hide( "Menu");
-	Overlay_Show( "Score");
-	Overlay_Show( "MenuInGame");
 	Overlay_Show( "TopRight");
 	l_start->Hide();
 	Overlay_Show( "Start");
@@ -331,7 +322,6 @@ void StartGame()
 	l_nbSeconde = 0;
 	l_nbCentieme = 0;
 	UpdateChrono();
-	UpdateScore();
 
 	l_charAnims->StartAnimation( "ouverture");
 	timer ("FinOuverture", TIMERTYPE_ONCE, l_charAnims->GetObject("Corps")->GetAnimation( "ouverture")->GetLength())
@@ -461,7 +451,6 @@ void LaunchDescent()
 			else
 			{
 				g_score = g_score + (l_nbLives * 3000);
-				UpdateScore();
 				_submitHighscore();
 				WinGame();
 			};
@@ -605,25 +594,16 @@ void BeginGame()
 
 void PauseGame()
 {
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
+	KazuGuiPause();
 	Overlay_Hide( "TopRight");
-	OverlayElement_GetByName( "Menu/Recommencer")->Show();
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
-	Overlay_Show( "Menu");
 	Timer_PauseAll();
 	l_paused = true;
 };
 
 void StopGame()
 {
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
+	KazuGuiStop();
 	Overlay_Hide( "TopRight");
-	OverlayElement_GetByName( "Menu/Recommencer")->Show();
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
 	Overlay_Show( "Menu");
 
 	l_paused = false;
@@ -677,9 +657,7 @@ void StopGame()
 
 void ContinueGame()
 {
-	Overlay_Hide( "Menu");
-	Overlay_Show( "Score");
-	Overlay_Show( "MenuInGame");
+	KazuGuiResume();
 	Overlay_Show( "TopRight");
 	l_paused = false;
 
@@ -702,16 +680,11 @@ void ContinueGame()
 
 void Initialise()
 {
-	l_sound = false;
-	l_music = false;
 	l_inGame = false;
 	l_paused = false;
-	l_gameStarted = false;
 	l_currentPitch = 30.0;
 	l_previousPitch = 30.0;
 	l_currentZoom = 15000.0;
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
 	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
 	l_previousVelocity = SetVector3( 0.0, 0.0, 0.0);
 	l_top = SetVector3( 40.0, 15040.0, 3235.0);
@@ -753,20 +726,12 @@ void Initialise()
 	l_charAnims->StartAnimation( "ouverture");
 	l_charAnims->PauseAnimation( "ouverture");
 
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "Options");
-	Overlay_Hide( "Regles");
 	Overlay_Hide( "Start");
-	Overlay_Hide( "Scores");
 	Overlay_Hide( "Score");
-	Overlay_Hide( "MenuInGame");
 	Overlay_Hide( "TopRight");
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 
-	l_ticPos = 1.0;
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-	l_relativeTicWidth = l_ticMusic->GetWidth() / GENERAL_SCREEN_WIDTH;
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Les commandes utilisees sont les touches directionnelles du clavier. Fleche bas pour freiner. Fleches droite et gauche pour se deplacer, respectivement a droite et a gauche." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Evitez les momies durant la descente et amassez le plus possible de statuettes." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
 };

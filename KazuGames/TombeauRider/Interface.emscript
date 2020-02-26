@@ -19,7 +19,13 @@ Overlay_SetAction( "Menu/Continuer")
 	ContinueGame();
 };
 
-Overlay_SetAction( "MenuInGame")
+Overlay_SetAction( "Menu/Retour")
+{
+	Timer_KillAll();
+	KazuGuiCleanup();
+}
+
+Overlay_SetAction( "InGame/Menu")
 {
 	Echo( "InGame");
 	PauseGame();

@@ -31,7 +31,7 @@ template element Panel(MinigameNamePanel)
 	metrics_mode pixels
 	left 0
 	top 2
-	width 256
+	width 400
 	height 25
 	material Base/Invisible
 }

@@ -1,5 +1,13 @@
 // SOUNDS
 
+sound Haunted
+{
+	url ./Sons/Haunted House.mp3
+	type music
+	global true
+	looped true
+}
+
 sound Lancer
 {
 	url ./Sons/Lanceur.wav

@@ -1,5 +1,3 @@
-bool l_music;
-bool l_sound;
 bool l_inGame;
 bool l_inBalcon;
 bool l_paused;
@@ -13,7 +11,6 @@ bool l_balconPreviousLevel;
 bool l_menuShown;
 bool l_finished;
 bool l_firstPlay;
-bool l_titleShown;
 
 int i;
 int imax;
@@ -23,10 +20,6 @@ int l_maxBalcon;
 int l_indexBalconTaken;
 
 real j;
-real l_musicVol;
-real l_soundVol;
-real l_ticPos;
-real l_relativeRegletteWidth;
 real l_relativeTicWidth;
 real l_currentPitch;
 real l_previousPitch;
@@ -62,8 +55,6 @@ vector3 l_balconPos;
 
 camera l_rootCamera;
 
-overlay l_ticMusic;
-overlay l_ticSound;
 overlay l_display;
 overlay l_scoreInGame;
 overlay l_chronoInGame;
@@ -78,36 +69,20 @@ void ToggleMenu()
 	Echo( "ToggleMenu");
 	if (l_menuShown)
 	{
-		Overlay_Hide( "InGame/BottomLeft");
+		Overlay_Hide( "Menu");
 		Overlay_Show( "InGame/Menu");
 		OverlayElement_GetByName( "InGame/TopLeft")->Show();
 		OverlayElement_GetByName( "InGame/TopRight")->Show();
 	}
 	else
 	{
-		Overlay_Show( "InGame/BottomLeft");
+		Overlay_Show( "Menu");
 		Overlay_Hide( "InGame/Menu");
 		OverlayElement_GetByName( "InGame/TopLeft")->Hide();
 		OverlayElement_GetByName( "InGame/TopRight")->Hide();
 	}
 
 	l_menuShown = ! l_menuShown;
-}
-
-void ShowTitle()
-{
-	if (l_titleShown)
-	{
-		Overlay_Show( "Title");
-	}
-}
-
-void HideTitle()
-{
-	if (l_titleShown)
-	{
-		Overlay_Hide( "Title");
-	}
 }
 
 void HideMenu()
@@ -133,7 +108,6 @@ void ContinueGame()
 {
 	l_paused = false;
 	Timer_PlayAll();
-
 	HideMenu();
 }
 
@@ -248,10 +222,10 @@ void StopGame( bool p_gagne)
 		g_score = 0;
 	}
 
-	OverlayElement_GetByName( "InGame/BottomLeft/Jouer")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Continuer")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer")->Show();
-	Overlay_Show( "InGame/BottomLeft");
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Show();
+	Overlay_Show( "Menu");
 	Overlay_Show( "InGame/Result");
 
 	ShowMenu();
@@ -314,6 +288,7 @@ void BeginGame()
 	l_firstPlay = false;
 	l_finished = false;
 	SetupRace();
+	KazuGuiBegin();
 
 	l_inGame = false;
 	l_inBalcon = false;
@@ -357,11 +332,9 @@ void BeginGame()
 	Overlay_Show( "InGame/TopLeft");
 	Overlay_Show( "InGame/TopRight");
 	Overlay_Hide( "InGame/Result");
-	Overlay_Hide( "Title");
-	OverlayElement_GetByName( "InGame/BottomLeft/Jouer")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Continuer")->Show();
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
 
 	HideMenu();
 
@@ -595,9 +568,6 @@ void BeginGame()
 
 void Initialise()
 {
-	l_titleShown = true;
-	l_sound = false;
-	l_music = false;
 	l_inGame = false;
 	l_inBalcon = false;
 	l_paused = false;
@@ -608,9 +578,6 @@ void Initialise()
 	l_rightDown = false;
 	l_firstPlay = true;
 
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
-	l_ticPos = 1.0;
 	l_currentPitch = -20.0;
 	l_previousPitch = -20.0;
 	l_currentZoom = 1000.0;
@@ -639,8 +606,6 @@ void Initialise()
 	l_nbCentieme = 0;
 	l_runTime = 0.0;
 
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
 	l_display = OverlayElement_GetByName( "Start/Display");
 	l_scoreInGame = OverlayElement_GetByName( "InGame/TopLeft/ScoreTxt");
 	l_chronoInGame = OverlayElement_GetByName( "InGame/TopRight/ChronoTxt");
@@ -650,9 +615,6 @@ void Initialise()
 	l_charNode = SceneNode_GetByName( "PersoNode");
 	l_rootCamera = Camera_GetByName( "RootCamera");
 
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-	l_relativeTicWidth = l_ticMusic->GetWidth() / GENERAL_SCREEN_WIDTH;
-
 	l_rootCamera->GetParent()->Yaw( 90.0);
 	l_rootCamera->GetParent()->Pitch( l_currentPitch);
 	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (l_currentZoom / V3_GetLength( l_rootCamera->GetPosition())));
@@ -661,25 +623,19 @@ void Initialise()
 
 	AnimationGroup_GetByName( "Perso")->StartAnimation( "Stand");
 
-	Overlay_Hide( "InGame/SubmitScore");
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "Options");
-	Overlay_Hide( "Regles");
 	Overlay_Hide( "Start");
-	Overlay_Hide( "Scores");
+	Overlay_Hide( "InGame/SubmitScore");
 	Overlay_Hide( "InGame/TopLeft");
 	Overlay_Hide( "InGame/TopRight");
 	Overlay_Hide( "InGame/Result");
-	OverlayElement_GetByName( "InGame/BottomLeft/Continuer")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer")->Hide();
-	OverlayElement_GetByName( "InGame/BottomLeft/Recommencer/Cout")->Hide();
 	ShowMenu();
 
 	SetupRace();
 
 	Sound_Play_Global( "Ambiance");
 
-	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
-	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
-	Overlay_Hide( "FinMiniGame");
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Les commandes utilisees sont les touches directionnelles du clavier. Fleche bas pour freiner votre chute, fleche haut pour reprendre la chute libre plus rapidement. Fleches droite et gauche pour se deplacer, respectivement a droite et a gauche." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Eviter les balcons durant la chute et plonger dans la bassine. Vous gagnez des points constamment en fonction de votre vitesse de chute et de votre inclinaison. Vous gagnez aussi des points plus vous passez vite au niveau des balcons." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
 }

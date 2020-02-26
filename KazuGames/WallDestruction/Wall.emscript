@@ -1,6 +1,5 @@
 bool l_gameStarted;
 bool l_inGame;
-bool l_titleShown;
 bool l_ballLaunched;
 bool l_shootingBall;
 bool l_hurtingWall;
@@ -8,8 +7,6 @@ bool l_odd;
 bool l_ballShot;
 bool l_hurtWall;
 bool l_bricksFlowing;
-bool l_music;
-bool l_sound;
 bool l_ballOutOfBounds;
 bool l_ballOnFloor;
 bool l_endShoot;
@@ -38,10 +35,6 @@ real l_min;
 real l_offset;
 real l_briqueXPos;
 real l_briqueYPos;
-real l_relativeRegletteWidth;
-real l_ticPos;
-real l_musicVol;
-real l_soundVol;
 
 vector3 l_initBallPower;
 vector3 l_ballPower;
@@ -58,9 +51,6 @@ quaternion l_batteOrientation;
 quaternion l_ballDirection;
 
 string l_name;
-
-overlay l_ticSound;
-overlay l_ticMusic;
 
 object l_balle;
 object l_batte;
@@ -87,23 +77,21 @@ void UpdateScore()
 	{
 		g_score = 500;
 	}
-	OverlayElement_GetByName("Score/Text")->SetCaption( itoa( g_score));
+	OverlayElement_GetByName("InGame/Score/Text")->SetCaption( itoa( g_score));
 }
 
 void UpdateNbCoups()
 {
-	OverlayElement_GetByName("Score/NbCoupsText")->SetCaption( itoa( g_nbCoups));
+	OverlayElement_GetByName("InGame/Score/NbCoupsText")->SetCaption( itoa( g_nbCoups));
 }
 
 void EndGame()
 {
+	KazuGuiStop();
 	Overlay_Hide( "WinGame");
 	Overlay_Hide( "LoseGame");
 	Overlay_Show( "Menu");
 	Overlay_Hide( "Score");
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Show();
 }
 
 void WinGame()
@@ -114,7 +102,7 @@ void WinGame()
 	l_gameStarted = false;
 	l_inGame = false;
 	Overlay_Hide( "Menu");
-	Overlay_Hide( "MenuInGame");
+	KazuGuiStop();
 }
 
 void LoseGame()
@@ -125,7 +113,7 @@ void LoseGame()
 	l_gameStarted = false;
 	l_inGame = false;
 	Overlay_Hide( "Menu");
-	Overlay_Hide( "MenuInGame");
+	KazuGuiStop();
 }
 
 void DestroyWall()
@@ -198,7 +186,6 @@ void DestroyWall()
 				}
 			}
 		}
-//		Echo( "DestroyWall - Bricks unphysicallised");
 	}
 }
 
@@ -244,7 +231,6 @@ void ShootBall()
 		if (l_shootingBall && ! l_hurtingWall)
 		{
 			ResetBallPhys();
-//			l_ballLaunched = false;
 			l_shootingBall = false;
 			l_ballShot = true;
 			l_speed = SetVector3( 0.0, 0.0, -60000.0);
@@ -449,7 +435,6 @@ void BuildWall()
 			l_currentBriqueNode->SetPosition( SetVector3( l_briqueXPos, l_briqueYPos, 0.0));
 			l_currentBriqueNode->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
 			l_nbMaxBriques = l_nbMaxBriques + 1;
-//			Echo( "BuildWall - Brique : " + l_name + " - End");
 		}
 	}
 }
@@ -473,19 +458,16 @@ void StopGame()
 		}
 	}
 	BuildWall();
+	KazuGuiStop();
 	Overlay_Show( "Menu");
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
-	OverlayElement_GetByName( "Menu/Jouer")->Show();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	Overlay_Hide( "InGame/Score");
 }
 
 void PauseGame()
 {
 	l_inGame = false;
 	Timer_PauseAll();
+	KazuGuiPause();
 	if (l_bricksFlowing)
 	{
 		for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
@@ -504,14 +486,13 @@ void PauseGame()
 	{
 		l_ballePhys->SetEnabled( false);
 	}
-	Overlay_Show( "Menu");
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
+	Overlay_Hide( "InGame/Score");
 }
 
 void ContinueGame()
 {
 	Timer_PlayAll();
+	KazuGuiResume();
 	if (l_bricksFlowing)
 	{
 		for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
@@ -530,9 +511,7 @@ void ContinueGame()
 	{
 		l_ballePhys->SetEnabled( true);
 	}
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
-	Overlay_Show( "Score");
+	Overlay_Show( "InGame/Score");
 	timer( "StartGame", TIMERTYPE_ONCE, 0.1)
 	{
 		l_inGame = true;
@@ -542,7 +521,6 @@ void ContinueGame()
 void BeginGame()
 {
 	l_gameStarted = true;
-	l_titleShown = false;
 	l_ballLaunched = false;
 	l_shootingBall = false;
 	l_hurtingWall = false;
@@ -552,15 +530,9 @@ void BeginGame()
 	g_nbCoups = 0;
 	UpdateScore();
 	UpdateNbCoups();
+	KazuGuiBegin();
 
-	Overlay_Hide( "Title");
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
-	Overlay_Show( "Score");
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	Overlay_Show( "InGame/Score");
 	timer( "StartGame", TIMERTYPE_ONCE, 0.1)
 	{
 		l_inGame = true;
@@ -569,16 +541,6 @@ void BeginGame()
 
 void InitialiseWallDestruction()
 {
-	l_sound = false;
-	l_music = false;
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
-	l_ticPos = 1.0;
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-
-
 	g_rootCamera = Camera_GetByName( "RootCamera");
 
 	l_maxLines = 12;
@@ -608,25 +570,17 @@ void InitialiseWallDestruction()
 
 	l_gameStarted = false;
 	l_inGame = false;
-	l_titleShown = true;
 
-	Overlay_Hide( "Regles");
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "Options");
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
-	Overlay_Hide( "Scores");
 	Overlay_Hide( "WinGame");
 	Overlay_Hide( "LoseGame");
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	Overlay_Hide( "InGame/Score");
 
 	Sound_Play_Global( "Ambiance");
 
-	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
-	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
-	Overlay_Hide( "FinMiniGame");
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "La seule commande a connaitre est le clic gauche de la souris qui lance le balle, et qui permet de frapper avec la batte." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de detruire le mur en vous servant de la batte. Vous avez 50 coups pour atteindre cet objectif." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
 }
 
 InitialiseWallDestruction();

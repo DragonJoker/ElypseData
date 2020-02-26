@@ -1,8 +1,5 @@
 bool l_gameStarted;
 bool l_inGame;
-bool l_titleShown;
-bool l_music;
-bool l_sound;
 bool l_melted;
 bool l_selected;
 bool l_odd;
@@ -17,10 +14,6 @@ int l_maxSwitches;
 int l_nbTries;
 int l_maxTries;
 
-real l_ticPos;
-real l_musicVol;
-real l_soundVol;
-real l_relativeRegletteWidth;
 real l_speed;
 real l_currentSpeed;
 
@@ -37,9 +30,6 @@ vector3 l_middlePos2;
 vector3 l_currentPos2;
 vector3 l_maxHeight;
 vector3 l_minHeight;
-
-overlay l_ticMusic;
-overlay l_ticSound;
 
 scene_node l_pieceNode;
 scene_node l_revealedNode;
@@ -59,10 +49,11 @@ void EndGame()
 	Echo( "EndGame " + itoa( l_nbTries) + "/" + itoa( l_maxTries));
 	if (l_nbTries == l_maxTries)
 	{
-		Overlay_Hide( "MenuInGame");
+		KazuGuiStop();
 		OverlayElement_GetByName( "Fin/Score")->Show();
 		OverlayElement_GetByName( "Fin/Text")->Show();
 		OverlayElement_GetByName( "Fin/Text")->SetCaption( itoa( g_score));
+		Overlay_Show( "Fin");
 		_submitHighscore();
 		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
 		{
@@ -78,7 +69,6 @@ void EndGame()
 
 void LoseGame()
 {
-//	Echo( "Perdu");
 	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Perdu");
 	Overlay_Show( "Fin");
 	OverlayElement_GetByName( "Fin/Score")->Hide();
@@ -88,7 +78,6 @@ void LoseGame()
 
 void WinGame()
 {
-	//Echo( "Gagne");
 	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Gagne");
 	Overlay_Show( "Fin");
 	OverlayElement_GetByName( "Fin/Score")->Hide();
@@ -327,10 +316,8 @@ void StopGame()
 {
 	l_inGame = false;
 	l_gameStarted = false;
+	KazuGuiStop();
 	Overlay_Show( "Menu");
-	Overlay_Hide( "MenuInGame");
-	OverlayElement_GetByName( "Menu/Jouer")->Show();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	l_box1->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
 	l_box2->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
 	l_box3->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
@@ -341,31 +328,22 @@ void StopGame()
 void PauseGame()
 {
 	l_inGame = false;
-	Overlay_Show( "Menu");
-	Overlay_Hide( "MenuInGame");
 	Timer_PauseAll();
+	KazuGuiPause();
 };
 
 void ContinueGame()
 {
 	l_inGame = true;
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
 	Timer_PlayAll();
+	KazuGuiResume();
 };
 
 void BeginGame()
 {
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
-	Overlay_Hide( "Title");
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	KazuGuiBegin();
 	l_inGame = true;
 	l_gameStarted = true;
-	l_titleShown = false;
 	l_melted = false;
 	l_selected = false;
 	g_score = 0;
@@ -376,16 +354,6 @@ void BeginGame()
 
 void InitialiseGame()
 {
-	l_titleShown = true;
-	l_sound = false;
-	l_music = false;
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
-	l_ticPos = 1.0;
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-
 	l_pieceNode = SceneNode_GetByName( "Piece");
 	l_box1 = SceneNode_GetByName( "Box_1");
 	l_box2 = SceneNode_GetByName( "Box_2");
@@ -393,23 +361,16 @@ void InitialiseGame()
 	l_maxSwitches = 10;
 	l_odd = false;
 
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "Regles");
-	Overlay_Hide( "Options");
 	Overlay_Hide( "Fin");
-	Overlay_Hide( "FinInstant");
-	Overlay_Hide( "Scores");
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
 	OverlayElement_GetByName( "Fin/Score")->Hide();
 	OverlayElement_GetByName( "Fin/Text")->Hide();
 
 	Sound_Play_Global( "Haunted");
 
-	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
-	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Clic gauche de la souris sur un des 3 mini manoirs pour reveler ce qui se cache en dessous." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de retourner le manoir ou se trouve la piece, sans tomber sur un fantome." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
 };
 
 InitialiseGame();

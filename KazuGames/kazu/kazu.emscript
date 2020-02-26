@@ -19,6 +19,18 @@ string l_muse;
 overlay l_gameOverlay;
 vector3 l_gameOverlayPosition;
 
+bool l_titleShown = true;
+bool l_music = true;
+bool l_sound = true;
+
+real l_relativeRegletteWidth;
+real l_ticPos;
+real l_musicVol;
+real l_soundVol;
+
+overlay l_ticMusic;
+overlay l_ticSound;
+
 void KazuPlayGame()
 {
 	Echo( "KazuPlayGame");
@@ -41,7 +53,6 @@ void CheckClearToGo()
 	g_clearToGo = false;
 	g_fucked = false;
 	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=info", "");
-	Echo( "Retour du script de connection : " + l_infos);
 	
 	if (l_infos == "tech error")
 	{
@@ -53,44 +64,43 @@ void CheckClearToGo()
 		l_index = strFind( l_infos, "<br>");
 		l_names = substr( l_infos, 0, l_index);
 		l_muses = substr( l_infos, l_index + 4, strlen( l_infos));
-		Echo( "muse files: " + l_muses);
-		Echo( "muse names: " + l_names);
 		l_name = strSplitOne( l_names, "|");
 		l_muse = strSplitOne( l_muses, "|");
-		Echo( "First muse file: (" + l_name + ")" + l_muse);
 		l_gameOverlayPosition = SetVector3( 20.0, 20.0, 104.0 );
 
 		while (l_muse != "" && l_name != "")
 		{
 			l_name = strSplitOne( l_names, "|");
 			l_muse = strSplitOne( l_muses, "|");
-			Echo( "Muse file: (" + l_name + ")" + l_muse);
+
 			if (l_muse != "" || l_name != "")
 			{
-				l_gameOverlay = OverlayElement_Create("GamePanel/" + l_muse, "MinigameNamePanel", "GamesList/Games");
-				l_gameOverlay->SetPosition( l_gameOverlayPosition );
-				l_gameOverlay = OverlayElement_Create("Game/" + l_muse, "MinigameName", "GamePanel/" + l_muse);
-				l_gameOverlay->SetCaption( l_name );
-				l_gameOverlay->SetFontSize( 25.0 );
-				Overlay_SetAction( "GamePanel/" + l_muse )
+				if ( !OverlayElement_Exists( "GamePanel/" + l_muse ) )
 				{
-					l_gameOverlay = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y );
-					l_muse = l_gameOverlay->GetName();
-					l_muse = l_muse->replace( "Panel", "" );
-					l_gameOverlay = OverlayElement_GetByName( l_muse );
-					l_muse = l_gameOverlay->GetName();
-					Echo( "Clicked on " + l_muse);
-
-					if ( l_muse->find( "Game/" ) == 0 )
+					l_gameOverlay = OverlayElement_Create("GamePanel/" + l_muse, "MinigameNamePanel", "GamesList/Games");
+					l_gameOverlay->SetPosition( l_gameOverlayPosition );
+					l_gameOverlay->SetMouseOverMaterial( "Base/LowAlphaBrightGrey" );
+					l_gameOverlay = OverlayElement_Create("Game/" + l_muse, "MinigameName", "GamePanel/" + l_muse);
+					l_gameOverlay->SetCaption( l_name );
+					l_gameOverlay->SetFontSize( 25.0 );
+					Overlay_SetAction( "GamePanel/" + l_muse )
 					{
-						l_name = l_gameOverlay->GetCaption();
-						l_muse = l_muse->replace( "Game/", "" );
-						Echo( "  Loading : (" + l_name + ")" + l_muse);
-						c_sceneName = l_name;
-						DownloadSeparateMuseFile( l_muse, LaunchGame() );
+						l_gameOverlay = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y );
+						l_muse = l_gameOverlay->GetName();
+						l_muse = l_muse->replace( "Panel", "" );
+						l_gameOverlay = OverlayElement_GetByName( l_muse );
+						l_muse = l_gameOverlay->GetName();
+
+						if ( l_muse->find( "Game/" ) == 0 )
+						{
+							l_name = l_gameOverlay->GetCaption();
+							l_muse = l_muse->replace( "Game/", "" );
+							c_sceneName = l_name;
+							DownloadSeparateMuseFile( l_muse, LaunchGame() );
+						}
 					}
+					l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );
 				}
-				l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );
 			}
 		}
 
@@ -110,6 +120,20 @@ void CheckClearToGo()
 void InitialiseKazuSplash()
 {
 	Echo( "InitialiseKazuSplash");
+	Overlay_Hide( "Commandes");
+	Overlay_Hide( "Menu");
+	Overlay_Hide( "Options");
+	Overlay_Hide( "Regles");
+	Overlay_Hide( "Title");
+	Overlay_Hide( "FinMiniGame");
+	Overlay_Hide( "InGame/Menu" );
+
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
 
 	CheckClearToGo();
 

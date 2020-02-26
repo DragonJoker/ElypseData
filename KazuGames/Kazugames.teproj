@@ -9,12 +9,14 @@ project Kazugames
 		scene_files
 		{
 			kazu.emscene
+			gui.emscene
 			scores.emscene
 		}
 		load_script_files
 		{
 			kazu.emscript
 			scores.emscript
+			gui.emscript
 		}
 		data_files_3d
 		{
@@ -129,7 +131,6 @@ project Kazugames
 	{
 		scene_files
 		{
-			Menu.emscene
 			Bassine-Jump.emscene
 			InGame.emscene
 		}

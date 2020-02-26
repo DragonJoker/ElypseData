@@ -1,8 +1,5 @@
 bool l_gameStarted;
 bool l_inGame;
-bool l_titleShown;
-bool l_music;
-bool l_sound;
 bool l_dicesLaunched;
 bool l_dicesStopped;
 bool l_dice1Stopped;
@@ -22,10 +19,6 @@ int l_faceValue;
 int l_nbTries;
 int l_maxTries;
 
-real l_relativeRegletteWidth;
-real l_ticPos;
-real l_musicVol;
-real l_soundVol;
 real l_xAngle;
 real l_yAngle;
 real l_zAngle;
@@ -79,9 +72,6 @@ string l_launchFaces;
 string l_keptFaces;
 string l_checkFaces;
 
-overlay l_ticSound;
-overlay l_ticMusic;
-
 object l_selectedObject;
 
 scene_node l_dice1;
@@ -95,34 +85,29 @@ physics_object l_dice3Phys;
 
 void PauseGame()
 {
-	Overlay_Hide( "MenuInGame");
-	Overlay_Show( "Menu");
 	Timer_PauseAll();
+	KazuGuiPause();
 	l_inGame = false;
-};
+}
 
 void ContinueGame()
 {
-	Overlay_Show( "MenuInGame");
-	Overlay_Hide( "Menu");
 	Timer_PlayAll();
+	KazuGuiResume();
 	l_inGame = true;
-};
+}
 
 void BeginGame()
 {
-	Overlay_Hide( "Title");
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
+	KazuGuiBegin();
 	Timer_PlayAll();
-	l_titleShown = false;
 	l_gameStarted = true;
 	l_nbTries = 0;
 	timer( "BeginGame", TIMERTYPE_ONCE, 0.3)
 	{
 		l_inGame = true;
-	};
-};
+	}
+}
 
 void InitialiseGame();
 
@@ -133,7 +118,6 @@ void StopGame()
 	l_inGame = false;
 	l_gameStarted = false;
 	Overlay_Hide( "Fin");
-	Overlay_Hide( "MenuInGame");
 	Object_GetByName( "Dice1")->SetSubMaterial( 0, "421/surface");
 	Object_GetByName( "Dice2")->SetSubMaterial( 0, "421/surface");
 	Object_GetByName( "Dice3")->SetSubMaterial( 0, "421/surface");
@@ -149,7 +133,7 @@ void StopGame()
 	SceneNode_GetByName( "Dice1")->SetVisible( false);
 	SceneNode_GetByName( "Dice2")->SetVisible( false);
 	SceneNode_GetByName( "Dice3")->SetVisible( false);
-};
+}
 
 void CheckEndDices()
 {
@@ -170,43 +154,36 @@ void CheckEndDices()
 		g_score = 0;
 		OverlayElement_GetByName( "Fin")->SetMaterial( "Perdu");
 		_submitHighscore();
-	};
+	}
 	Overlay_Show( "Fin");
-};
+}
 
 bool g_clearToGo = true;
 bool g_free = true;
 
 void EndGame()
 {
-	Overlay_Hide( "MenuInGame");
-
 	l_inGame = false;
 	l_gameStarted = false;
 	Overlay_Show( "Menu");
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Show();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "");
-};
+}
 
 void IsSpeedLower( vector3 p_speed, vector3 p_minSpeed)
 {
 	l_speedLower = (abs(p_speed[0]) < abs(p_minSpeed[0]) && abs(p_speed[1]) < abs(p_minSpeed[1]) && abs(p_speed[2]) < abs(p_minSpeed[2]));
-};
+}
 
 void IsAngularSpeedLower( vector3 p_angularSpeed, vector3 p_minAngularSpeed, scene_node p_iasDice)
 {
 	l_angularSpeedLower = (abs(p_angularSpeed[0]) < abs(p_minAngularSpeed[0]) && abs(p_angularSpeed[1]) < abs(p_minAngularSpeed[1]) && abs(p_angularSpeed[2]) < abs(p_minAngularSpeed[2]));
-};
+}
 
 void DiceStopped( vector3 p_dsSpeed, vector3 p_dsAngularSpeed, scene_node p_dsDice)
 {
 	IsSpeedLower( p_dsSpeed, l_minSpeed);
 	IsAngularSpeedLower( p_dsAngularSpeed, l_minAngularSpeed, p_dsDice);
 	l_diceStopped = (l_speedLower && l_angularSpeedLower);
-};
+}
 
 void RetrieveFace( scene_node p_rfDice)
 {
@@ -260,14 +237,14 @@ void RetrieveFace( scene_node p_rfDice)
 						else
 						{
 							Echo( "UnknownFace");
-						};
-					};
-				};
-			};
-		};
-	};
+						}
+					}
+				}
+			}
+		}
+	}
 //	Echo( "RetrieveFace - Face : " + itoa( l_faceValue));
-};
+}
 
 void Reorient( scene_node p_rNode)
 {
@@ -300,14 +277,14 @@ void Reorient( scene_node p_rNode)
 	{
 // 5
 		p_rNode->Yaw( -p_rNode->GetYaw());
-	};
-};
+	}
+}
 
 void StopDice( scene_node p_sdDice, physics_object p_sdDicePhys)
 {
 	p_sdDicePhys->SetEnabled( false);
 	RetrieveFace( p_sdDice);
-};
+}
 
 void CheckDices()
 {
@@ -319,7 +296,7 @@ void CheckDices()
 		Echo( "CheckDices - Win");
 		l_inGame = false;
 		l_gameStarted = false;
-		Overlay_Hide( "MenuInGame");
+		KazuGuiStop();
 		g_score = 4000 - (l_nbTries * 1000);
 		OverlayElement_GetByName( "Fin")->SetMaterial( "Gagne");
 		Overlay_Show( "Fin");
@@ -328,9 +305,9 @@ void CheckDices()
 		{
 			Overlay_Hide( "Fin");
 			EndGame();
-		};
-	};
-};
+		}
+	}
+}
 
 void UpdateDices()
 {
@@ -346,7 +323,7 @@ void UpdateDices()
 				l_diceX = l_diceX + 20.0;
 				StopDice( l_dice1, l_dice1Phys);
 				l_launchFaces = l_launchFaces + itoa( l_faceValue);
-			};
+			}
 			l_dice1PreviousOrientation = l_dice1CurrentOrientation;
 		}
 		elseif (i == 1 && ! l_dice2Stopped)
@@ -359,7 +336,7 @@ void UpdateDices()
 				l_diceX = l_diceX + 20.0;
 				StopDice( l_dice2, l_dice2Phys);
 				l_launchFaces = l_launchFaces + itoa( l_faceValue);
-			};
+			}
 			l_dice2PreviousOrientation = l_dice2CurrentOrientation;
 		}
 		elseif (i == 2 && ! l_dice3Stopped)
@@ -372,10 +349,10 @@ void UpdateDices()
 				l_diceX = l_diceX + 20.0;
 				StopDice( l_dice3, l_dice3Phys);
 				l_launchFaces = l_launchFaces + itoa( l_faceValue);
-			};
+			}
 			l_dice3PreviousOrientation = l_dice3CurrentOrientation;
-		};
-	};
+		}
+	}
 
 	l_dicesStopped = (l_dice1Stopped && l_dice2Stopped && l_dice3Stopped);
 	if (l_dicesStopped)
@@ -386,19 +363,19 @@ void UpdateDices()
 		if (l_nbTries == l_maxTries)
 		{
 			CheckEndDices();
-			Overlay_Hide( "MenuInGame");
+			KazuGuiStop();
 			timer( "EndGame", TIMERTYPE_ONCE, 2.0)
 			{
 				Overlay_Hide( "Fin");
 				EndGame();
-			};
+			}
 		}
 		else
 		{
 			CheckDices();
-		};
-	};
-};
+		}
+	}
+}
 
 void LaunchDice( scene_node p_ldDice, physics_object p_ldDicePhys, vector3 p_ldPosition)
 {
@@ -412,7 +389,7 @@ void LaunchDice( scene_node p_ldDice, physics_object p_ldDicePhys, vector3 p_ldP
 	p_ldDice->RotateLocal( UNIT_Z, l_zAngle * 90.0);
 	p_ldDicePhys->ReassertPosition();
 	p_ldDice->Hide();
-};
+}
 
 void EndDiceLaunch( scene_node p_edlDice, physics_object p_edlDicePhys)
 {
@@ -421,7 +398,7 @@ void EndDiceLaunch( scene_node p_edlDice, physics_object p_edlDicePhys)
 	p_edlDicePhys->SetEnabled( true);
 	p_edlDicePhys->SetSpeed( SetVector3( rand( 50.0, 80.0), rand( -30.0, -40.0), 0.0));
 	p_edlDicePhys->SetAngularSpeed( SetVector3( rand( -20.0, -30.0), rand( -20.0, -30.0), rand( -20.0, -30.0)));
-};
+}
 
 void LaunchDices()
 {
@@ -442,7 +419,7 @@ void LaunchDices()
 	{
 		l_dicesToLaunch->erase( l_dicesToLaunch->find( ctoa( strGetChar( l_dicesKept, i))), 1);
 		l_nbDicesToLaunch = l_nbDicesToLaunch - 1;
-	};
+	}
 //	Echo( "Dices To Launch : " + l_dicesToLaunch);
 	for (i = 0 ; i < l_dicesToLaunch->length() ; i++)
 	{
@@ -464,8 +441,8 @@ void LaunchDices()
 			l_dice3 = SceneNode_GetByName( l_name);
 			l_dice3Phys = Object_GetByName( l_dice3->GetName())->GetPhysicsObject();
 			LaunchDice( l_dice3, l_dice3Phys, l_godetEndPosition + SetVector3( 15.0, 8.0, 0.0));
-		};
-	};
+		}
+	}
 
 	timer( "LaunchDices", TIMERTYPE_CONTINUOUS, 0.3)
 	{
@@ -473,7 +450,7 @@ void LaunchDices()
 		l_godet->SetPosition( l_godetCurrentPosition);
 		l_godetCurrentAngle = V3_BezierInterpolation( l_godetStartAngle, l_godetMiddleAngle, l_godetEndAngle,  CURRENTTIMER_TIME_ELAPSED / 0.3);
 		l_godet->SetOrientation( SetQuaternion( UNIT_Z, (l_godetCurrentAngle[0])));
-	};
+	}
 	timer ( "EndDicesLaunch", TIMERTYPE_ONCE, 0.3)
 	{
 		l_dicesLaunched = false;
@@ -494,17 +471,17 @@ void LaunchDices()
 			{
 				l_dice3Stopped = false;
 				EndDiceLaunch( l_dice3, l_dice3Phys);
-			};
-		};
+			}
+		}
 		l_dice1CurrentOrientation = l_dice1->GetOrientation();
 		l_dice2CurrentOrientation = l_dice2->GetOrientation();
 		l_dice3CurrentOrientation = l_dice3->GetOrientation();
 		timer( "UpdateDices", TIMERTYPE_PERMANENT, 0.0)
 		{
 			UpdateDices();
-		};
-	};
-};
+		}
+	}
+}
 
 void SelectDice()
 {
@@ -532,7 +509,7 @@ void SelectDice()
 			elseif (l_selectedObject->GetParent()->GetPosition() == SetVector3( 20.0, 5.0, 75.0))
 			{
 				l_dice3Kept = false;
-			};
+			}
 		}
 		else
 		{
@@ -559,40 +536,44 @@ void SelectDice()
 				l_selectedObject->GetParent()->SetPosition( SetVector3( 20.0, 5.0, 75.0));
 				Reorient( l_selectedObject->GetParent());
 				l_selectedObject->GetPhysicsObject()->ReassertPosition();
-			};
-		};
+			}
+		}
 //		Echo( "SelectDice - " + l_dicesKept + " - " + l_keptFaces);
-	};
-};
+	}
+}
+
+SetMouseLUpScript()
+{
+	Timer_Kill( "SoundChangeVolume");
+	Timer_Kill( "MusicChangeVolume");
+	if (l_inGame && l_gameStarted)
+	{
+		if ( ! l_dicesLaunched && l_dicesStopped && l_nbTries < l_maxTries)
+		{
+			LaunchDices();
+		}
+	}
+}
+
+SetMouseRUpScript()
+{
+	if (l_inGame && l_gameStarted)
+	{
+		if ( ! l_dicesLaunched && l_dicesStopped)
+		{
+			SelectDice();
+		}
+	}
+}
 
 void InitialiseGame()
 {
-	l_sound = false;
-	l_music = false;
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
-	l_ticPos = 1.0;
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-
-	Overlay_Hide( "Regles");
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "Options");
-	Overlay_Hide( "MenuInGame");
-	Overlay_Hide( "Score");
-	Overlay_Hide( "Scores");
 	Overlay_Hide( "Fin");
-	Overlay_Hide( "FinInstant");
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
 
 	l_godet = SceneNode_GetByName( "Godet");
 
 	l_inGame = false;
 	l_gameStarted = false;
-	l_titleShown = true;
 	l_dicesStopped = true;
 	l_dicesLaunched = false;
 	l_dice1Stopped = false;
@@ -631,9 +612,10 @@ void InitialiseGame()
 
 	Sound_Play_Global( "Ambiance");
 
-	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
-	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
-	Overlay_Hide( "FinMiniGame");
-};
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Un clic gauche de la souris pour lancer les des. Puis clic droit sur les des a garder." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "L'objectif dans ce jeu est de realiser un 421 en 3 essais." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
+}
 
 InitialiseGame();

@@ -1,0 +1,288 @@
+overlay Menu
+{
+	class PanelZone
+	material BaseMenu
+	position 0.00% 0.0%
+	size 30.00% 100%
+
+	element Menu/Continuer
+	{
+		class PanelZone
+		position 3.00% 5%
+		size 60.54% 10%
+		material Continuer
+		mouse_over_material ContinuerMO
+	}
+
+	element Menu/Recommencer
+	{
+		class PanelZone
+		position 3.00% 5%
+		size 60.54% 10%
+		material Recommencer
+		mouse_over_material RecommencerMO
+	}
+
+	element Menu/Jouer
+	{
+		class PanelZone
+		position 3.00% 5%
+		size 60.54% 10%
+		material Commencer
+		mouse_over_material CommencerMO
+	}
+
+	element Menu/Commandes
+	{
+		class PanelZone
+		position 3.00% 20%
+		size 60.54% 10%
+		material Commandes
+		mouse_over_material CommandesMO
+	}
+
+	element Menu/Regles
+	{
+		class PanelZone
+		position 3.00% 35%
+		size 60.54% 10%
+		material Regles
+		mouse_over_material ReglesMO
+	}
+
+	element Menu/Scores
+	{
+		class PanelZone
+		position 3.00% 50%
+		size 60.54% 10%
+		material Scores
+		mouse_over_material ScoresMO
+	}
+
+	element Menu/Options
+	{
+		class PanelZone
+		position 3.00% 65%
+		size 60.54% 10%
+		material Options
+		mouse_over_material OptionsMO
+	}
+
+	element Menu/Retour
+	{
+		class PanelZone
+		position 3.00% 85%
+		size 60.54% 10%
+		material Retour
+		mouse_over_material RetourMO
+	}
+}
+
+overlay Commandes
+{
+	class MinigameFrame
+	position -25% -25%
+	size 50% 50%
+	align center center
+	border_size 32.0 32.0 32.0 32.0
+
+	element Commandes/Retour
+	{
+		class PanelZone
+		position 25% 75%
+		size 50.00% 20.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Commandes/Text
+	{
+		class MinigameText
+		position 10% 25%
+		size 80% 50%
+		font_size 16.00
+	}
+
+	element Commandes/Title
+	{
+		class MinigameText
+		position 0.00% 5.00%
+		size 100% 10%
+		font_size 40
+		text Commandes
+		text_align center
+	}
+}
+
+overlay Options
+{
+	class MinigameFrame
+	position 25.00% 25%
+	size 50.00% 50%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Options/Title
+	{
+		class MinigameText
+		position 0.00% 5.00%
+		size 100% 10%
+		font_size 40.0
+		text Options
+		text_align center
+	}
+
+	element Options/Music
+	{
+		class MinigameText
+		position 20.00% 25.00%
+		size 0.12% 1.14%
+		font_size 24.00
+		text Musique
+	}
+
+	element Options/MusicOnOff
+	{
+		class PanelZone
+		position 20.00% 38.00%
+		size 25.0 25.0
+		material On
+	}
+
+	element Options/RegletteMusic
+	{
+		class PanelZone
+		position 25.00% 35.00%
+		size 60% 15%
+		material Reglette
+
+		element Options/Music/TicContainer
+		{
+			class PanelZone
+			position 7% 0%
+			size 85% 100%
+			material Base/Invisible
+
+			element Options/TicMusic
+			{
+				class PanelZone
+				position 80.00% 0.00%
+				size 20.00% 100.00%
+				material Tic
+			}
+		}
+	}
+
+	element Options/Sound
+	{
+		class MinigameText
+		position 20.00% 50%
+		size 0.12% 1.14%
+		font_size 24.00
+		text Sons
+	}
+
+	element Options/SoundOnOff
+	{
+		class PanelZone
+		position 20.00% 63%
+		size 25.0 25.0
+		material On
+	}
+
+	element Options/RegletteSound
+	{
+		class PanelZone
+		position 25.00% 60%
+		size 60% 15%
+		material Reglette
+
+		element Options/Sound/TicContainer
+		{
+			class PanelZone
+			position 7% 0%
+			size 85% 100%
+			material Base/Invisible
+
+			element Options/TicSound
+			{
+				class PanelZone
+				position 80.00% 0.00%
+				size 20.00% 100.00%
+				material Tic
+			}
+		}
+	}
+
+	element Options/Retour
+	{
+		class PanelZone
+		position 25.00% 75.00%
+		size 50.00% 20.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+}
+
+overlay Regles
+{
+	class MinigameFrame
+	position 25% 25%
+	size 50% 50%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Regles/Retour
+	{
+		class PanelZone
+		position 25% 75%
+		size 50.00% 20.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Regles/Text
+	{
+		class MinigameText
+		position 10% 25%
+		size 80% 50%
+		font_size 16.00
+	}
+
+	element Regles/Title
+	{
+		class MinigameText
+		position 0.00% 5.00%
+		size 100% 10%
+		font_size 40.00
+		text Regles
+		text_align center
+	}
+}
+
+overlay InGame/Menu
+{
+	class PanelZone
+	position 0.00% -10.00%
+	size 15.00% 10.00%
+	align bottom left
+	material MenuInGame
+	mouse_over_material MenuInGameMO
+}
+
+overlay Title
+{
+	class PanelZone
+	position -25% -35%
+	size 50% 70%
+	align center center
+	material Base/Invisible
+}
+
+overlay FinMiniGame
+{
+	class MinigameText
+	position 0% 45%
+	size 100% 10%
+	font_size 40.0
+	text_colour 0.0 0.0 1.0 1.0
+	text 0
+}

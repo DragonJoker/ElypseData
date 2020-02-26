@@ -35,15 +35,15 @@ overlay Scores
 		element Scores/TitleName
 		{
 			class PanelZone
-			position 0% 0%
+			position 0% 3%
 			size 70% 7%
 			material Base/Invisible
 
 			element Scores/TitleName/Text
 			{
 				class MinigameText
-				font_size 24.0
-				position 50% 30%
+				font_size 16.0
+				position 50% 50%
 				text Noms
 				text_align center
 			}
@@ -52,15 +52,15 @@ overlay Scores
 		element Scores/TitleScore
 		{
 			class PanelZone
-			position 75% 0%
-			size 20% 5%
+			position 75% 3%
+			size 20% 7%
 			material Base/Invisible
 
 			element Scores/TitleScore/Text
 			{
 				class MinigameText
-				font_size 24.0
-				position 50% 30%
+				font_size 16.0
+				position 50% 50%
 				text Scores
 				text_align center
 			}

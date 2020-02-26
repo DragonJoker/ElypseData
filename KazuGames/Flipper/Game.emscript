@@ -10,7 +10,6 @@ bool l_result;
 bool l_inGame;
 bool l_tilted;
 bool l_shaking;
-bool l_titleShown;
 
 int l_plateToChange;
 int l_level;
@@ -66,20 +65,10 @@ animation l_anim;
 
 real g_distance;
 
-real l_relativeRegletteWidth;
-real l_soundVol;
-real l_musicVol;
-real l_ticPos;
 real l_shake;
 real l_tiltValue;
 
-bool l_titleShown;
-bool l_music;
-bool l_sound;
 bool l_collideWithWall;
-
-overlay l_ticSound;
-overlay l_ticMusic;
 
 void UpdateScore()
 {
@@ -657,12 +646,9 @@ void CheckCollisionsWithWalls()
 
 void EndGame()
 {
+	KazuGuiStop();
 	Overlay_Show( "Menu");
 	Overlay_Hide( "InGame");
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Show();
-	Overlay_Hide( "MenuInGame");
 }
 
 void StopGame()
@@ -681,12 +667,6 @@ void StopGame()
 	Timer_Kill( "EndBump");
 	Timer_Kill( "UnBump");
 	Timer_Kill( "EndUnBump");
-//	Overlay_Show( "Menu");
-	Overlay_Hide( "MenuInGame");
-	OverlayElement_GetByName( "Menu/Jouer")->Show();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	l_inGame = false;
 	l_gameStarted = false;
 	EndGame();
@@ -694,8 +674,7 @@ void StopGame()
 
 void PauseGame()
 {
-	Overlay_Show( "Menu");
-	Overlay_Hide( "MenuInGame");
+	KazuGuiPause();
 	Overlay_Hide( "InGame");
 	l_billePhys->SetEnabled( false);
 	Timer_PauseAll();
@@ -704,8 +683,7 @@ void PauseGame()
 
 void ContinueGame()
 {
-	Overlay_Hide( "Menu");
-	Overlay_Show( "MenuInGame");
+	KazuGuiResume();
 	Overlay_Show( "InGame");
 	Timer_PlayAll();
 	if (l_gameStarted)
@@ -722,7 +700,7 @@ void LoseGame()
 {
 	Overlay_Hide( "Tilt");
 	Overlay_Show( "Fin");
-	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "InGame/Menu");
 	l_billePhys->SetEnabled( false);
 	_submitHighscore();
 	timer( "HideFin", TIMERTYPE_ONCE, 2.0)
@@ -901,15 +879,6 @@ void ShakeFlipper()
 
 void InitialiseFlipper()
 {
-	l_sound = false;
-	l_music = false;
-	l_musicVol = 1.0;
-	l_soundVol = 1.0;
-	l_ticPos = 1.0;
-	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
-	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
-	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
-
 	l_inGame = false;
 	l_leftDown = false;
 	l_gameStarted = false;
@@ -917,7 +886,6 @@ void InitialiseFlipper()
 	l_ballOnLeftFlipper = false;
 	l_leftAtMax = false;
 	l_rightAtMax= false;
-	l_titleShown = true;
 	l_plateToChange = 1;
 	g_score = 0;
 	g_distance = 0.0;
@@ -956,22 +924,21 @@ void InitialiseFlipper()
 	l_plateNode = SceneNode_GetByName("Plateau" + l_plateToChangeStr + "Node");
 	l_platePosition = l_plateNode->GetPosition();
 
-	Overlay_Hide( "Scores");
 	Overlay_Hide( "InGame");
-	Overlay_Hide( "Regles");
-	Overlay_Hide( "Commandes");
 	Overlay_Hide( "Fin");
 	Overlay_Hide( "Tilt");
-	Overlay_Hide( "Options");
-	Overlay_Hide( "MenuInGame");
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+
+	Sound_Play_Global( "Haunted");
+
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Maintenir le clic gauche afin d'orienter le lanceur, relacher le clic gauche pour lancer la bille. Fleches gauche et droite pour controler les flippers. Barre d'espace pour secouer le flipper, mais gare au Tilt." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Le but est d'aller le plus loin possible et d'accumuler le plus de points possible." );
+	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	KazuGuiInit();
 }
 
 void BeginGame()
 {
-	l_titleShown = false;
+	KazuGuiBegin();
 
 	l_billeNode->SetPosition( SetVector3( 0.0, 1.0, -400.0));
 	l_billePhys->SetEnabled( false);
@@ -1029,18 +996,12 @@ void BeginGame()
 	l_currentLanceurYaw = 0.0;
 	l_timeSinceLastWall = 0.0;
 	l_platePosition = VECTOR3_ZERO;
-	Overlay_Hide( "Menu");
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
 	Overlay_Show( "InGame");
 	Overlay_Hide( "Tilt");
-	Overlay_Show( "MenuInGame");
-	Overlay_Hide( "Title");
 	timer( "Start", TIMERTYPE_ONCE, 0.2)
 	{
 		l_inGame = true;
 	}
-	Overlay_Hide( "FinMiniGame");
 }
 
 void ResetGame()
