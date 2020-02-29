@@ -9,7 +9,8 @@ bool g_fucked;
 
 string c_baseSite;
 string c_gameName;
-string c_sceneName;
+string c_prvSceneName;
+string c_curSceneName;
 
 int l_index;
 string l_names;
@@ -44,7 +45,17 @@ void LaunchGame()
 	KazuPlayGame();
 	Overlay_Hide( "Splash/GamesList" );
 	Overlay_Hide( "Splash/Kazu" );
-	Scene_Load( c_sceneName );
+
+	if ( c_prvSceneName != "" )
+	{
+		Sound_Stop_All();
+		Timer_KillAll();
+		ClearScene();
+		Scene_Unload( c_prvSceneName );
+	}
+
+	Scene_Load( c_curSceneName );
+	c_prvSceneName = c_curSceneName;
 };
 
 void CheckClearToGo()
@@ -95,8 +106,16 @@ void CheckClearToGo()
 						{
 							l_name = l_gameOverlay->GetCaption();
 							l_muse = l_muse->replace( "Game/", "" );
-							c_sceneName = l_name;
-							Muse_DownloadSeparate( l_muse, LaunchGame() );
+							c_curSceneName = l_name;
+
+							if ( Muse_IsDownloaded( l_muse ) )
+							{
+								LaunchGame();
+							}
+							else
+							{
+								Muse_DownloadSeparate( l_muse, LaunchGame() );
+							}
 						}
 					}
 					l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );

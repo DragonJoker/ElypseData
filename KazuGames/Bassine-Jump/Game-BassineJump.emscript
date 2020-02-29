@@ -11,6 +11,7 @@ bool l_balconPreviousLevel;
 bool l_menuShown;
 bool l_finished;
 bool l_firstPlay;
+bool l_winBassineJump;
 
 int i;
 int imax;
@@ -21,8 +22,8 @@ int l_indexBalconTaken;
 
 real j;
 real l_relativeTicWidth;
-real l_currentPitch;
-real l_previousPitch;
+real l_rcurrentPitch;
+real l_rpreviousPitch;
 real l_pitch;
 real l_currentZoom;
 real l_acceleration;
@@ -201,7 +202,7 @@ void ResetInclinaison()
 	}
 }
 
-void StopGame( bool p_gagne)
+void StopGame()
 {
 	l_inGame = false;
 	l_finished = true;
@@ -211,7 +212,7 @@ void StopGame( bool p_gagne)
 
 	ResetInclinaison();
 
-	if (p_gagne)
+	if ( l_winBassineJump )
 	{
 		OverlayElement_GetByName( "InGame/Result")->SetMaterial( "Gagne");
 		Overlay_Show( "InGame/SubmitScore");
@@ -312,7 +313,7 @@ void BeginGame()
 	SceneNode_GetByName( "CameraNode")->Reset();
 
 	l_rootCamera->GetParent()->Yaw( 90.0);
-	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+	l_rootCamera->GetParent()->Pitch( l_rcurrentPitch);
 	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (1000.0 / V3_GetLength( l_rootCamera->GetPosition())));
 
 	timer( "CameraStarting", TIMERTYPE_REPEAT, 0.01)
@@ -542,7 +543,8 @@ void BeginGame()
 
 				if ((l_position - SetVector3( l_decalage, l_floorLevel, 500.0))->Length() <= 250.0)
 				{
-					StopGame( true);
+					l_winBassineJump = true;
+					StopGame();
 
 					AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
 
@@ -550,7 +552,8 @@ void BeginGame()
 				}
 				elseif (l_position[1] <= l_floorLevel)
 				{
-					StopGame( false);
+					l_winBassineJump = false;
+					StopGame();
 					l_inBalcon = true;
 
 					AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
@@ -566,7 +569,7 @@ void BeginGame()
 	}
 }
 
-void Initialise()
+void InitialiseBassineJump()
 {
 	l_inGame = false;
 	l_inBalcon = false;
@@ -578,8 +581,8 @@ void Initialise()
 	l_rightDown = false;
 	l_firstPlay = true;
 
-	l_currentPitch = -20.0;
-	l_previousPitch = -20.0;
+	l_rcurrentPitch = -20.0;
+	l_rpreviousPitch = -20.0;
 	l_currentZoom = 1000.0;
 	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
 	l_previousVelocity = SetVector3( 0.0, 0.0, 0.0);
@@ -616,7 +619,7 @@ void Initialise()
 	l_rootCamera = Camera_GetByName( "RootCamera");
 
 	l_rootCamera->GetParent()->Yaw( 90.0);
-	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+	l_rootCamera->GetParent()->Pitch( l_rcurrentPitch);
 	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (l_currentZoom / V3_GetLength( l_rootCamera->GetPosition())));
 
 	HidePerso();
@@ -636,6 +639,6 @@ void Initialise()
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Les commandes utilisees sont les touches directionnelles du clavier. Fleche bas pour freiner votre chute, fleche haut pour reprendre la chute libre plus rapidement. Fleches droite et gauche pour se deplacer, respectivement a droite et a gauche." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Eviter les balcons durant la chute et plonger dans la bassine. Vous gagnez des points constamment en fonction de votre vitesse de chute et de votre inclinaison. Vous gagnez aussi des points plus vous passez vite au niveau des balcons." );
-	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	OverlayElement_GetByName( "Title")->SetMaterial( "TitreBassineJump" );
 	KazuGuiInit();
 }

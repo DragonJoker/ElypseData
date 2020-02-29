@@ -115,29 +115,10 @@ overlay Start
 	}
 }
 
-overlay Title
-{
-	class PanelZone
-	position -35% -55%
-	size 70% 110%
-	align center center
-	material Titre
-}
-
 overlay InGame/Result
 {
 	class PanelZone
 	position 25% 37.5%
 	size 50% 25%
 	material Gagne
-}
-
-overlay FinMiniGame
-{
-	class MinigameText
-	position 0% 45%
-	size 100% 10%
-	font_size 40.0
-	text_colour 0.0 0.0 1.0 1.0
-	text 0
 }

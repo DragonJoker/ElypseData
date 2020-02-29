@@ -45,7 +45,7 @@ vector3 l_posToInit;
 vector3 l_batteStartAngle;
 vector3 l_batteEndAngle;
 vector3 l_batteCurrentAngle;
-vector3 l_speed;
+vector3 l_v3speed;
 
 quaternion l_batteOrientation;
 quaternion l_ballDirection;
@@ -233,10 +233,10 @@ void ShootBall()
 			ResetBallPhys();
 			l_shootingBall = false;
 			l_ballShot = true;
-			l_speed = SetVector3( 0.0, 0.0, -60000.0);
+			l_v3speed = SetVector3( 0.0, 0.0, -60000.0);
 			l_ballDirection = l_batteNode->GetOrientation() * SetQuaternion( SetVector3( 1.0, 0.0, 0.0), 150.0);
-			l_speed = l_speed * l_ballDirection;
-			l_ballePhys->AddForce( l_speed);
+			l_v3speed = l_v3speed * l_ballDirection;
+			l_ballePhys->AddForce( l_v3speed );
 		}
 	}
 }
@@ -579,7 +579,7 @@ void InitialiseWallDestruction()
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "La seule commande a connaitre est le clic gauche de la souris qui lance le balle, et qui permet de frapper avec la batte." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de detruire le mur en vous servant de la batte. Vous avez 50 coups pour atteindre cet objectif." );
-	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	OverlayElement_GetByName( "Title")->SetMaterial( "TitreWallDestruction" );
 	KazuGuiInit();
 }
 

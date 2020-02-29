@@ -1,4 +1,4 @@
-material Titre
+material TitreGratzPaire
 {
 	technique
 	{
@@ -10,7 +10,7 @@ material Titre
 
 			texture_unit
 			{
-				texture titreflipper.png
+				texture titre.png
 			}
 		}
 	}

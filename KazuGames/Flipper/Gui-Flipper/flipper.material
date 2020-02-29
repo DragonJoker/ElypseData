@@ -17,7 +17,7 @@ material Tilt
 	}
 }
 
-material Titre
+material TitreFlipper
 {
 	technique
 	{

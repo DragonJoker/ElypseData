@@ -6,7 +6,7 @@ bool l_ballOnLeftFlipper;
 bool l_leftAtMax;
 bool l_rightAtMax;
 bool l_ballOnFlipper;
-bool l_result;
+bool l_collides;
 bool l_inGame;
 bool l_tilted;
 bool l_shaking;
@@ -41,7 +41,7 @@ vector3 l_flipperForce;
 vector3 l_leftAngle;
 vector3 l_rightAngle;
 vector3 l_vDiff;
-vector3 l_speed;
+vector3 l_vSpeed;
 vector3 l_originalCamPos;
 vector3 l_leftCamPos;
 vector3 l_rightCamPos;
@@ -273,42 +273,42 @@ void OrientLeftFlippers( real p_lAngle)
 
 bool CheckCollisionWithFlipper( string p_flipperName)
 {
-	l_result = false;
+	l_collides = false;
 
 	if (l_billePhys->CollisionCheck( Object_GetByName( p_flipperName)->GetPhysicsObject(), true))
 	{
 		l_flipperNodeName = p_flipperName + "Node";
-		l_result = true;
+		l_collides = true;
 	}
 
-	return l_result;
+	return l_collides;
 }
 
 void CheckCollisionWithRightFlippers( string p_ccwrfTable)
 {
 	CheckCollisionWithFlipper( "Flipper" + p_ccwrfTable + "Right1");
-	if (l_result)
+	if (l_collides)
 	{
 		l_ballOnRightFlipper = true;
 	}
 	else
 	{
 		CheckCollisionWithFlipper( "Flipper" + p_ccwrfTable + "Right2");
-		if (l_result)
+		if (l_collides)
 		{
 			l_ballOnRightFlipper = true;
 		}
 		else
 		{
 			CheckCollisionWithFlipper( "Flipper" + p_ccwrfTable + "Center2");
-			if (l_result)
+			if (l_collides)
 			{
 				l_ballOnRightFlipper = true;
 			}
 			else
 			{
 				CheckCollisionWithFlipper( "Flipper" + p_ccwrfTable + "Center4");
-				if (l_result)
+				if (l_collides)
 				{
 					l_ballOnRightFlipper = true;
 				}
@@ -320,28 +320,28 @@ void CheckCollisionWithRightFlippers( string p_ccwrfTable)
 void CheckCollisionWithLeftFlippers( string p_ccwlfTable)
 {
 	CheckCollisionWithFlipper( "Flipper" + p_ccwlfTable + "Left1");
-	if (l_result)
+	if (l_collides)
 	{
 		l_ballOnLeftFlipper = true;
 	}
 	else
 	{
 		CheckCollisionWithFlipper( "Flipper" + p_ccwlfTable + "Left2");
-		if (l_result)
+		if (l_collides)
 		{
 			l_ballOnLeftFlipper = true;
 		}
 		else
 		{
 			CheckCollisionWithFlipper( "Flipper" + p_ccwlfTable + "Center1");
-			if (l_result)
+			if (l_collides)
 			{
 				l_ballOnLeftFlipper = true;
 			}
 			else
 			{
 				CheckCollisionWithFlipper( "Flipper" + p_ccwlfTable + "Center3");
-				if (l_result)
+				if (l_collides)
 				{
 					l_ballOnLeftFlipper = true;
 				}
@@ -534,7 +534,7 @@ void SoundBumper( string p_sbBumperName)
 
 bool CheckCollisionWithBumper( string p_bumperName)
 {
-	l_speed = l_billePhys->GetSpeed();
+	l_vSpeed = l_billePhys->GetSpeed();
 	if (l_billePhys->CollisionCheck( Object_GetByName( p_bumperName)->GetPhysicsObject(), true))
 	{
 		l_bumpAngle = V3_GetRotationTo( l_billeNode->GetPosition(), Object_GetByName( p_bumperName)->GetParent()->GetPosition());
@@ -554,49 +554,49 @@ bool CheckCollisionWithBumper( string p_bumperName)
 
 bool CheckCollisionWithBumpers( string p_bTable)
 {
-	l_result = false;
+	l_collides = false;
 
 	if (CheckCollisionWithBumper( "Bumper" + p_bTable + "Left1"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Left2"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Right1"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Right2"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Center1"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Center2"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Center3"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithBumper( "Bumper" + p_bTable + "Center4"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 
-	return l_result;
+	return l_collides;
 }
 
 void CheckCollisionsWithBumpers()
 {
 	if ( ! l_tilted)
 	{
-		l_speed = l_billePhys->GetSpeed();
+		l_vSpeed = l_billePhys->GetSpeed();
 		CheckCollisionWithBumpers( "1");
 	 	CheckCollisionWithBumpers( "2");
 	}
@@ -623,18 +623,18 @@ bool CheckCollisionWithWall( string p_ccwwWallName)
 
 bool CheckCollisionWithWalls( string p_ccwwTable)
 {
-	l_result = false;
+	l_collides = false;
 
 	if (CheckCollisionWithWall( "Cote" + p_ccwwTable + "Droit"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 	elseif (CheckCollisionWithWall( "Cote" + p_ccwwTable + "Gauche"))
 	{
-		l_result = true;
+		l_collides = true;
 	}
 
-	return l_result;
+	return l_collides;
 }
 
 void CheckCollisionsWithWalls()
@@ -735,8 +735,8 @@ void UpdateBille()
 		CheckCollisionsWithWalls();
 	}
 
-	l_speed = l_billePhys->GetSpeed();
-	l_billePhys->SetSpeed( SetVector3( l_speed[0], 0.0, l_speed[2]));
+	l_vSpeed = l_billePhys->GetSpeed();
+	l_billePhys->SetSpeed( SetVector3( l_vSpeed[0], 0.0, l_vSpeed[2]));
 	l_billePhys->SetTorque( VECTOR3_ZERO);
 	l_billePhys->SetAngularSpeed( VECTOR3_ZERO);
 }
@@ -932,7 +932,7 @@ void InitialiseFlipper()
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Maintenir le clic gauche afin d'orienter le lanceur, relacher le clic gauche pour lancer la bille. Fleches gauche et droite pour controler les flippers. Barre d'espace pour secouer le flipper, mais gare au Tilt." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Le but est d'aller le plus loin possible et d'accumuler le plus de points possible." );
-	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	OverlayElement_GetByName( "Title")->SetMaterial( "TitreFlipper" );
 	KazuGuiInit();
 }
 

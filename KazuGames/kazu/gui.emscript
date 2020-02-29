@@ -65,7 +65,6 @@ void KazuGuiStop()
 
 void KazuGuiCleanup()
 {
-	ClearScene();
 	Overlay_Hide( "Commandes");
 	Overlay_Hide( "FinMiniGame");
 	Overlay_Hide( "Regles");

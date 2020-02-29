@@ -1,12 +1,3 @@
-overlay Title
-{
-	class PanelZone
-	position -25% -45%
-	size 50% 50%
-	align center center
-	material Titre
-}
-
 overlay InGame/Score
 {
 	class PanelZone
@@ -99,14 +90,4 @@ overlay LoseGame
 		text Soumettre le score
 		text_align center
 	}
-}
-
-overlay FinMiniGame
-{
-	class MinigameText
-	position 0% 45%
-	size 100% 10%
-	font_size 40.0
-	text_colour 0.0 0.0 1.0 1.0
-	text 0
 }

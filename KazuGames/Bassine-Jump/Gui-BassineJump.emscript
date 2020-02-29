@@ -305,5 +305,5 @@ BindKey( KEYCODE_P, BINDKEY_UP)
 
 timer( "Initialisation", TIMERTYPE_ONCE, 0.0)
 {
-	Initialise();
+	InitialiseBassineJump();
 };

@@ -27,18 +27,18 @@ project Kazugames
 	{
 		scene_files
 		{
-			Game.emscene
-			Interface.emscene
+			Game-421.emscene
+			Gui-421.emscene
 		}
 		load_script_files
 		{
-			Game.emscript
-			Interface.emscript
+			Game-421.emscript
+			Gui-421.emscript
 		}
 		data_files_3d
 		{
-			421
-			Interface
+			Game-421
+			Gui-421
 		}
 		data_files_other
 		{
@@ -53,18 +53,18 @@ project Kazugames
 	{
 		scene_files
 		{
-			Interface.emscene
-			Game.emscene
+			Gui-GratzPaire.emscene
+			Game-GratzPaire.emscene
 		}
 		load_script_files
 		{
-			Game.emscript
-			Interface.emscript
+			Game-GratzPaire.emscript
+			Gui-GratzPaire.emscript
 		}
 		data_files_3d
 		{
-			Gratzpaire
-			Interface
+			Game-GratzPaire
+			Gui-GratzPaire
 		}
 		data_files_other
 		{
@@ -79,18 +79,18 @@ project Kazugames
 	{
 		scene_files
 		{
-			Game.emscene
-			Interface.emscene
+			Game-MockingGhost.emscene
+			Gui-MockingGhost.emscene
 		}
 		load_script_files
 		{
-			Game.emscript
-			Interface.emscript
+			Game-MockingGhost.emscript
+			Gui-MockingGhost.emscript
 		}
 		data_files_3d
 		{
-			Interface
-			MockingGhost
+			Gui-MockingGhost
+			Game-MockingGhost
 		}
 		data_files_other
 		{
@@ -105,18 +105,18 @@ project Kazugames
 	{
 		scene_files
 		{
-			Wall.emscene
-			Interface.emscene
+			Game-WallDestruction.emscene
+			Gui-WallDestruction.emscene
 		}
 		load_script_files
 		{
-			Wall.emscript
-			Interface.emscript
+			Game-WallDestruction.emscript
+			Gui-WallDestruction.emscript
 		}
 		data_files_3d
 		{
-			Interface
-			WallDestruction
+			Gui-WallDestruction
+			Game-WallDestruction
 		}
 		data_files_other
 		{
@@ -131,44 +131,18 @@ project Kazugames
 	{
 		scene_files
 		{
-			Bassine-Jump.emscene
-			InGame.emscene
+			Game-BassineJump.emscene
+			Gui-BassineJump.emscene
 		}
 		load_script_files
 		{
-			Bassine-Jump.emscript
-			Interface.emscript
+			Game-BassineJump.emscript
+			Gui-BassineJump.emscript
 		}
 		data_files_3d
 		{
-			Interfaces
-			Bassine-Jump
-		}
-		data_files_other
-		{
-			Sons
-		}
-		dependencies
-		{
-			kazu
-		}
-	}
-	scene TombeauRider
-	{
-		scene_files
-		{
-			Interface.emscene
-			Game.emscene
-		}
-		load_script_files
-		{
-			Game.emscript
-			Interface.emscript
-		}
-		data_files_3d
-		{
-			Game
-			Interface
+			Gui-BassineJump
+			Game-BassineJump
 		}
 		data_files_other
 		{
@@ -183,18 +157,18 @@ project Kazugames
 	{
 		scene_files
 		{
-			Flipper.emscene
-			Interface.emscene
+			Game-Flipper.emscene
+			Gui-Flipper.emscene
 		}
 		load_script_files
 		{
-			Game.emscript
-			Interface.emscript
+			Game-Flipper.emscript
+			Gui-Flipper.emscript
 		}
 		data_files_3d
 		{
-			Flipper
-			Interface
+			Game-Flipper
+			Gui-Flipper
 		}
 		data_files_other
 		{

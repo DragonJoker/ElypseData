@@ -225,7 +225,7 @@ void ChooseCard()
 	};
 };
 
-void InitialiseGame()
+void InitialiseGratzPaire()
 {
 	l_endRevealed = true;
 	l_nbMaxErrors = 5;
@@ -240,8 +240,8 @@ void InitialiseGame()
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Cliquez sur les cartes que vous desirez retourner." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Retournez les cartes et essayez de trouver toutes les paires en commettant moins de 5 erreurs." );
-	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	OverlayElement_GetByName( "Title")->SetMaterial( "TitreGratzPaire" );
 	KazuGuiInit();
 };
 
-InitialiseGame();
+InitialiseGratzPaire();

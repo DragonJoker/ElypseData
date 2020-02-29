@@ -352,7 +352,7 @@ void BeginGame()
 	ShowPiece();
 };
 
-void InitialiseGame()
+void InitialiseMockingGhost()
 {
 	l_pieceNode = SceneNode_GetByName( "Piece");
 	l_box1 = SceneNode_GetByName( "Box_1");
@@ -369,8 +369,8 @@ void InitialiseGame()
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Clic gauche de la souris sur un des 3 mini manoirs pour reveler ce qui se cache en dessous." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de retourner le manoir ou se trouve la piece, sans tomber sur un fantome." );
-	OverlayElement_GetByName( "Title")->SetMaterial( "Titre" );
+	OverlayElement_GetByName( "Title")->SetMaterial( "TitreMockingGhost" );
 	KazuGuiInit();
 };
 
-InitialiseGame();
+InitialiseMockingGhost();
