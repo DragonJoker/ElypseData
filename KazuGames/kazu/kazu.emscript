@@ -96,7 +96,7 @@ void CheckClearToGo()
 							l_name = l_gameOverlay->GetCaption();
 							l_muse = l_muse->replace( "Game/", "" );
 							c_sceneName = l_name;
-							DownloadSeparateMuseFile( l_muse, LaunchGame() );
+							Muse_DownloadSeparate( l_muse, LaunchGame() );
 						}
 					}
 					l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );
