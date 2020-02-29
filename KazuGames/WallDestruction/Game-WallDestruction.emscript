@@ -85,7 +85,7 @@ void UpdateNbCoups()
 	OverlayElement_GetByName("InGame/Score/NbCoupsText")->SetCaption( itoa( g_nbCoups));
 }
 
-void EndGame()
+void EndWallDestruction()
 {
 	KazuGuiStop();
 	Overlay_Hide( "WinGame");
@@ -94,7 +94,7 @@ void EndGame()
 	Overlay_Hide( "Score");
 }
 
-void WinGame()
+void WinWallDestruction()
 {
 	g_score = g_score + 50000 - (g_nbCoups * 200);
 	UpdateScore();
@@ -105,7 +105,7 @@ void WinGame()
 	KazuGuiStop();
 }
 
-void LoseGame()
+void LoseWallDestruction()
 {
 	g_score = g_score - (g_nbCoups * 200);
 	UpdateScore();
@@ -309,11 +309,11 @@ void UpdateBall()
 			ResetBallAndBatte();
 			if (l_nbMaxBriques == l_nbBriques)
 			{
-				WinGame();
+				WinWallDestruction();
 			}
 			elseif (g_nbCoups == l_maxTries)
 			{
-				LoseGame();
+				LoseWallDestruction();
 			}
 		}
 		elseif (l_ballePhys->GetNumCollisions() > 0 || l_battePhys->GetNumCollisions() > 0)
@@ -439,7 +439,7 @@ void BuildWall()
 	}
 }
 
-void StopGame()
+void StopWallDestruction()
 {
 	l_gameStarted = false;
 	l_inGame = false;
@@ -463,7 +463,7 @@ void StopGame()
 	Overlay_Hide( "InGame/Score");
 }
 
-void PauseGame()
+void PauseWallDestruction()
 {
 	l_inGame = false;
 	Timer_PauseAll();
@@ -489,7 +489,7 @@ void PauseGame()
 	Overlay_Hide( "InGame/Score");
 }
 
-void ContinueGame()
+void ContinueWallDestruction()
 {
 	Timer_PlayAll();
 	KazuGuiResume();
@@ -518,7 +518,7 @@ void ContinueGame()
 	}
 }
 
-void BeginGame()
+void BeginWallDestruction()
 {
 	l_gameStarted = true;
 	l_ballLaunched = false;

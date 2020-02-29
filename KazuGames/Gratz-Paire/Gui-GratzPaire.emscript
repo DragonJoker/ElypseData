@@ -13,23 +13,23 @@ SetMouseLUpScript()
 
 Overlay_SetAction( "Menu/Jouer")
 {
-	BeginGame();
+	BeginGratzPaire();
 }
 
 Overlay_SetAction( "InGame/Menu")
 {
-	PauseGame();
+	PauseGratzPaire();
 }
 
 Overlay_SetAction( "Menu/Continuer")
 {
-	ContinueGame();
+	ContinueGratzPaire();
 }
 
 Overlay_SetAction( "Menu/Recommencer")
 {
-	StopGame();
-	BeginGame();
+	StopGratzPaire();
+	BeginGratzPaire();
 }
 
 Overlay_SetAction( "Menu/Retour")

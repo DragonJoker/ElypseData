@@ -644,14 +644,14 @@ void CheckCollisionsWithWalls()
 	CheckCollisionWithWall( "Bas");
 }
 
-void EndGame()
+void EndFlipper()
 {
 	KazuGuiStop();
 	Overlay_Show( "Menu");
 	Overlay_Hide( "InGame");
 }
 
-void StopGame()
+void StopFlipper()
 {
 	l_billePhys->SetEnabled( false);
 	Timer_Kill( "UpdateBille");
@@ -669,10 +669,10 @@ void StopGame()
 	Timer_Kill( "EndUnBump");
 	l_inGame = false;
 	l_gameStarted = false;
-	EndGame();
+	EndFlipper();
 }
 
-void PauseGame()
+void PauseFlipper()
 {
 	KazuGuiPause();
 	Overlay_Hide( "InGame");
@@ -681,7 +681,7 @@ void PauseGame()
 	l_inGame = false;
 }
 
-void ContinueGame()
+void ContinueFlipper()
 {
 	KazuGuiResume();
 	Overlay_Show( "InGame");
@@ -696,7 +696,7 @@ void ContinueGame()
 	}
 }
 
-void LoseGame()
+void LoseFlipper()
 {
 	Overlay_Hide( "Tilt");
 	Overlay_Show( "Fin");
@@ -706,7 +706,7 @@ void LoseGame()
 	timer( "HideFin", TIMERTYPE_ONCE, 2.0)
 	{
 		Overlay_Hide( "Fin");
-		StopGame();
+		StopFlipper();
 	}
 }
 
@@ -722,7 +722,7 @@ void UpdateBille()
 
 	if ((l_currentPosition[2]) <= (l_platePosition[2]) - 457.5 || (l_currentPosition[2]) < -400.0)
 	{
-		LoseGame();
+		LoseFlipper();
 	}
 
 	l_timeSinceLastWall = l_timeSinceLastWall + GENERAL_ELAPSED_TIME;
@@ -936,7 +936,7 @@ void InitialiseFlipper()
 	KazuGuiInit();
 }
 
-void BeginGame()
+void BeginFlipper()
 {
 	KazuGuiBegin();
 

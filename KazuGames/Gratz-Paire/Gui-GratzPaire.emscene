@@ -52,8 +52,8 @@ overlay WinGame
 	element WinGame/Text
 	{
 		class MinigameText
-		position 60% 65%
-		size 40% 100%
+		position 60% 60%
+		size 40% 25%
 		font_size 40.0
 		text_colour 0.0 0.0 1.0 1.0
 		text 0

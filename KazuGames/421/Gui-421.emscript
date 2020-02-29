@@ -1,19 +1,19 @@
 Overlay_SetAction( "Menu/Jouer")
 {
-	BeginGame();
+	Begin421();
 }
 
 Overlay_SetAction( "Menu/Recommencer")
 {
-	StopGame();
-	BeginGame();
+	Stop421();
+	Begin421();
 	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
 	OverlayElement_GetByName( "Menu/Continuer")->Show();
 }
 
 Overlay_SetAction( "Menu/Continuer")
 {
-	ContinueGame();
+	Continue421();
 }
 
 Overlay_SetAction( "Menu/Retour")
@@ -26,5 +26,5 @@ Overlay_SetAction( "Menu/Retour")
 
 Overlay_SetAction( "InGame/Menu")
 {
-	PauseGame();
+	Pause421();
 }

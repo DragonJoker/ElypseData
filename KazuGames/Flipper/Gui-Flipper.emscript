@@ -1,17 +1,17 @@
 Overlay_SetAction( "Menu/Jouer")
 {
-	BeginGame();
+	BeginFlipper();
 };
 
 Overlay_SetAction( "Menu/Recommencer")
 {
-	StopGame();
-	BeginGame();
+	StopFlipper();
+	BeginFlipper();
 };
 
 Overlay_SetAction( "Menu/Continuer")
 {
-	ContinueGame();
+	ContinueFlipper();
 };
 
 Overlay_SetAction( "Menu/Retour")
@@ -24,7 +24,7 @@ Overlay_SetAction( "Menu/Retour")
 
 Overlay_SetAction( "InGame/Menu")
 {
-	PauseGame();
+	PauseFlipper();
 };
 
 SetMouseLDownScript()

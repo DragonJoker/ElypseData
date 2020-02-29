@@ -1,17 +1,17 @@
 Overlay_SetAction( "Menu/Jouer")
 {
-	BeginGame();
+	BeginMockingGhost();
 }
 
 Overlay_SetAction( "Menu/Continuer")
 {
-	ContinueGame();
+	ContinueMockingGhost();
 }
 
 Overlay_SetAction( "Menu/Recommencer")
 {
-	StopGame();
-	BeginGame();
+	StopMockingGhost();
+	BeginMockingGhost();
 }
 
 Overlay_SetAction( "Menu/Retour")
@@ -23,7 +23,7 @@ Overlay_SetAction( "Menu/Retour")
 
 Overlay_SetAction( "InGame/Menu")
 {
-	PauseGame();
+	PauseMockingGhost();
 }
 
 SetMouseLUpScript()

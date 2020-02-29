@@ -98,14 +98,14 @@ void ShowMenu()
 	ToggleMenu();
 }
 
-void PauseGame()
+void PauseBassineJump()
 {
 	l_paused = true;
 	Timer_PauseAll();
 	ShowMenu();
 }
 
-void ContinueGame()
+void ContinueBassineJump()
 {
 	l_paused = false;
 	Timer_PlayAll();
@@ -202,7 +202,7 @@ void ResetInclinaison()
 	}
 }
 
-void StopGame()
+void StopBassineJump()
 {
 	l_inGame = false;
 	l_finished = true;
@@ -284,7 +284,7 @@ real Frottement()
 	return( (((l_inclinaison / 30.0) + 0.5) * l_currentVelocity->Length() / 1000.0));
 }
 
-void BeginGame()
+void BeginBassineJump()
 {
 	l_firstPlay = false;
 	l_finished = false;
@@ -544,7 +544,7 @@ void BeginGame()
 				if ((l_position - SetVector3( l_decalage, l_floorLevel, 500.0))->Length() <= 250.0)
 				{
 					l_winBassineJump = true;
-					StopGame();
+					StopBassineJump();
 
 					AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
 
@@ -553,7 +553,7 @@ void BeginGame()
 				elseif (l_position[1] <= l_floorLevel)
 				{
 					l_winBassineJump = false;
-					StopGame();
+					StopBassineJump();
 					l_inBalcon = true;
 
 					AnimationGroup_GetByName( "Perso")->StopAnimation( "move");

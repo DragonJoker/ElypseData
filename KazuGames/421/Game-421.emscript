@@ -83,21 +83,21 @@ physics_object l_dice1Phys;
 physics_object l_dice2Phys;
 physics_object l_dice3Phys;
 
-void PauseGame()
+void Pause421()
 {
 	Timer_PauseAll();
 	KazuGuiPause();
 	l_inGame = false;
 }
 
-void ContinueGame()
+void Continue421()
 {
 	Timer_PlayAll();
 	KazuGuiResume();
 	l_inGame = true;
 }
 
-void BeginGame()
+void Begin421()
 {
 	KazuGuiBegin();
 	Timer_PlayAll();
@@ -109,11 +109,11 @@ void BeginGame()
 	}
 }
 
-void InitialiseGame();
+void Initialise421();
 
-void StopGame()
+void Stop421()
 {
-	InitialiseGame();
+	Initialise421();
 	Timer_KillAll();
 	l_inGame = false;
 	l_gameStarted = false;
@@ -158,10 +158,7 @@ void CheckEndDices()
 	Overlay_Show( "Fin");
 }
 
-bool g_clearToGo = true;
-bool g_free = true;
-
-void EndGame()
+void End421()
 {
 	l_inGame = false;
 	l_gameStarted = false;
@@ -304,7 +301,7 @@ void CheckDices()
 		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
 		{
 			Overlay_Hide( "Fin");
-			EndGame();
+			End421();
 		}
 	}
 }
@@ -367,7 +364,7 @@ void UpdateDices()
 			timer( "EndGame", TIMERTYPE_ONCE, 2.0)
 			{
 				Overlay_Hide( "Fin");
-				EndGame();
+				End421();
 			}
 		}
 		else

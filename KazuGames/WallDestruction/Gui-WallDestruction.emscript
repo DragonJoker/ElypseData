@@ -17,23 +17,23 @@ SetMouseLUpScript()
 
 Overlay_SetAction( "Menu/Jouer")
 {
-	BeginGame();
+	BeginWallDestruction();
 };
 
 Overlay_SetAction( "InGame/Menu")
 {
-	PauseGame();
+	PauseWallDestruction();
 };
 
 Overlay_SetAction( "Menu/Continuer")
 {
-	ContinueGame();
+	ContinueWallDestruction();
 };
 
 Overlay_SetAction( "Menu/Recommencer")
 {
-	StopGame();
-	BeginGame();
+	StopWallDestruction();
+	BeginWallDestruction();
 };
 
 Overlay_SetAction( "Menu/Retour")
@@ -48,12 +48,12 @@ Overlay_SetAction( "WinGame/Submit")
 {
 	_submitHighscore();
 	OverlayElement_GetByName( "WinGame/Submit")->Hide();
-	EndGame();
+	EndWallDestruction();
 };
 
 Overlay_SetAction( "LoseGame/Submit")
 {
 	_submitHighscore();
 	OverlayElement_GetByName( "LoseGame/Submit")->Hide();
-	EndGame();
+	EndWallDestruction();
 };

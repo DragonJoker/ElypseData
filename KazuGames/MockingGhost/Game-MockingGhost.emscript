@@ -44,7 +44,7 @@ object l_selectedObject;
 
 string l_name;
 
-void EndGame()
+void EndMockingGhost()
 {
 	Echo( "EndGame " + itoa( l_nbTries) + "/" + itoa( l_maxTries));
 	if (l_nbTries == l_maxTries)
@@ -67,23 +67,23 @@ void EndGame()
 	};
 };
 
-void LoseGame()
+void LoseMockingGhost()
 {
 	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Perdu");
 	Overlay_Show( "Fin");
 	OverlayElement_GetByName( "Fin/Score")->Hide();
 	OverlayElement_GetByName( "Fin/Text")->Hide();
-	EndGame();
+	EndMockingGhost();
 };
 
-void WinGame()
+void WinMockingGhost()
 {
 	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Gagne");
 	Overlay_Show( "Fin");
 	OverlayElement_GetByName( "Fin/Score")->Hide();
 	OverlayElement_GetByName( "Fin/Text")->Hide();
 	g_score = g_score + 1000;
-	EndGame();
+	EndMockingGhost();
 };
 
 void ChangeSpeed()
@@ -265,12 +265,12 @@ void RevealBox()
 		if (l_selectedObject->GetName() == "Box_1")
 		{
 			Sound_Play_Global( "Coin");
-			WinGame();
+			WinMockingGhost();
 		}
 		else
 		{
 			Sound_Play_Global( "Ghost");
-			LoseGame();
+			LoseMockingGhost();
 		};
 		if (l_nbTries < l_maxTries)
 		{
@@ -312,7 +312,7 @@ void ChooseBox()
 	};
 };
 
-void StopGame()
+void StopMockingGhost()
 {
 	l_inGame = false;
 	l_gameStarted = false;
@@ -325,21 +325,21 @@ void StopGame()
 	l_selectedObject->GetParent()->SetPosition( l_minHeight);
 };
 
-void PauseGame()
+void PauseMockingGhost()
 {
 	l_inGame = false;
 	Timer_PauseAll();
 	KazuGuiPause();
 };
 
-void ContinueGame()
+void ContinueMockingGhost()
 {
 	l_inGame = true;
 	Timer_PlayAll();
 	KazuGuiResume();
 };
 
-void BeginGame()
+void BeginMockingGhost()
 {
 	KazuGuiBegin();
 	l_inGame = true;

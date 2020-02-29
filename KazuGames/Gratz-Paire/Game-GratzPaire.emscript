@@ -69,7 +69,7 @@ void ShuffleCards()
 	Echo( l_sequence);
 };
 
-void StopGame()
+void StopGratzPaire()
 {
 	Overlay_Hide( "InGame/Score");
 	KazuGuiStop();
@@ -90,7 +90,7 @@ void StopGame()
 	SceneNode_GetByName( "Carte_12")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
 };
 
-void PauseGame()
+void PauseGratzPaire()
 {
 	Timer_PauseAll();
 	KazuGuiPause();
@@ -98,7 +98,7 @@ void PauseGame()
 	l_inGame = false;
 };
 
-void ContinueGame()
+void ContinueGratzPaire()
 {
 	Timer_PlayAll();
 	KazuGuiResume();
@@ -106,7 +106,7 @@ void ContinueGame()
 	l_inGame = true;
 };
 
-void BeginGame()
+void BeginGratzPaire()
 {
 	KazuGuiBegin();
 	Overlay_Show( "InGame/Score");
@@ -119,7 +119,7 @@ void BeginGame()
 	l_endRevealed = true;
 };
 
-void EndGame()
+void EndGratzPaire()
 {
 	KazuGuiStop();
 	Overlay_Hide( "InGame/Score");
@@ -174,7 +174,7 @@ void RevealCard()
 						g_score = (l_nbMaxErrors - l_nbTries) * 1000;
 						Echo( itoa( g_score));
 						Overlay_Show( "WinGame");
-						EndGame();
+						EndGratzPaire();
 					};
 				}
 				else
@@ -198,7 +198,7 @@ void RevealCard()
 					else
 					{
 						Overlay_Show( "LoseGame");
-						EndGame();
+						EndGratzPaire();
 					};
 				};
 			};

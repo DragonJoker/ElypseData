@@ -7,20 +7,20 @@ Overlay_SetAction( "Menu/Jouer")
 	{
 		if (l_firstPlay)
 		{
-			BeginGame();
+			BeginBassineJump();
 		}
 		else
 		{
 			KazuPlayGame();
 			if (l_infos == "ok" || g_fucked || l_infos == "tech error")
 			{
-				BeginGame();
+				BeginBassineJump();
 			};
 		};
 	}
 	else
 	{
-		ContinueGame();
+		ContinueBassineJump();
 	};
 };
 
@@ -33,7 +33,7 @@ Overlay_SetAction( "Menu/Recommencer")
 	{
 		if (l_firstPlay)
 		{
-			BeginGame();
+			BeginBassineJump();
 		}
 		else
 		{
@@ -42,13 +42,13 @@ Overlay_SetAction( "Menu/Recommencer")
 			{
 				OverlayElement_GetByName( "Menu/Recommencer")->Hide();
 				OverlayElement_GetByName( "Menu/Continuer")->Show();
-				BeginGame();
+				BeginBassineJump();
 			};
 		};
 	}
 	else
 	{
-		ContinueGame();
+		ContinueBassineJump();
 	};
 };
 
@@ -63,7 +63,7 @@ Overlay_SetAction( "Menu/Continuer")
 {
 	ToggleMenu();
 	Overlay_Hide( "InGame/SubmitScore");
-	ContinueGame();
+	ContinueBassineJump();
 };
 
 Overlay_SetAction( "InGame/SubmitScore")
@@ -80,7 +80,7 @@ Overlay_SetAction( "InGame/SubmitScore/Text")
 
 Overlay_SetAction( "InGame/Menu")
 {
-	PauseGame();
+	PauseBassineJump();
 };
 
 SetMouseLUpScript()
@@ -283,11 +283,11 @@ BindKey( KEYCODE_ESCAPE, BINDKEY_UP)
 {
 	if (l_paused)
 	{
-		ContinueGame();
+		ContinueBassineJump();
 	}
 	else
 	{
-		PauseGame();
+		PauseBassineJump();
 	};
 };
 
@@ -295,11 +295,11 @@ BindKey( KEYCODE_P, BINDKEY_UP)
 {
 	if (l_paused)
 	{
-		ContinueGame();
+		ContinueBassineJump();
 	}
 	else
 	{
-		PauseGame();
+		PauseBassineJump();
 	};
 };
 
