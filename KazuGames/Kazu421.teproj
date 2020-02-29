@@ -8,16 +8,16 @@ project Kazugames
 		scene_files
 		{
 			kazu.emscene
+			gui.emscene
+			scores.emscene
 		}
 		load_script_files
 		{
 			kazu.emscript
+			scores.emscript
+			gui.emscript
 		}
 		data_files_3d
-		{
-			kazu
-		}
-		data_files_other
 		{
 			kazu
 		}
@@ -26,24 +26,22 @@ project Kazugames
 	{
 		scene_files
 		{
-			Game.emscene
-			Interface.emscene
+			Game-421.emscene
+			Gui-421.emscene
 		}
 		load_script_files
 		{
-			Scores.emscript
-			Game.emscript
-			Interface.emscript
+			Game-421.emscript
+			Gui-421.emscript
 		}
 		data_files_3d
 		{
-			421
-			Interface
+			Game-421
+			Gui-421
 		}
 		data_files_other
 		{
-			421
-			Interface
+			Sons
 		}
 		dependencies
 		{

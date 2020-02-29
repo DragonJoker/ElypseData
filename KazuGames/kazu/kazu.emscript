@@ -39,7 +39,7 @@ void KazuPlayGame()
 	Echo( "KazuPlayGame");
 	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=confirm&gamename=" + c_gameName, "");
 	ExecuteJavaScript( "RefreshCredits();");
-};
+}
 
 void LaunchGame()
 {
@@ -47,6 +47,7 @@ void LaunchGame()
 	KazuPlayGame();
 	Overlay_Hide( "Splash/GamesList" );
 	Overlay_Hide( "Splash/Kazu" );
+	OverlayElement_GetByName( "GamesList/Retour" )->Show();
 
 	if ( c_prvSceneName != "" )
 	{
@@ -58,7 +59,7 @@ void LaunchGame()
 
 	Scene_Load( c_curSceneName );
 	c_prvSceneName = c_curSceneName;
-};
+}
 
 void CheckClearToGo()
 {
@@ -135,8 +136,8 @@ void CheckClearToGo()
 	{
 		g_clearToGo = true;
 		g_fucked = true;
-	};
-};
+	}
+}
 
 void InitialiseKazuSplash()
 {
@@ -149,6 +150,7 @@ void InitialiseKazuSplash()
 	Overlay_Hide( "Title");
 	Overlay_Hide( "InGame/Menu" );
 	Overlay_Hide( "InGame/Score" );
+	OverlayElement_GetByName( "GamesList/Retour" )->Hide();
 
 	l_musicVol = 1.0;
 	l_soundVol = 1.0;
@@ -162,7 +164,7 @@ void InitialiseKazuSplash()
 	if (g_clearToGo)
 	{
 		c_highscorePage = c_baseSite + "/score.php";
-	};
-};
+	}
+}
 
 InitialiseKazuSplash();

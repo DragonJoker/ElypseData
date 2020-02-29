@@ -1,93 +1,52 @@
 Overlay_SetAction( "Menu/Jouer")
 {
 	ToggleMenu();
-	Overlay_Hide( "InGame/SubmitScore");
 
 	if ( ! l_paused && ! l_finished)
 	{
-		if (l_firstPlay)
-		{
-			BeginBassineJump();
-		}
-		else
-		{
-			KazuPlayGame();
-			if (l_infos == "ok" || g_fucked || l_infos == "tech error")
-			{
-				BeginBassineJump();
-			};
-		};
+		BeginBassineJump();
 	}
 	else
 	{
 		ContinueBassineJump();
-	};
-};
+	}
+}
 
 Overlay_SetAction( "Menu/Recommencer")
 {
 	ToggleMenu();
-	Overlay_Hide( "InGame/SubmitScore");
 
 	if ( ! l_paused && ! l_finished)
 	{
-		if (l_firstPlay)
-		{
-			BeginBassineJump();
-		}
-		else
-		{
-			KazuPlayGame();
-			if (l_infos == "ok" || g_fucked || l_infos == "tech error")
-			{
-				OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-				OverlayElement_GetByName( "Menu/Continuer")->Show();
-				BeginBassineJump();
-			};
-		};
+		BeginBassineJump();
 	}
 	else
 	{
 		ContinueBassineJump();
-	};
-};
+	}
+}
 
 Overlay_SetAction( "Menu/Retour")
 {
-	Timer_KillAll();
-	Sound_Stop_Global( "Ambiance");
 	KazuGuiCleanup();
 }
 
 Overlay_SetAction( "Menu/Continuer")
 {
 	ToggleMenu();
-	Overlay_Hide( "InGame/SubmitScore");
 	ContinueBassineJump();
-};
-
-Overlay_SetAction( "InGame/SubmitScore")
-{
-	_submitHighscore();
-	Overlay_Hide( "InGame/SubmitScore");
-};
-
-Overlay_SetAction( "InGame/SubmitScore/Text")
-{
-	_submitHighscore();
-	Overlay_Hide( "InGame/SubmitScore");
-};
+}
 
 Overlay_SetAction( "InGame/Menu")
 {
 	PauseBassineJump();
-};
+}
 
 SetMouseLUpScript()
 {
 	Timer_Kill( "MusicChangeVolume");
 	Timer_Kill( "SoundChangeVolume");
-};
+}
 
 BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 {
@@ -95,8 +54,8 @@ BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 	{
 		l_acceleration = 9.81;
 		l_leftDown = true;
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 {
@@ -104,8 +63,8 @@ BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 	{
 		l_acceleration = -9.81;
 		l_rightDown = true;
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_LEFT, BINDKEY_UP)
 {
@@ -114,11 +73,11 @@ BindKey( KEYCODE_LEFT, BINDKEY_UP)
 		if ( ! l_rightDown)
 		{
 			l_acceleration = 0.0;
-		};
+		}
 
 		l_leftDown = false;
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 {
@@ -127,11 +86,11 @@ BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 		if ( ! l_leftDown)
 		{
 			l_acceleration = 0.0;
-		};
+		}
 
 		l_rightDown = false;
-	};
-};
+	}
+}
 
 void NaturalInclinate()
 {
@@ -150,7 +109,7 @@ void NaturalInclinate()
 				{
 					l_inclinaison = 0.0;
 					Timer_Kill( "NaturalInclinate");
-				};
+				}
 
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), -l_inclinaison);
 				l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
@@ -163,15 +122,15 @@ void NaturalInclinate()
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
 				l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
 				l_inclinaison = 0.0;
-			};
-		};
+			}
+		}
 
 		if (l_paused)
 		{
 			Timer_Pause( "NaturalInclinate");
-		};
-	};
-};
+		}
+	}
+}
 
 BindKey( KEYCODE_UP, BINDKEY_DOWN)
 {
@@ -193,7 +152,7 @@ BindKey( KEYCODE_UP, BINDKEY_DOWN)
 				{
 					l_inclinaison = 0.0;
 					Timer_Kill( "Accelerating");
-				};
+				}
 
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), -l_inclinaison);
 				l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
@@ -206,15 +165,15 @@ BindKey( KEYCODE_UP, BINDKEY_DOWN)
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
 				l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
 				l_inclinaison = 0.0;
-			};
-		};
+			}
+		}
 
 		if (l_paused)
 		{
 			Timer_Pause( "Accelerating");
-		};
-	};
-};
+		}
+	}
+}
 
 BindKey( KEYCODE_UP, BINDKEY_UP)
 {
@@ -223,8 +182,8 @@ BindKey( KEYCODE_UP, BINDKEY_UP)
 		Timer_Kill( "Accelerating");
 
 		NaturalInclinate();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 {
@@ -246,7 +205,7 @@ BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 				{
 					l_inclinaison = 45.0;
 					Timer_Kill( "Breaking");
-				};
+				}
 
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), -l_inclinaison);
 				l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
@@ -259,15 +218,15 @@ BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
 				l_charNode->TranslateLocal( SetVector3( 0.0, -200.0, 50.0));
 				l_inclinaison = 0.0;
-			};
-		};
+			}
+		}
 
 		if (l_paused)
 		{
 			Timer_Pause( "Breaking");
-		};
-	};
-};
+		}
+	}
+}
 
 BindKey( KEYCODE_DOWN, BINDKEY_UP)
 {
@@ -276,8 +235,8 @@ BindKey( KEYCODE_DOWN, BINDKEY_UP)
 		Timer_Kill( "Breaking");
 
 		NaturalInclinate();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_ESCAPE, BINDKEY_UP)
 {
@@ -288,8 +247,8 @@ BindKey( KEYCODE_ESCAPE, BINDKEY_UP)
 	else
 	{
 		PauseBassineJump();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_P, BINDKEY_UP)
 {
@@ -300,10 +259,10 @@ BindKey( KEYCODE_P, BINDKEY_UP)
 	else
 	{
 		PauseBassineJump();
-	};
-};
+	}
+}
 
 timer( "Initialisation", TIMERTYPE_ONCE, 0.0)
 {
 	InitialiseBassineJump();
-};
+}

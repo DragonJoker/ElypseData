@@ -16,7 +16,6 @@ Overlay_SetAction( "Menu/Recommencer")
 
 Overlay_SetAction( "Menu/Retour")
 {
-	Sound_Stop_Global( "Haunted");
 	KazuGuiCleanup();
 }
 

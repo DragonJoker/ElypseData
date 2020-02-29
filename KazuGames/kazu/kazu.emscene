@@ -32,7 +32,16 @@ overlay Splash/GamesList
 	{
 		class NoBorderMenu
 		position 10% 17%
-		size 80% 71%
+		size 80% 65%
 		border_size 32.0 32.0 32.0 32.0
+	}
+
+	element GamesList/Retour
+	{
+		class PanelZone
+		position 40% 85%
+		size 20% 10%
+		material Retour
+		mouse_over_material RetourMO
 	}
 }

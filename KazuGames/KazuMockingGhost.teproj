@@ -8,16 +8,16 @@ project Kazugames
 		scene_files
 		{
 			kazu.emscene
+			gui.emscene
+			scores.emscene
 		}
 		load_script_files
 		{
 			kazu.emscript
+			scores.emscript
+			gui.emscript
 		}
 		data_files_3d
-		{
-			kazu
-		}
-		data_files_other
 		{
 			kazu
 		}
@@ -26,24 +26,22 @@ project Kazugames
 	{
 		scene_files
 		{
-			Game.emscene
-			Interface.emscene
+			Game-MockingGhost.emscene
+			Gui-MockingGhost.emscene
 		}
 		load_script_files
 		{
-			Scores.emscript
-			Game.emscript
-			Interface.emscript
+			Game-MockingGhost.emscript
+			Gui-MockingGhost.emscript
 		}
 		data_files_3d
 		{
-			Interface
-			MockingGhost
+			Gui-MockingGhost
+			Game-MockingGhost
 		}
 		data_files_other
 		{
-			Interface
-			MockingGhost
+			Sons
 		}
 		dependencies
 		{

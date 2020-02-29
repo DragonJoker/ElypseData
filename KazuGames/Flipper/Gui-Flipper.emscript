@@ -1,31 +1,29 @@
 Overlay_SetAction( "Menu/Jouer")
 {
 	BeginFlipper();
-};
+}
 
 Overlay_SetAction( "Menu/Recommencer")
 {
 	StopFlipper();
 	BeginFlipper();
-};
+}
 
 Overlay_SetAction( "Menu/Continuer")
 {
 	ContinueFlipper();
-};
+}
 
 Overlay_SetAction( "Menu/Retour")
 {
-	Timer_KillAll();
 	Simulation_ClearObjects( "Main" );
-	Sound_Stop_Global( "Haunted");
 	KazuGuiCleanup();
 }
 
 Overlay_SetAction( "InGame/Menu")
 {
 	PauseFlipper();
-};
+}
 
 SetMouseLDownScript()
 {
@@ -41,12 +39,12 @@ SetMouseLDownScript()
 			elseif (l_currentLanceurYaw > 45.0)
 			{
 				l_currentLanceurYaw = 45.0;
-			};
+			}
 			l_lanceurNode->SetOrientation( SetQuaternion( SetVector3(0.0, 1.0, 0.0), 180.0 + l_currentLanceurYaw));
 			l_initForce = SetVector3( 0.0, 0.0, 20000.0) * SetQuaternion( SetVector3(0.0, 1.0, 0.0), l_currentLanceurYaw);
-		};
-	};
-};
+		}
+	}
+}
 
 SetMouseLUpScript()
 {
@@ -56,45 +54,45 @@ SetMouseLUpScript()
 	if ( kazuInGame && ! kazuGameStarted)
 	{
 		LaunchBall();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 {
 	if (kazuInGame)
 	{
 		FlipRight();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 {
 	if (kazuInGame)
 	{
 		UnFlipRight();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 {
 	if (kazuInGame)
 	{
 		FlipLeft();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_LEFT, BINDKEY_UP)
 {
 	if (kazuInGame)
 	{
 		UnFlipLeft();
-	};
-};
+	}
+}
 
 BindKey( KEYCODE_SPACE, BINDKEY_UP)
 {
 	if (kazuInGame)
 	{
 		ShakeFlipper();
-	};
-};
+	}
+}

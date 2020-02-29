@@ -202,12 +202,21 @@ Overlay_SetAction( "Menu/Retour")
 Overlay_SetAction( "EndGame/Score/Submit")
 {
 	KazuSubmitScore();
+	Overlay_Hide( "EndGame");
+	Overlay_Show( "Menu");
 }
 
 Overlay_SetAction( "Options/Retour")
 {
 	ShowTitle();
 	Overlay_Hide( "Options");
+	Overlay_Show( "Menu");
+}
+
+Overlay_SetAction( "GamesList/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Splash/GamesList");
 	Overlay_Show( "Menu");
 }
 

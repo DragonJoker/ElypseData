@@ -38,9 +38,7 @@ Overlay_SetAction( "Menu/Recommencer")
 
 Overlay_SetAction( "Menu/Retour")
 {
-	Timer_KillAll();
 	Simulation_ClearObjects( "Main" );
-	Sound_Stop_Global( "Ambiance");
 	KazuGuiCleanup();
 }
 
