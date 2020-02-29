@@ -545,7 +545,7 @@ void InitialiseWallDestruction()
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreWallDestruction" );
 	OverlayElement_GetByName( "InGame/Score/Line1/Title")->SetCaption( "Score:" );
 	OverlayElement_GetByName( "InGame/Score/Line2/Title")->SetCaption( "NbCoups:" );
-	KazuGuiInit( true, true, true );
+	KazuGuiInit( true, true, true, false, false, false );
 }
 
 InitialiseWallDestruction();

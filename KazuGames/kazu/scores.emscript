@@ -22,8 +22,8 @@ void KazuRetrieveHighScores()
 	l_names = l_names->replace( "|", endl);
 	l_scores = l_scores->replace( "|", endl);
 
-	OverlayElement_GetByName( "Scores/Names")->SetCaption( l_names);
-	OverlayElement_GetByName( "Scores/Scores")->SetCaption( l_scores);
+	OverlayElement_GetByName( "Scores/Names")->SetCaption( l_names );
+	OverlayElement_GetByName( "Scores/Scores")->SetCaption( l_scores );
 }
 
 void KazuSubmitScore()

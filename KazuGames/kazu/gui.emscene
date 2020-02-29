@@ -380,3 +380,47 @@ overlay InGame/Score
 		text 0
 	}
 }
+
+overlay InGame/Info
+{
+	class PanelZone
+	position 60% 0%
+	size 40% 50%
+	material HautDroite
+
+	element InGame/Info/Line1/Title
+	{
+		class MinigameText
+		position 40% 10%
+		size 25% 10%
+		font_size 16.0
+		text Chrono:
+	}
+
+	element InGame/Info/Line1/Text
+	{
+		class MinigameText
+		position 65% 10%
+		size 35% 10%
+		font_size 16.0
+		text 0'00''
+	}
+
+	element InGame/Info/Line2/Title
+	{
+		class MinigameText
+		position 40% 20%
+		size 25% 10%
+		font_size 16.0
+		text Vitesse:
+	}
+
+	element InGame/Info/Line2/Text
+	{
+		class MinigameText
+		position 65% 20%
+		size 35% 10%
+		font_size 16.0
+		text 0.00
+	}
+}

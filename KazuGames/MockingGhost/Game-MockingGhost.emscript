@@ -337,7 +337,7 @@ void InitialiseMockingGhost()
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Clic gauche de la souris sur un des 3 mini manoirs pour reveler ce qui se cache en dessous." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de retourner le manoir ou se trouve la piece, sans tomber sur un fantome." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreMockingGhost" );
-	KazuGuiInit( false, false, false );
+	KazuGuiInit( false, false, false, false, false, false );
 }
 
 InitialiseMockingGhost();

@@ -150,6 +150,7 @@ void InitialiseKazuSplash()
 	Overlay_Hide( "Title");
 	Overlay_Hide( "InGame/Menu" );
 	Overlay_Hide( "InGame/Score" );
+	Overlay_Hide( "InGame/Info" );
 	OverlayElement_GetByName( "GamesList/Retour" )->Hide();
 
 	l_musicVol = 1.0;

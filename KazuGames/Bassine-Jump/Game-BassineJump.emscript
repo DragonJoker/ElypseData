@@ -67,19 +67,20 @@ scene_node l_tempNode;
 void ToggleMenu()
 {
 	Echo( "ToggleMenu");
+
 	if (l_menuShown)
 	{
 		Overlay_Hide( "Menu");
 		Overlay_Show( "InGame/Menu");
-		OverlayElement_GetByName( "InGame/TopLeft")->Show();
-		OverlayElement_GetByName( "InGame/TopRight")->Show();
+		OverlayElement_GetByName( "InGame/Score")->Show();
+		OverlayElement_GetByName( "InGame/Info")->Show();
 	}
 	else
 	{
 		Overlay_Show( "Menu");
 		Overlay_Hide( "InGame/Menu");
-		OverlayElement_GetByName( "InGame/TopLeft")->Hide();
-		OverlayElement_GetByName( "InGame/TopRight")->Hide();
+		OverlayElement_GetByName( "InGame/Score")->Hide();
+		OverlayElement_GetByName( "InGame/Info")->Hide();
 	}
 
 	l_menuShown = ! l_menuShown;
@@ -144,7 +145,7 @@ void SetupRace()
 	g_score = 0;
 
 	l_chronoInGame->SetCaption( "0'00''");
-	l_speedInGame->SetCaption( "0");
+	l_speedInGame->SetCaption( "0 km/h");
 	l_scoreInGame->SetCaption( "0");
 
 	ClearRace();
@@ -191,8 +192,10 @@ void SetupRace()
 
 void ResetInclinaison()
 {
-	if (l_inclinaison != 0.0
-	&& ! (Timer_Exists( "Accelerating") || Timer_Exists( "Breaking") || Timer_Exists( "NaturalInclinate")))
+	if ( l_inclinaison != 0.0
+		&& !( Timer_Exists( "Accelerating" )
+			|| Timer_Exists( "Breaking" )
+			|| Timer_Exists( "NaturalInclinate" ) ) )
 	{
 		l_charNode->TranslateLocal( SetVector3( 0.0, 200.0, -50.0));
 		l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
@@ -213,20 +216,13 @@ void StopBassineJump()
 
 	if ( l_winBassineJump )
 	{
-		OverlayElement_GetByName( "InGame/Result")->SetMaterial( "Gagne");
-		Overlay_Show( "InGame/SubmitScore");
+		KazuWinGame();
 	}
 	else
 	{
-		OverlayElement_GetByName( "InGame/Result")->SetMaterial( "Perdu");
+		KazuLoseGame( false );
 		g_score = 0;
 	}
-
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Show();
-	Overlay_Show( "Menu");
-	Overlay_Show( "InGame/Result");
 
 	ShowMenu();
 	l_finished = false;
@@ -328,13 +324,6 @@ void BeginBassineJump()
 			l_rootCamera->GetParent()->Yaw( 1.0);
 		}
 	}
-
-	Overlay_Show( "InGame/TopLeft");
-	Overlay_Show( "InGame/TopRight");
-	Overlay_Hide( "InGame/Result");
-	OverlayElement_GetByName( "Menu/Jouer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
 
 	HideMenu();
 
@@ -461,7 +450,7 @@ void BeginBassineJump()
 					l_balconLevel = (l_position[1] <= (l_balconPos[1] + l_heightBalcon) && l_position[1] >= l_balconPos[1]);
 
 					if (l_position[0] >= (l_balconPos[0] - l_widthBalcon / 2.0)
-					&& l_position[0] <= (l_balconPos[0] + l_widthBalcon / 2.0))
+						&& l_position[0] <= (l_balconPos[0] + l_widthBalcon / 2.0))
 					{
 						if (l_balconLevel)
 						{
@@ -488,6 +477,8 @@ void BeginBassineJump()
 
 							AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
 							AnimationGroup_GetByName( "Perso")->StartAnimation( "crash");
+							Sound_Play_Global( "Thud" );
+							Sound_Play_Global( "Ouch" );
 
 							timer( "EndCrash", TIMERTYPE_ONCE, AnimationGroup_GetByName( "Perso")->GetObject( "Character")->GetAnimation( "crash")->GetLength())
 							{
@@ -532,9 +523,9 @@ void BeginBassineJump()
 			l_nbCentieme = rtoi( l_runTime * 100.0);
 			l_speedKMH = itor( rtoi( l_currentVelocity->Length() * 360.0)) / 100.0;
 
-			l_scoreInGame->SetCaption( itoa( g_score));
-			l_chronoInGame->SetCaption( itoa( l_nbSeconde) + "'" + itoa( l_nbCentieme) + "''");
-			l_speedInGame->SetCaption( rtoa( l_speedKMH));
+			l_scoreInGame->SetCaption( itoa( g_score ) );
+			l_chronoInGame->SetCaption( itoa( l_nbSeconde ) + "'" + itoa( l_nbCentieme ) + "''" );
+			l_speedInGame->SetCaption( rtoa( l_speedKMH ) + " km/h" );
 
 			if (kazuInGame)
 			{
@@ -546,6 +537,7 @@ void BeginBassineJump()
 					StopBassineJump();
 
 					AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
+					Sound_Play_Global( "Splash" );
 
 					HidePerso();
 				}
@@ -557,6 +549,8 @@ void BeginBassineJump()
 
 					AnimationGroup_GetByName( "Perso")->StopAnimation( "move");
 					AnimationGroup_GetByName( "Perso")->StartAnimation( "crash");
+					Sound_Play_Global( "Thud" );
+					Sound_Play_Global( "Ouch" );
 
 					timer( "CrashPause", TIMERTYPE_ONCE, AnimationGroup_GetByName( "Perso")->GetObject( "Character")->GetAnimation( "crash")->GetLength() - 0.1)
 					{
@@ -570,7 +564,6 @@ void BeginBassineJump()
 
 void InitialiseBassineJump()
 {
-	kazuInGame = false;
 	l_inBalcon = false;
 	l_paused = false;
 	l_isEditingName = false;
@@ -609,9 +602,9 @@ void InitialiseBassineJump()
 	l_runTime = 0.0;
 
 	l_display = OverlayElement_GetByName( "Start/Display");
-	l_scoreInGame = OverlayElement_GetByName( "InGame/TopLeft/ScoreTxt");
-	l_chronoInGame = OverlayElement_GetByName( "InGame/TopRight/ChronoTxt");
-	l_speedInGame = OverlayElement_GetByName( "InGame/TopRight/VitesseTxt");
+	l_scoreInGame = OverlayElement_GetByName( "InGame/Score/Line1/Text");
+	l_chronoInGame = OverlayElement_GetByName( "InGame/Info/Line1/Text");
+	l_speedInGame = OverlayElement_GetByName( "InGame/Info/Line2/Text");
 
 	l_rootNode = SceneNode_GetByName( "root node");
 	l_charNode = SceneNode_GetByName( "PersoNode");
@@ -626,10 +619,7 @@ void InitialiseBassineJump()
 	AnimationGroup_GetByName( "Perso")->StartAnimation( "Stand");
 
 	Overlay_Hide( "Start");
-	Overlay_Hide( "InGame/SubmitScore");
-	Overlay_Hide( "InGame/TopLeft");
 	Overlay_Hide( "InGame/TopRight");
-	Overlay_Hide( "InGame/Result");
 	ShowMenu();
 
 	SetupRace();
@@ -639,5 +629,8 @@ void InitialiseBassineJump()
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Les commandes utilisees sont les touches directionnelles du clavier. Fleche bas pour freiner votre chute, fleche haut pour reprendre la chute libre plus rapidement. Fleches droite et gauche pour se deplacer, respectivement a droite et a gauche." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Eviter les balcons durant la chute et plonger dans la bassine. Vous gagnez des points constamment en fonction de votre vitesse de chute et de votre inclinaison. Vous gagnez aussi des points plus vous passez vite au niveau des balcons." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreBassineJump" );
-	KazuGuiInit();
+	OverlayElement_GetByName( "InGame/Score/Line1/Title")->SetCaption( "Score:" );
+	OverlayElement_GetByName( "InGame/Info/Line1/Title")->SetCaption( "Chrono:" );
+	OverlayElement_GetByName( "InGame/Info/Line2/Title")->SetCaption( "Vitesse:" );
+	KazuGuiInit( true, true, false, true, true, true );
 }

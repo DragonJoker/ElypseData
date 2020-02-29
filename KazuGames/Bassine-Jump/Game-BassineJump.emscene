@@ -7,8 +7,29 @@ sound Ambiance
 	url ./Sons/Ambiance.mp3
 	type music
 	global true
-	attenuation 0.0
+	attenuation 0.8
 	looped true
+}
+
+sound Thud
+{
+	url ./Sons/Thud.wav
+	type sfx
+	global true
+}
+
+sound Ouch
+{
+	url ./Sons/Ouch.mp3
+	type sfx
+	global true
+}
+
+sound Splash
+{
+	url ./Sons/Splash.mp3
+	type sfx
+	global true
 }
 
 // SCENE NODES

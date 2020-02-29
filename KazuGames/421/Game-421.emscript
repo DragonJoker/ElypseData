@@ -576,7 +576,7 @@ void Initialise421()
 	OverlayElement_GetByName( "Commandes/Text" )->SetCaption( "Un clic gauche de la souris pour lancer les des. Puis clic droit sur les des a garder." );
 	OverlayElement_GetByName( "Regles/Text" )->SetCaption( "L'objectif dans ce jeu est de realiser un 421 en 3 essais." );
 	OverlayElement_GetByName( "Title" )->SetMaterial( "Titre421" );
-	KazuGuiInit( false, false, false );
+	KazuGuiInit( false, false, false, false, false, false );
 }
 
 Initialise421();

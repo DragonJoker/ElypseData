@@ -213,7 +213,7 @@ void InitialiseGratzPaire()
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Retournez les cartes et essayez de trouver toutes les paires en commettant moins de 5 erreurs." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreGratzPaire" );
 	OverlayElement_GetByName( "InGame/Score/Line1/Title" )->SetCaption( "Nb Erreurs:" );
-	KazuGuiInit( true, true, false );
+	KazuGuiInit( true, true, false, false, false, false );
 }
 
 InitialiseGratzPaire();
