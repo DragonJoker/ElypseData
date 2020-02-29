@@ -1,3 +1,5 @@
+bool kazuScoreShown;
+
 void ShowTitle()
 {
 	if (l_titleShown)
@@ -14,20 +16,46 @@ void HideTitle()
 	}
 }
 
-void KazuGuiInit()
+void KazuGuiInit( bool showInGameScore, bool inGameScoreLine1, bool inGameScoreLine2 )
 {
-	Overlay_Hide( "Commandes");
-	Overlay_Hide( "FinMiniGame");
-	Overlay_Hide( "Regles");
-	Overlay_Hide( "Options");
-	Overlay_Hide( "Scores");
-	Overlay_Hide( "InGame/Menu");
-	OverlayElement_GetByName( "Menu/Jouer")->Show();
-	OverlayElement_GetByName( "Menu/Continuer")->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	Overlay_Hide( "Commandes" );
+	Overlay_Hide( "Regles" );
+	Overlay_Hide( "Options" );
+	Overlay_Hide( "Scores" );
+	Overlay_Hide( "EndGame" );
+	Overlay_Hide( "InGame/Menu" );
+	Overlay_Hide( "InGame/Score" );
+	OverlayElement_GetByName( "Menu/Jouer" )->Show();
+	OverlayElement_GetByName( "Menu/Continuer" )->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer" )->Hide();
 	Overlay_Show( "Title" );
 	Overlay_Show( "Menu" );
 	l_titleShown = true;
+	kazuInGame = false;
+	kazuGameStarted = false;
+	kazuScoreShown = showInGameScore;
+
+	if ( inGameScoreLine1 )
+	{
+		OverlayElement_GetByName( "InGame/Score/Line1/Title" )->Show();
+		OverlayElement_GetByName( "InGame/Score/Line1/Text" )->Show();
+	}
+	else
+	{
+		OverlayElement_GetByName( "InGame/Score/Line1/Title" )->Hide();
+		OverlayElement_GetByName( "InGame/Score/Line1/Text" )->Hide();
+	}
+
+	if ( inGameScoreLine2 )
+	{
+		OverlayElement_GetByName( "InGame/Score/Line2/Title" )->Show();
+		OverlayElement_GetByName( "InGame/Score/Line2/Text" )->Show();
+	}
+	else
+	{
+		OverlayElement_GetByName( "InGame/Score/Line2/Title" )->Hide();
+		OverlayElement_GetByName( "InGame/Score/Line2/Text" )->Hide();
+	}
 }
 
 void KazuGuiBegin()
@@ -35,13 +63,27 @@ void KazuGuiBegin()
 	Overlay_Hide( "Menu");
 	Overlay_Hide( "Title");
 	Overlay_Show( "InGame/Menu");
-	Overlay_Hide( "FinMiniGame");
+
+	if ( kazuScoreShown )
+	{
+		Overlay_Show( "InGame/Score" );
+	}
+
 	l_titleShown = false;
+	kazuGameStarted = true;
+
+	timer( "BeginGame", TIMERTYPE_ONCE, 0.3 )
+	{
+		kazuInGame = true;
+	}
 }
 
 void KazuGuiPause()
 {
+	Timer_PauseAll();
+	kazuInGame = false;
 	Overlay_Hide( "InGame/Menu");
+	Overlay_Hide( "InGame/Score" );
 	OverlayElement_GetByName( "Menu/Continuer")->Show();
 	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
 	OverlayElement_GetByName( "Menu/Jouer")->Hide();
@@ -50,14 +92,38 @@ void KazuGuiPause()
 
 void KazuGuiResume()
 {
+	Timer_PlayAll();
 	Overlay_Hide( "Menu");
 	Overlay_Show( "InGame/Menu");
-	Overlay_Show( "InGame/Score");
+
+	if ( kazuScoreShown )
+	{
+		Overlay_Show( "InGame/Score" );
+	}
+
+	timer( "ResumeGame", TIMERTYPE_ONCE, 0.3 )
+	{
+		kazuInGame = true;
+	}
+}
+
+void KazuGuiRestart()
+{
+	OverlayElement_GetByName( "Menu/Jouer" )->Hide();
+	OverlayElement_GetByName( "Menu/Continuer" )->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer" )->Show();
+	Overlay_Hide( "InGame/Menu");
+	Overlay_Hide( "InGame/Score" );
+	Overlay_Hide( "EndGame" );
+	Overlay_Show( "Menu" );
 }
 
 void KazuGuiStop()
 {
+	kazuInGame = false;
+	kazuGameStarted = false;
 	Overlay_Hide( "InGame/Menu");
+	Overlay_Hide( "InGame/Score" );
 	OverlayElement_GetByName( "Menu/Jouer")->Hide();
 	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer")->Show();
@@ -65,12 +131,15 @@ void KazuGuiStop()
 
 void KazuGuiCleanup()
 {
+	Timer_KillAll();
+	kazuInGame = false;
+	kazuGameStarted = false;
 	Overlay_Hide( "Commandes");
-	Overlay_Hide( "FinMiniGame");
 	Overlay_Hide( "Regles");
 	Overlay_Hide( "Options");
 	Overlay_Hide( "Scores");
 	Overlay_Hide( "InGame/Menu");
+	Overlay_Hide( "InGame/Score" );
 	Overlay_Hide( "Title" );
 	Overlay_Hide( "Menu" );
 	Overlay_Show( "Splash/GamesList" );
@@ -128,6 +197,11 @@ Overlay_SetAction( "Menu/Options")
 Overlay_SetAction( "Menu/Retour")
 {
 	KazuGuiCleanup();
+}
+
+Overlay_SetAction( "EndGame/Score/Submit")
+{
+	KazuSubmitScore();
 }
 
 Overlay_SetAction( "Options/Retour")

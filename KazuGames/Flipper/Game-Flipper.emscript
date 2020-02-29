@@ -1,13 +1,11 @@
 bool l_leftDown;
 bool l_rightDown;
-bool l_gameStarted;
 bool l_ballOnRightFlipper;
 bool l_ballOnLeftFlipper;
 bool l_leftAtMax;
 bool l_rightAtMax;
 bool l_ballOnFlipper;
 bool l_collides;
-bool l_inGame;
 bool l_tilted;
 bool l_shaking;
 
@@ -72,14 +70,12 @@ bool l_collideWithWall;
 
 void UpdateScore()
 {
-	OverlayElement_GetByName("InGame/Score/Text")->SetCaption( itoa( g_score));
-	OverlayElement_GetByName("Fin/Score/Text")->SetCaption( itoa( g_score + rtoi( g_distance)));
+	OverlayElement_GetByName( "InGame/Score/Line1/Text" )->SetCaption( itoa( g_score ) );
 }
 
 void UpdateDistance()
 {
-	OverlayElement_GetByName("InGame/Hauteur/Text")->SetCaption( itoa( rtoi( g_distance)));
-	OverlayElement_GetByName("Fin/Score/Text")->SetCaption( itoa( g_score + rtoi( g_distance)));
+	OverlayElement_GetByName( "InGame/Score/Line2/Text" )->SetCaption( itoa( rtoi( g_distance ) ) );
 }
 
 void HideFlipper( string p_hFlipperName)
@@ -131,7 +127,6 @@ void ShowFlipperI( string p_sfiTable, int p_sfi)
 void ShowFlippers( string p_tsFlip)
 {
 	l_nbFlippersShown = 8;
-//	l_nbFlippersShown = rtoi( rand( 1.0, 8.0));
 	if (l_nbFlippersShown > 1)
 	{
 		for (i = 1 ; i <= l_nbFlippersShown ; i++)
@@ -648,7 +643,7 @@ void EndFlipper()
 {
 	KazuGuiStop();
 	Overlay_Show( "Menu");
-	Overlay_Hide( "InGame");
+	Overlay_Hide( "InGame/Score");
 }
 
 void StopFlipper()
@@ -667,45 +662,32 @@ void StopFlipper()
 	Timer_Kill( "EndBump");
 	Timer_Kill( "UnBump");
 	Timer_Kill( "EndUnBump");
-	l_inGame = false;
-	l_gameStarted = false;
 	EndFlipper();
 }
 
 void PauseFlipper()
 {
 	KazuGuiPause();
-	Overlay_Hide( "InGame");
 	l_billePhys->SetEnabled( false);
-	Timer_PauseAll();
-	l_inGame = false;
 }
 
 void ContinueFlipper()
 {
 	KazuGuiResume();
-	Overlay_Show( "InGame");
-	Timer_PlayAll();
-	if (l_gameStarted)
+	if (kazuGameStarted)
 	{
 		l_billePhys->SetEnabled( true);
-	}
-	timer( "Start", TIMERTYPE_ONCE, 0.2)
-	{
-		l_inGame = true;
 	}
 }
 
 void LoseFlipper()
 {
 	Overlay_Hide( "Tilt");
-	Overlay_Show( "Fin");
-	Overlay_Hide( "InGame/Menu");
+	KazuEndGame();
 	l_billePhys->SetEnabled( false);
-	_submitHighscore();
 	timer( "HideFin", TIMERTYPE_ONCE, 2.0)
 	{
-		Overlay_Hide( "Fin");
+		Overlay_Hide( "EndGame");
 		StopFlipper();
 	}
 }
@@ -812,7 +794,7 @@ void UpdateCamera()
 
 void LaunchBall()
 {
-	l_gameStarted = true;
+	kazuGameStarted = true;
 	l_currentPosition = l_billeNode->GetPosition();
 	l_previousPosition = l_billeNode->GetPosition();
 	l_billePhys->SetEnabled( true);
@@ -879,9 +861,9 @@ void ShakeFlipper()
 
 void InitialiseFlipper()
 {
-	l_inGame = false;
+	kazuInGame = false;
 	l_leftDown = false;
-	l_gameStarted = false;
+	kazuGameStarted = false;
 	l_ballOnRightFlipper = false;
 	l_ballOnLeftFlipper = false;
 	l_leftAtMax = false;
@@ -924,8 +906,6 @@ void InitialiseFlipper()
 	l_plateNode = SceneNode_GetByName("Plateau" + l_plateToChangeStr + "Node");
 	l_platePosition = l_plateNode->GetPosition();
 
-	Overlay_Hide( "InGame");
-	Overlay_Hide( "Fin");
 	Overlay_Hide( "Tilt");
 
 	Sound_Play_Global( "Haunted");
@@ -933,7 +913,9 @@ void InitialiseFlipper()
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Maintenir le clic gauche afin d'orienter le lanceur, relacher le clic gauche pour lancer la bille. Fleches gauche et droite pour controler les flippers. Barre d'espace pour secouer le flipper, mais gare au Tilt." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Le but est d'aller le plus loin possible et d'accumuler le plus de points possible." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreFlipper" );
-	KazuGuiInit();
+	OverlayElement_GetByName( "InGame/Score/Line1/Title")->SetCaption( "Score:" );
+	OverlayElement_GetByName( "InGame/Score/Line2/Title")->SetCaption( "Hauteur:" );
+	KazuGuiInit( true, true, true );
 }
 
 void BeginFlipper()
@@ -979,9 +961,9 @@ void BeginFlipper()
 	UpdateDistance();
 
 	l_shaking = false;
-	l_inGame = false;
+	kazuInGame = false;
 	l_leftDown = false;
-	l_gameStarted = false;
+	kazuGameStarted = false;
 	l_ballOnRightFlipper = false;
 	l_ballOnLeftFlipper = false;
 	l_leftAtMax = false;
@@ -996,11 +978,11 @@ void BeginFlipper()
 	l_currentLanceurYaw = 0.0;
 	l_timeSinceLastWall = 0.0;
 	l_platePosition = VECTOR3_ZERO;
-	Overlay_Show( "InGame");
+	Overlay_Show( "InGame/Score");
 	Overlay_Hide( "Tilt");
 	timer( "Start", TIMERTYPE_ONCE, 0.2)
 	{
-		l_inGame = true;
+		kazuInGame = true;
 	}
 }
 

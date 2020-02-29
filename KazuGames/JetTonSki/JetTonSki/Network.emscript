@@ -622,7 +622,7 @@ void TreatGameMessage( string tgm_message)
 
 void GameEnded()
 {
-	l_inGame = false;
+	kazuInGame = false;
 	Timer_Kill( "Pret-3");
 	Timer_Kill( "Pret-2");
 	Timer_Kill( "Pret-1");

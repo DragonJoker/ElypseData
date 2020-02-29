@@ -10,7 +10,7 @@ string c_highscorePage;
 
 c_highscorePage = c_baseSite + "/score.php";
 
-void _retrieveHighScores()
+void KazuRetrieveHighScores()
 {
 	l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + c_gameName, EMPTY_STRING);
 
@@ -26,8 +26,56 @@ void _retrieveHighScores()
 	OverlayElement_GetByName( "Scores/Scores")->SetCaption( l_scores);
 }
 
-void _submitHighscore()
+void KazuSubmitScore()
 {
-	l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + c_gameName + "&player=" + c_playerName);
+	StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + c_gameName + "&player=" + c_playerName);
 }
 
+void KazuWinGame()
+{
+	OverlayElement_GetByName( "EndGame/End" )->Hide();
+	OverlayElement_GetByName( "EndGame/Win" )->Show();
+	OverlayElement_GetByName( "EndGame/Lose" )->Hide();
+	OverlayElement_GetByName( "EndGame/Score/Title" )->Show();
+	OverlayElement_GetByName( "EndGame/Score/Text" )->SetCaption( itoa( g_score ) );
+	OverlayElement_GetByName( "EndGame/Score/Text" )->Show();
+	OverlayElement_GetByName( "EndGame/Score/Submit" )->Show();
+	Overlay_Show( "EndGame" );
+}
+
+void KazuLoseGame( bool submitScore )
+{
+	OverlayElement_GetByName( "EndGame/End" )->Hide();
+	OverlayElement_GetByName( "EndGame/Win" )->Hide();
+	OverlayElement_GetByName( "EndGame/Lose" )->Show();
+	OverlayElement_GetByName( "EndGame/Score/Title" )->Hide();
+	OverlayElement_GetByName( "EndGame/Score/Text" )->Hide();
+
+	if ( submitScore )
+	{
+		OverlayElement_GetByName( "EndGame/Score/Submit" )->Show();
+	}
+	else
+	{
+		OverlayElement_GetByName( "EndGame/Score/Submit" )->Hide();
+		Overlay_Show( "EndGame" );
+
+		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
+		{
+			Overlay_Hide( "EndGame" );
+			Overlay_Show( "Menu");
+		}
+	}
+}
+
+void KazuEndGame()
+{
+	OverlayElement_GetByName( "EndGame/End" )->Show();
+	OverlayElement_GetByName( "EndGame/Win" )->Hide();
+	OverlayElement_GetByName( "EndGame/Lose" )->Hide();
+	OverlayElement_GetByName( "EndGame/Score/Title" )->Show();
+	OverlayElement_GetByName( "EndGame/Score/Text" )->SetCaption( itoa( g_score ) );
+	OverlayElement_GetByName( "EndGame/Score/Text" )->Show();
+	OverlayElement_GetByName( "EndGame/Score/Submit" )->Show();
+	Overlay_Show( "EndGame" );
+}

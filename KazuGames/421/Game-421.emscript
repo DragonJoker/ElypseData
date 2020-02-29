@@ -1,5 +1,3 @@
-bool l_gameStarted;
-bool l_inGame;
 bool l_dicesLaunched;
 bool l_dicesStopped;
 bool l_dice1Stopped;
@@ -85,28 +83,19 @@ physics_object l_dice3Phys;
 
 void Pause421()
 {
-	Timer_PauseAll();
 	KazuGuiPause();
-	l_inGame = false;
 }
 
 void Continue421()
 {
-	Timer_PlayAll();
 	KazuGuiResume();
-	l_inGame = true;
 }
 
 void Begin421()
 {
 	KazuGuiBegin();
 	Timer_PlayAll();
-	l_gameStarted = true;
 	l_nbTries = 0;
-	timer( "BeginGame", TIMERTYPE_ONCE, 0.3)
-	{
-		l_inGame = true;
-	}
 }
 
 void Initialise421();
@@ -115,9 +104,9 @@ void Stop421()
 {
 	Initialise421();
 	Timer_KillAll();
-	l_inGame = false;
-	l_gameStarted = false;
-	Overlay_Hide( "Fin");
+	kazuInGame = false;
+	kazuGameStarted = false;
+	Overlay_Hide( "EndGame");
 	Object_GetByName( "Dice1")->SetSubMaterial( 0, "421/surface");
 	Object_GetByName( "Dice2")->SetSubMaterial( 0, "421/surface");
 	Object_GetByName( "Dice3")->SetSubMaterial( 0, "421/surface");
@@ -145,23 +134,20 @@ void CheckEndDices()
 	{
 		Echo( "CheckEndDices - Win");
 		g_score = 4000 - (l_nbTries * 1000);
-		OverlayElement_GetByName( "Fin")->SetMaterial( "Gagne");
-		_submitHighscore();
+		KazuWinGame();
 	}
 	else
 	{
 		Echo( "CheckEndDices - Lose");
 		g_score = 0;
-		OverlayElement_GetByName( "Fin")->SetMaterial( "Perdu");
-		_submitHighscore();
+		KazuLoseGame( false );
 	}
-	Overlay_Show( "Fin");
 }
 
 void End421()
 {
-	l_inGame = false;
-	l_gameStarted = false;
+	kazuInGame = false;
+	kazuGameStarted = false;
 	Overlay_Show( "Menu");
 }
 
@@ -240,39 +226,32 @@ void RetrieveFace( scene_node p_rfDice)
 			}
 		}
 	}
-//	Echo( "RetrieveFace - Face : " + itoa( l_faceValue));
 }
 
 void Reorient( scene_node p_rNode)
 {
 	if (l_axis == UNIT_X)
-	{
-// 3
+	{// 3
 		p_rNode->Pitch( -p_rNode->GetPitch());
 	}
 	elseif (l_axis == NEGATIVE_UNIT_X)
-	{
-// 4
+	{// 4
 		p_rNode->Pitch( -p_rNode->GetPitch());
 	}
 	elseif (l_axis == UNIT_Y)
-	{
-// 6
+	{// 6
 		p_rNode->Yaw( -p_rNode->GetYaw());
 	}
 	elseif (l_axis == NEGATIVE_UNIT_Y)
-	{
-// 1
+	{// 1
 		p_rNode->Yaw( -p_rNode->GetYaw());
 	}
 	elseif (l_axis == UNIT_Z)
-	{
-// 2
+	{// 2
 		p_rNode->Yaw( -p_rNode->GetYaw());
 	}
 	elseif (l_axis == NEGATIVE_UNIT_Z)
-	{
-// 5
+	{// 5
 		p_rNode->Yaw( -p_rNode->GetYaw());
 	}
 }
@@ -291,18 +270,9 @@ void CheckDices()
 	if (l_checkFaces->find( "4") != npos && l_checkFaces->find( "1") != npos && l_checkFaces->find( "2") != npos)
 	{
 		Echo( "CheckDices - Win");
-		l_inGame = false;
-		l_gameStarted = false;
-		KazuGuiStop();
 		g_score = 4000 - (l_nbTries * 1000);
-		OverlayElement_GetByName( "Fin")->SetMaterial( "Gagne");
-		Overlay_Show( "Fin");
-		_submitHighscore();
-		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
-		{
-			Overlay_Hide( "Fin");
-			End421();
-		}
+		KazuGuiStop();
+		KazuWinGame();
 	}
 }
 
@@ -363,7 +333,7 @@ void UpdateDices()
 			KazuGuiStop();
 			timer( "EndGame", TIMERTYPE_ONCE, 2.0)
 			{
-				Overlay_Hide( "Fin");
+				Overlay_Hide( "EndGame" );
 				End421();
 			}
 		}
@@ -417,7 +387,7 @@ void LaunchDices()
 		l_dicesToLaunch->erase( l_dicesToLaunch->find( ctoa( strGetChar( l_dicesKept, i))), 1);
 		l_nbDicesToLaunch = l_nbDicesToLaunch - 1;
 	}
-//	Echo( "Dices To Launch : " + l_dicesToLaunch);
+
 	for (i = 0 ; i < l_dicesToLaunch->length() ; i++)
 	{
 		l_name = "Dice" + strGetChar( l_dicesToLaunch, i);
@@ -484,7 +454,6 @@ void SelectDice()
 {
 	l_selectedObject = MousePickupObject( MOUSE_POSITION_X, MOUSE_POSITION_Y, true);
 	l_name = l_selectedObject->GetName();
-//	Echo( "SelectDice - " + l_name);
 	if (l_name->find( "Dice") != npos)
 	{
 		l_name = substr( l_name, 4, 1);
@@ -535,7 +504,6 @@ void SelectDice()
 				l_selectedObject->GetPhysicsObject()->ReassertPosition();
 			}
 		}
-//		Echo( "SelectDice - " + l_dicesKept + " - " + l_keptFaces);
 	}
 }
 
@@ -543,7 +511,7 @@ SetMouseLUpScript()
 {
 	Timer_Kill( "SoundChangeVolume");
 	Timer_Kill( "MusicChangeVolume");
-	if (l_inGame && l_gameStarted)
+	if (kazuInGame && kazuGameStarted)
 	{
 		if ( ! l_dicesLaunched && l_dicesStopped && l_nbTries < l_maxTries)
 		{
@@ -554,7 +522,7 @@ SetMouseLUpScript()
 
 SetMouseRUpScript()
 {
-	if (l_inGame && l_gameStarted)
+	if (kazuInGame && kazuGameStarted)
 	{
 		if ( ! l_dicesLaunched && l_dicesStopped)
 		{
@@ -565,12 +533,8 @@ SetMouseRUpScript()
 
 void Initialise421()
 {
-	Overlay_Hide( "Fin");
-
 	l_godet = SceneNode_GetByName( "Godet");
 
-	l_inGame = false;
-	l_gameStarted = false;
 	l_dicesStopped = true;
 	l_dicesLaunched = false;
 	l_dice1Stopped = false;
@@ -609,10 +573,10 @@ void Initialise421()
 
 	Sound_Play_Global( "Ambiance");
 
-	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Un clic gauche de la souris pour lancer les des. Puis clic droit sur les des a garder." );
-	OverlayElement_GetByName( "Regles/Text")->SetCaption( "L'objectif dans ce jeu est de realiser un 421 en 3 essais." );
-	OverlayElement_GetByName( "Title")->SetMaterial( "Titre421" );
-	KazuGuiInit();
+	OverlayElement_GetByName( "Commandes/Text" )->SetCaption( "Un clic gauche de la souris pour lancer les des. Puis clic droit sur les des a garder." );
+	OverlayElement_GetByName( "Regles/Text" )->SetCaption( "L'objectif dans ce jeu est de realiser un 421 en 3 essais." );
+	OverlayElement_GetByName( "Title" )->SetMaterial( "Titre421" );
+	KazuGuiInit( false, false, false );
 }
 
 Initialise421();

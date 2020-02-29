@@ -1,5 +1,3 @@
-bool l_gameStarted;
-bool l_inGame;
 bool l_ballLaunched;
 bool l_shootingBall;
 bool l_hurtingWall;
@@ -77,31 +75,24 @@ void UpdateScore()
 	{
 		g_score = 500;
 	}
-	OverlayElement_GetByName("InGame/Score/Text")->SetCaption( itoa( g_score));
+	OverlayElement_GetByName("InGame/Score/Line1/Text")->SetCaption( itoa( g_score));
 }
 
 void UpdateNbCoups()
 {
-	OverlayElement_GetByName("InGame/Score/NbCoupsText")->SetCaption( itoa( g_nbCoups));
+	OverlayElement_GetByName("InGame/Score/Line2/Text")->SetCaption( itoa( g_nbCoups));
 }
 
 void EndWallDestruction()
 {
 	KazuGuiStop();
-	Overlay_Hide( "WinGame");
-	Overlay_Hide( "LoseGame");
-	Overlay_Show( "Menu");
-	Overlay_Hide( "Score");
 }
 
 void WinWallDestruction()
 {
 	g_score = g_score + 50000 - (g_nbCoups * 200);
 	UpdateScore();
-	Overlay_Show( "WinGame");
-	l_gameStarted = false;
-	l_inGame = false;
-	Overlay_Hide( "Menu");
+	KazuWinGame();
 	KazuGuiStop();
 }
 
@@ -109,10 +100,7 @@ void LoseWallDestruction()
 {
 	g_score = g_score - (g_nbCoups * 200);
 	UpdateScore();
-	Overlay_Show( "LoseGame");
-	l_gameStarted = false;
-	l_inGame = false;
-	Overlay_Hide( "Menu");
+	KazuLoseGame( true );
 	KazuGuiStop();
 }
 
@@ -297,7 +285,7 @@ void UpdateShootInfo()
 
 void UpdateBall()
 {
-	if (l_inGame && l_gameStarted)
+	if (kazuInGame && kazuGameStarted)
 	{
 		l_ballPosition = l_balleNode->GetPosition();
 		l_hurtObject = ClosestObject( SetVector3( l_ballPosition[0], l_ballPosition[1], (l_ballPosition[2]) - 30.0));
@@ -441,8 +429,6 @@ void BuildWall()
 
 void StopWallDestruction()
 {
-	l_gameStarted = false;
-	l_inGame = false;
 	Timer_KillAll();
 	ResetBallAndBatte();
 	for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
@@ -460,13 +446,10 @@ void StopWallDestruction()
 	BuildWall();
 	KazuGuiStop();
 	Overlay_Show( "Menu");
-	Overlay_Hide( "InGame/Score");
 }
 
 void PauseWallDestruction()
 {
-	l_inGame = false;
-	Timer_PauseAll();
 	KazuGuiPause();
 	if (l_bricksFlowing)
 	{
@@ -491,7 +474,6 @@ void PauseWallDestruction()
 
 void ContinueWallDestruction()
 {
-	Timer_PlayAll();
 	KazuGuiResume();
 	if (l_bricksFlowing)
 	{
@@ -511,16 +493,10 @@ void ContinueWallDestruction()
 	{
 		l_ballePhys->SetEnabled( true);
 	}
-	Overlay_Show( "InGame/Score");
-	timer( "StartGame", TIMERTYPE_ONCE, 0.1)
-	{
-		l_inGame = true;
-	}
 }
 
 void BeginWallDestruction()
 {
-	l_gameStarted = true;
 	l_ballLaunched = false;
 	l_shootingBall = false;
 	l_hurtingWall = false;
@@ -531,12 +507,6 @@ void BeginWallDestruction()
 	UpdateScore();
 	UpdateNbCoups();
 	KazuGuiBegin();
-
-	Overlay_Show( "InGame/Score");
-	timer( "StartGame", TIMERTYPE_ONCE, 0.1)
-	{
-		l_inGame = true;
-	}
 }
 
 void InitialiseWallDestruction()
@@ -568,19 +538,14 @@ void InitialiseWallDestruction()
 
 	l_wallPhys = Object_GetByName( "WallBox")->GetPhysicsObject();
 
-	l_gameStarted = false;
-	l_inGame = false;
-
-	Overlay_Hide( "WinGame");
-	Overlay_Hide( "LoseGame");
-	Overlay_Hide( "InGame/Score");
-
 	Sound_Play_Global( "Ambiance");
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "La seule commande a connaitre est le clic gauche de la souris qui lance le balle, et qui permet de frapper avec la batte." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de detruire le mur en vous servant de la batte. Vous avez 50 coups pour atteindre cet objectif." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreWallDestruction" );
-	KazuGuiInit();
+	OverlayElement_GetByName( "InGame/Score/Line1/Title")->SetCaption( "Score:" );
+	OverlayElement_GetByName( "InGame/Score/Line2/Title")->SetCaption( "NbCoups:" );
+	KazuGuiInit( true, true, true );
 }
 
 InitialiseWallDestruction();

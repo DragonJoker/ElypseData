@@ -2,14 +2,14 @@ SetMouseLUpScript()
 {
 	Timer_Kill( "MusicChangeVolume");
 	Timer_Kill( "SoundChangeVolume");
-	if (l_inGame && l_gameStarted && l_endRevealed)
+	if (kazuInGame && kazuGameStarted && l_endRevealed)
 	{
 		if (l_totalRevealedCards < 12 && l_nbTries < l_nbMaxErrors)
 		{
 			ChooseCard();
-		};
-	};
-};
+		}
+	}
+}
 
 Overlay_SetAction( "Menu/Jouer")
 {

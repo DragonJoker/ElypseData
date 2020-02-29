@@ -204,7 +204,7 @@ void Turn()
 
 BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inZombie && ! l_rightDown)
+	if (kazuInGame && ! l_inZombie && ! l_rightDown)
 	{
 		l_leftDown = true;
 		l_acceleration = 9.81;
@@ -216,7 +216,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 
 BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inZombie && ! l_leftDown)
+	if (kazuInGame && ! l_inZombie && ! l_leftDown)
 	{
 		l_rightDown = true;
 		l_acceleration = -9.81;
@@ -230,7 +230,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_UP)
 {
 	Timer_Kill( "TurnRight");
 	Timer_Kill( "TurnLeft");
-	if (l_inGame && ! l_inZombie && l_leftDown)
+	if (kazuInGame && ! l_inZombie && l_leftDown)
 	{
 		l_leftDown = false;
 		l_acceleration = 0.0;
@@ -244,7 +244,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 {
 	Timer_Kill( "TurnRight");
 	Timer_Kill( "TurnLeft");
-	if (l_inGame && ! l_inZombie && l_rightDown)
+	if (kazuInGame && ! l_inZombie && l_rightDown)
 	{
 		l_rightDown = false;
 		l_acceleration = 0.0;
@@ -256,7 +256,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 
 BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inZombie)
+	if (kazuInGame && ! l_inZombie)
 	{
 		timer( "Breaking", TIMERTYPE_REPEAT, 0.01)
 		{
@@ -287,7 +287,7 @@ BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 
 BindKey( KEYCODE_DOWN, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inZombie)
+	if (kazuInGame && ! l_inZombie)
 	{
 		Timer_Kill( "Breaking");
 	};

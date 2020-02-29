@@ -1,7 +1,0 @@
-overlay Fin
-{
-	class PanelZone
-	position 25% 37.5%
-	size 50% 25%
-	material Gagne
-}

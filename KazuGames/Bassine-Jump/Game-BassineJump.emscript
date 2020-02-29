@@ -1,4 +1,3 @@
-bool l_inGame;
 bool l_inBalcon;
 bool l_paused;
 bool l_isEditingName;
@@ -204,7 +203,7 @@ void ResetInclinaison()
 
 void StopBassineJump()
 {
-	l_inGame = false;
+	kazuInGame = false;
 	l_finished = true;
 
 	Timer_Kill( "Gaming");
@@ -291,7 +290,7 @@ void BeginBassineJump()
 	SetupRace();
 	KazuGuiBegin();
 
-	l_inGame = false;
+	kazuInGame = false;
 	l_inBalcon = false;
 	l_balconLevel = false;
 	l_balconPreviousLevel = false;
@@ -391,7 +390,7 @@ void BeginBassineJump()
 	{
 		Overlay_Hide( "Start");
 
-		l_inGame = true;
+		kazuInGame = true;
 
 		timer( "Friction", TIMERTYPE_REPEAT, 0.1)
 		{
@@ -446,7 +445,7 @@ void BeginBassineJump()
 				l_charNode->Translate( SetVector3( 100.0 * l_currentVelocity[0] * GENERAL_ELAPSED_TIME, -100.0 * l_currentVelocity[1] * GENERAL_ELAPSED_TIME, 0.0));
 			}
 
-			if (l_inGame && ! l_inBalcon)
+			if (kazuInGame && ! l_inBalcon)
 			{
 				l_position = l_charNode->GetPosition();
 
@@ -523,7 +522,7 @@ void BeginBassineJump()
 				}
 			}
 
-			if (l_inGame)
+			if (kazuInGame)
 			{
 				l_runTime = CURRENTTIMER_TIME_ELAPSED;
 			}
@@ -537,7 +536,7 @@ void BeginBassineJump()
 			l_chronoInGame->SetCaption( itoa( l_nbSeconde) + "'" + itoa( l_nbCentieme) + "''");
 			l_speedInGame->SetCaption( rtoa( l_speedKMH));
 
-			if (l_inGame)
+			if (kazuInGame)
 			{
 				l_position = l_charNode->GetPosition();
 
@@ -571,7 +570,7 @@ void BeginBassineJump()
 
 void InitialiseBassineJump()
 {
-	l_inGame = false;
+	kazuInGame = false;
 	l_inBalcon = false;
 	l_paused = false;
 	l_isEditingName = false;

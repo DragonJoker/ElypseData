@@ -4,6 +4,8 @@ string l_caption;
 string l_stringnum;
 string c_highscorePage;
 
+bool kazuGameStarted;
+bool kazuInGame;
 bool g_clearToGo;
 bool g_fucked;
 
@@ -140,12 +142,13 @@ void InitialiseKazuSplash()
 {
 	Echo( "InitialiseKazuSplash");
 	Overlay_Hide( "Commandes");
+	Overlay_Hide( "EndGame");
 	Overlay_Hide( "Menu");
 	Overlay_Hide( "Options");
 	Overlay_Hide( "Regles");
 	Overlay_Hide( "Title");
-	Overlay_Hide( "FinMiniGame");
 	Overlay_Hide( "InGame/Menu" );
+	Overlay_Hide( "InGame/Score" );
 
 	l_musicVol = 1.0;
 	l_soundVol = 1.0;

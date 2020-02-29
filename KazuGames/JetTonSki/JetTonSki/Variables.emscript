@@ -8,7 +8,6 @@ int g_score;
 //Game
 bool l_music;
 bool l_sound;
-bool l_inGame;
 bool l_turnLeft;
 bool l_turnRight;
 bool l_horsJeu;

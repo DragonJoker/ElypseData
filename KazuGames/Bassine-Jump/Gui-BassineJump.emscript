@@ -91,7 +91,7 @@ SetMouseLUpScript()
 
 BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		l_acceleration = 9.81;
 		l_leftDown = true;
@@ -100,7 +100,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 
 BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		l_acceleration = -9.81;
 		l_rightDown = true;
@@ -109,7 +109,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 
 BindKey( KEYCODE_LEFT, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		if ( ! l_rightDown)
 		{
@@ -122,7 +122,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_UP)
 
 BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		if ( ! l_leftDown)
 		{
@@ -139,7 +139,7 @@ void NaturalInclinate()
 	{
 		timer( "NaturalInclinate", TIMERTYPE_REPEAT, 0.01)
 		{
-			if (l_inGame && ! l_inBalcon)
+			if (kazuInGame && ! l_inBalcon)
 			{
 				l_charNode->TranslateLocal( SetVector3( 0.0, 200.0, -50.0));
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
@@ -175,14 +175,14 @@ void NaturalInclinate()
 
 BindKey( KEYCODE_UP, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		Timer_Kill( "Breaking");
 		Timer_Kill( "NaturalInclinate");
 
 		timer( "Accelerating", TIMERTYPE_REPEAT, 0.01)
 		{
-			if (l_inGame && ! l_inBalcon)
+			if (kazuInGame && ! l_inBalcon)
 			{
 				l_charNode->TranslateLocal( SetVector3( 0.0, 200.0, -50.0));
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
@@ -218,7 +218,7 @@ BindKey( KEYCODE_UP, BINDKEY_DOWN)
 
 BindKey( KEYCODE_UP, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		Timer_Kill( "Accelerating");
 
@@ -228,14 +228,14 @@ BindKey( KEYCODE_UP, BINDKEY_UP)
 
 BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		Timer_Kill( "Accelerating");
 		Timer_Kill( "NaturalInclinate");
 
 		timer( "Breaking", TIMERTYPE_REPEAT, 0.01)
 		{
-			if (l_inGame && ! l_inBalcon)
+			if (kazuInGame && ! l_inBalcon)
 			{
 				l_charNode->TranslateLocal( SetVector3( 0.0, 200.0, -50.0));
 				l_charNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_inclinaison);
@@ -271,7 +271,7 @@ BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 
 BindKey( KEYCODE_DOWN, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inBalcon)
+	if (kazuInGame && ! l_inBalcon)
 	{
 		Timer_Kill( "Breaking");
 

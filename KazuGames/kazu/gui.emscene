@@ -1,3 +1,75 @@
+overlay Title
+{
+	class PanelZone
+	position -25% -35%
+	size 50% 70%
+	align center center
+	material Base/Invisible
+}
+
+overlay EndGame
+{
+	class PanelZone
+	position -20% -20%
+	size 40% 40%
+	align center center
+	material Base/Invisible
+
+	element EndGame/End
+	{
+		class PanelZone
+		position 0% 0%
+		size 100% 50%
+		material Fin
+	}
+
+	element EndGame/Win
+	{
+		class PanelZone
+		position 0% 0%
+		size 100% 50%
+		material Gagne
+	}
+
+	element EndGame/Lose
+	{
+		class PanelZone
+		position 0% 0%
+		size 100% 50%
+		material Perdu
+	}
+
+	element EndGame/Score/Title
+	{
+		class MinigameText
+		position 0% 60%
+		size 50% 15%
+		font_size 30.0
+		text_colour 0.0 0.0 1.0 1.0
+		text Score:
+	}
+
+	element EndGame/Score/Text
+	{
+		class MinigameText
+		position 60% 60%
+		size 40% 15%
+		font_size 30.0
+		text_colour 0.0 0.0 1.0 1.0
+		text 0
+	}
+
+	element EndGame/Score/Submit
+	{
+		class MinigameText
+		position 0% 75%
+		size 100% 15%
+		font_size 30.0
+		text Soumettre le score
+		text_align center
+	}
+}
+
 overlay Menu
 {
 	class PanelZone
@@ -268,21 +340,43 @@ overlay InGame/Menu
 	mouse_over_material MenuInGameMO
 }
 
-overlay Title
+overlay InGame/Score
 {
 	class PanelZone
-	position -25% -35%
-	size 50% 70%
-	align center center
-	material Base/Invisible
-}
+	position 0% 0%
+	size 40% 50%
+	material HautGauche
 
-overlay FinMiniGame
-{
-	class MinigameText
-	position 0% 45%
-	size 100% 10%
-	font_size 40.0
-	text_colour 0.0 0.0 1.0 1.0
-	text 0
+	element InGame/Score/Line1/Title
+	{
+		class MinigameText
+		position 10% 10%
+		size 40% 10%
+		font_size 16.0
+		text Nb Erreurs:
+	}
+	element InGame/Score/Line1/Text
+	{
+		class MinigameText
+		position 50% 10%
+		size 60% 10%
+		font_size 16.00
+		text 0/4
+	}
+	element InGame/Score/Line2/Title
+	{
+		class MinigameText
+		position 10% 20%
+		size 30% 35%
+		font_size 16.0
+		text NbCoups :
+	}
+	element InGame/Score/Line2/Text
+	{
+		class MinigameText
+		position 40.00% 20.00%
+		size 65% 10%
+		font_size 16.0
+		text 0
+	}
 }

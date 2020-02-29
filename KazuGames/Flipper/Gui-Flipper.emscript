@@ -31,7 +31,7 @@ SetMouseLDownScript()
 {
 	timer( "mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
 	{
-		if (l_inGame && ! l_gameStarted)
+		if (kazuInGame && ! kazuGameStarted)
 		{
 			l_currentLanceurYaw = l_currentLanceurYaw - 0.500 * MOUSE_DIFFERENCE_X;
 			if (l_currentLanceurYaw < -45.0)
@@ -53,7 +53,7 @@ SetMouseLUpScript()
 	Timer_Kill( "MusicChangeVolume");
 	Timer_Kill( "SoundChangeVolume");
 	Timer_Kill( "mouse_LButtonDown");
-	if ( l_inGame && ! l_gameStarted)
+	if ( kazuInGame && ! kazuGameStarted)
 	{
 		LaunchBall();
 	};
@@ -61,7 +61,7 @@ SetMouseLUpScript()
 
 BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 {
-	if (l_inGame)
+	if (kazuInGame)
 	{
 		FlipRight();
 	};
@@ -69,7 +69,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 
 BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 {
-	if (l_inGame)
+	if (kazuInGame)
 	{
 		UnFlipRight();
 	};
@@ -77,7 +77,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 
 BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 {
-	if (l_inGame)
+	if (kazuInGame)
 	{
 		FlipLeft();
 	};
@@ -85,7 +85,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 
 BindKey( KEYCODE_LEFT, BINDKEY_UP)
 {
-	if (l_inGame)
+	if (kazuInGame)
 	{
 		UnFlipLeft();
 	};
@@ -93,7 +93,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_UP)
 
 BindKey( KEYCODE_SPACE, BINDKEY_UP)
 {
-	if (l_inGame)
+	if (kazuInGame)
 	{
 		ShakeFlipper();
 	};

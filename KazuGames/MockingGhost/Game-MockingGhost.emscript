@@ -1,5 +1,3 @@
-bool l_gameStarted;
-bool l_inGame;
 bool l_melted;
 bool l_selected;
 bool l_odd;
@@ -46,45 +44,29 @@ string l_name;
 
 void EndMockingGhost()
 {
-	Echo( "EndGame " + itoa( l_nbTries) + "/" + itoa( l_maxTries));
+	Echo( "EndGame " + itoa( l_nbTries ) + "/" + itoa( l_maxTries ) );
 	if (l_nbTries == l_maxTries)
 	{
 		KazuGuiStop();
-		OverlayElement_GetByName( "Fin/Score")->Show();
-		OverlayElement_GetByName( "Fin/Text")->Show();
-		OverlayElement_GetByName( "Fin/Text")->SetCaption( itoa( g_score));
-		Overlay_Show( "Fin");
-		_submitHighscore();
-		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
+		timer( "EndGame", TIMERTYPE_ONCE, 2.0 )
 		{
-			Overlay_Hide( "Fin");
-			CheckClearToGo();
-			Overlay_Show( "Menu");
-			OverlayElement_GetByName( "Menu/Jouer")->Hide();
-			OverlayElement_GetByName( "Menu/Continuer")->Hide();
-			OverlayElement_GetByName( "Menu/Recommencer")->Show();
-		};
-	};
-};
+			KazuGuiRestart();
+		}
+	}
+}
 
 void LoseMockingGhost()
 {
-	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Perdu");
-	Overlay_Show( "Fin");
-	OverlayElement_GetByName( "Fin/Score")->Hide();
-	OverlayElement_GetByName( "Fin/Text")->Hide();
+	KazuLoseGame( false );
 	EndMockingGhost();
-};
+}
 
 void WinMockingGhost()
 {
-	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Gagne");
-	Overlay_Show( "Fin");
-	OverlayElement_GetByName( "Fin/Score")->Hide();
-	OverlayElement_GetByName( "Fin/Text")->Hide();
+	KazuWinGame();
 	g_score = g_score + 1000;
 	EndMockingGhost();
-};
+}
 
 void ChangeSpeed()
 {
@@ -99,9 +81,9 @@ void ChangeSpeed()
 	else
 	{
 		l_speed = l_speed - 0.05;
-	};
+	}
 	Echo( "NbSwitches : " + itoa( l_nbSwitches) + " - Speed : " + rtoa( l_speed));
-};
+}
 
 void Switch_1_2()
 {
@@ -118,16 +100,15 @@ void Switch_1_2()
 		l_currentPos2 = V3_BezierInterpolation( l_startPos2, l_middlePos2, l_endPos2, CURRENTTIMER_TIME_LEFT / l_speed);
 		l_box1->SetPosition( l_currentPos1);
 		l_box2->SetPosition( l_currentPos2);
-	};
+	}
 	timer( "EndSwitch_1_2" + rtoa( l_currentSpeed), TIMERTYPE_ONCE, l_currentSpeed)
 	{
 		l_tmpBox = l_box1;
 		l_box1 = l_box2;
 		l_box2 = l_tmpBox;
 		ChangeSpeed();
-//		Echo( "EndSwitch_1_2 " + rtoa( l_speed));
-	};
-};
+	}
+}
 
 void Switch_1_3()
 {
@@ -144,16 +125,15 @@ void Switch_1_3()
 		l_currentPos2 = V3_BezierInterpolation( l_startPos2, l_middlePos2, l_endPos2, CURRENTTIMER_TIME_LEFT / l_speed);
 		l_box1->SetPosition( l_currentPos1);
 		l_box3->SetPosition( l_currentPos2);
-	};
+	}
 	timer( "EndSwitch_1_3" + rtoa( l_currentSpeed), TIMERTYPE_ONCE, l_currentSpeed)
 	{
 		l_tmpBox = l_box1;
 		l_box1 = l_box3;
 		l_box3 = l_tmpBox;
 		ChangeSpeed();
-//		Echo( "EndSwitch_1_3 " + rtoa( l_speed));
-	};
-};
+	}
+}
 
 void Switch_2_3()
 {
@@ -170,16 +150,15 @@ void Switch_2_3()
 		l_currentPos2 = V3_BezierInterpolation( l_startPos2, l_middlePos2, l_endPos2, CURRENTTIMER_TIME_LEFT / l_speed);
 		l_box2->SetPosition( l_currentPos1);
 		l_box3->SetPosition( l_currentPos2);
-	};
+	}
 	timer( "EndSwitch_2_3" + rtoa( l_currentSpeed), TIMERTYPE_ONCE, l_currentSpeed)
 	{
 		l_tmpBox = l_box2;
 		l_box2 = l_box3;
 		l_box3 = l_tmpBox;
 		ChangeSpeed();
-//		Echo( "EndSwitch_2_3 " + rtoa( l_speed));
-	};
-};
+	}
+}
 
 void SwitchBoxes()
 {
@@ -200,10 +179,10 @@ void SwitchBoxes()
 	else
 	{
 		Switch_2_3();
-	};
-};
+	}
+}
 
-void MeltBoxes()
+void ShuffleBoxes()
 {
 	l_selected = false;
 	l_nbSwitches = 0;
@@ -211,19 +190,19 @@ void MeltBoxes()
 	timer( "EndSwitch", TIMERTYPE_ONCE, 7.0)
 	{
 		l_melted = true;
-	};
-};
+	}
+}
 
 void HidePieceBox()
 {
 	Object_GetByName( "Box_1")->Hide();
-};
+}
 
 void ShowPieceBox()
 {
 	Object_GetByName( "Box_1")->Show();
-	MeltBoxes();
-};
+	ShuffleBoxes();
+}
 
 void ShowPiece()
 {
@@ -232,8 +211,8 @@ void ShowPiece()
 		l_speed = 0.5;
 		Sequence_Start( "RevealPiece");
 		l_nbTries = l_nbTries + 1;
-	};
-};
+	}
+}
 
 void RevealBox()
 {
@@ -253,13 +232,13 @@ void RevealBox()
 		l_revealedObject = Object_GetByName( "Ghost_" + itoa( l_selectedNumber - 1));
 		l_revealedObject->SetParent( SceneNode_GetByName( "RevealedBox"));
 		SceneNode_GetByName( "RevealedBox")->Translate( SetVector3( 0.0, 15.0, 0.0));
-	};
+	}
 	timer( "RevealBox", TIMERTYPE_CONTINUOUS, 1.0)
 	{
 		l_currentPitch = V3_LinearInterpolation( l_minPitch, l_maxPitch, CURRENTTIMER_TIME_LEFT);
 		l_selectedObject->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
 		l_selectedObject->GetParent()->SetPosition( V3_LinearInterpolation( l_minHeight, l_maxHeight, CURRENTTIMER_TIME_LEFT));
-	};
+	}
 	timer( "EndReveal", TIMERTYPE_ONCE, 1.0)
 	{
 		if (l_selectedObject->GetName() == "Box_1")
@@ -271,7 +250,7 @@ void RevealBox()
 		{
 			Sound_Play_Global( "Ghost");
 			LoseMockingGhost();
-		};
+		}
 		if (l_nbTries < l_maxTries)
 		{
 			timer( "ReHide", TIMERTYPE_ONCE, 2.0)
@@ -282,16 +261,16 @@ void RevealBox()
 					l_currentPitch = V3_LinearInterpolation( l_minPitch, l_maxPitch, CURRENTTIMER_TIME_ELAPSED);
 					l_selectedObject->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
 					l_selectedObject->GetParent()->SetPosition( V3_LinearInterpolation( l_minHeight, l_maxHeight, CURRENTTIMER_TIME_ELAPSED));
-				};
+				}
 				timer( "EndReHideBox", TIMERTYPE_ONCE, 2.0)
 				{
 					l_revealedObject->SetParent( l_revealedObjectNode);
 					ShowPiece();
-				};
-			};
-		};
-	};
-};
+				}
+			}
+		}
+	}
+}
 
 void ChooseBox()
 {
@@ -299,23 +278,21 @@ void ChooseBox()
 	if (l_selectedObject != NULL)
 	{
 		l_name = l_selectedObject->GetName();
-//		Echo( l_name);
 		if (l_name->find( "Box_") != npos)
 		{
 			strSplitOne( l_name, "_");
-//			Echo( l_name);
 			l_selectedNumber = atoi( l_name);
 			l_melted = false;
 			l_selected = true;
 			RevealBox();
-		};
-	};
-};
+		}
+	}
+}
 
 void StopMockingGhost()
 {
-	l_inGame = false;
-	l_gameStarted = false;
+	kazuInGame = false;
+	kazuGameStarted = false;
 	KazuGuiStop();
 	Overlay_Show( "Menu");
 	l_box1->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
@@ -323,34 +300,28 @@ void StopMockingGhost()
 	l_box3->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
 	l_revealedObject->SetParent( l_revealedObjectNode);
 	l_selectedObject->GetParent()->SetPosition( l_minHeight);
-};
+}
 
 void PauseMockingGhost()
 {
-	l_inGame = false;
-	Timer_PauseAll();
 	KazuGuiPause();
-};
+}
 
 void ContinueMockingGhost()
 {
-	l_inGame = true;
-	Timer_PlayAll();
 	KazuGuiResume();
-};
+}
 
 void BeginMockingGhost()
 {
 	KazuGuiBegin();
-	l_inGame = true;
-	l_gameStarted = true;
 	l_melted = false;
 	l_selected = false;
 	g_score = 0;
 	l_nbTries = 0;
 	l_maxTries = 3;
 	ShowPiece();
-};
+}
 
 void InitialiseMockingGhost()
 {
@@ -361,16 +332,12 @@ void InitialiseMockingGhost()
 	l_maxSwitches = 10;
 	l_odd = false;
 
-	Overlay_Hide( "Fin");
-	OverlayElement_GetByName( "Fin/Score")->Hide();
-	OverlayElement_GetByName( "Fin/Text")->Hide();
-
 	Sound_Play_Global( "Haunted");
 
 	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "Clic gauche de la souris sur un des 3 mini manoirs pour reveler ce qui se cache en dessous." );
 	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de retourner le manoir ou se trouve la piece, sans tomber sur un fantome." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreMockingGhost" );
-	KazuGuiInit();
-};
+	KazuGuiInit( false, false, false );
+}
 
 InitialiseMockingGhost();

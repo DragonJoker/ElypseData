@@ -202,7 +202,7 @@ SetMouseRDownScript()
 {
 	Timer_Kill( "Mouse_RButtonDown");
 
-	if (l_inGame && ! l_paused)
+	if (kazuInGame && ! l_paused)
 	{
 		timer( "Mouse_RButtonDown", TIMERTYPE_PERMANENT, 0.0)
 		{
@@ -239,7 +239,7 @@ SetMouseRUpScript()
 
 SetMouseWheelUpScript()
 {
-	if (l_inGame && ! l_paused)
+	if (kazuInGame && ! l_paused)
 	{
 		l_currentZoom = V3_GetLength( l_rootCamera->GetPosition() * 0.9);
 
@@ -254,7 +254,7 @@ SetMouseWheelUpScript()
 
 SetMouseWheelDownScript()
 {
-	if (l_inGame && ! l_paused)
+	if (kazuInGame && ! l_paused)
 	{
 		l_currentZoom = V3_GetLength( l_rootCamera->GetPosition() * 1.11);
 
@@ -269,7 +269,7 @@ SetMouseWheelDownScript()
 
 BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		Timer_Kill( "LeftUnTurn");
 
@@ -298,7 +298,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
 
 BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		Timer_Kill( "RightUnTurn");
 
@@ -328,7 +328,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
 BindKey( KEYCODE_LEFT, BINDKEY_UP)
 {
 
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		Timer_Kill( "LeftTurn");
 
@@ -362,7 +362,7 @@ BindKey( KEYCODE_LEFT, BINDKEY_UP)
 
 BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		Timer_Kill( "RightTurn");
 
@@ -396,7 +396,7 @@ BindKey( KEYCODE_RIGHT, BINDKEY_UP)
 
 BindKey( KEYCODE_UP, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inRock && ! Timer_Exists( "Accelerating"))
+	if (kazuInGame && ! l_inRock && ! Timer_Exists( "Accelerating"))
 	{
 		Timer_Kill( "Breaking");
 
@@ -424,7 +424,7 @@ BindKey( KEYCODE_UP, BINDKEY_DOWN)
 
 BindKey( KEYCODE_UP, BINDKEY_REPEATED)
 {
-	if (l_inGame && ! l_inRock && ! Timer_Exists( "Accelerating"))
+	if (kazuInGame && ! l_inRock && ! Timer_Exists( "Accelerating"))
 	{
 		Timer_Kill( "Breaking");
 
@@ -452,7 +452,7 @@ BindKey( KEYCODE_UP, BINDKEY_REPEATED)
 
 BindKey( KEYCODE_UP, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inRock && Timer_Exists( "Accelerating"))
+	if (kazuInGame && ! l_inRock && Timer_Exists( "Accelerating"))
 	{
 		Timer_Kill( "Accelerating");
 	};
@@ -460,7 +460,7 @@ BindKey( KEYCODE_UP, BINDKEY_UP)
 
 BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		Timer_Kill( "Accelerating");
 
@@ -497,7 +497,7 @@ BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
 
 BindKey( KEYCODE_DOWN, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		Timer_Kill( "Breaking");
 	};
@@ -505,7 +505,7 @@ BindKey( KEYCODE_DOWN, BINDKEY_UP)
 
 BindKey( KEYCODE_SPACE, BINDKEY_DOWN)
 {
-	if (l_inGame && ! l_inRock)
+	if (kazuInGame && ! l_inRock)
 	{
 		l_spaceHit = true;
 		timer( "SpaceTimeOut", TIMERTYPE_ONCE, 1.0)
@@ -517,7 +517,7 @@ BindKey( KEYCODE_SPACE, BINDKEY_DOWN)
 
 BindKey( KEYCODE_SPACE, BINDKEY_UP)
 {
-	if (l_inGame && ! l_inRock && Timer_Exists( "SpaceTimeOut"))
+	if (kazuInGame && ! l_inRock && Timer_Exists( "SpaceTimeOut"))
 	{
 		Timer_Kill( "SpaceTimeOut");
 		l_spaceHit = false;

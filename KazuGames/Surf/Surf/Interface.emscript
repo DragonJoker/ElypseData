@@ -223,7 +223,7 @@ SetMouseLButtonUpScript()
 
 void TreatKey( char p_currentKey)
 {
-	if ( ! l_sequenceCompleted && l_inGame && ! l_paused && Timer_Exists( "Surfing"))
+	if ( ! l_sequenceCompleted && kazuInGame && ! l_paused && Timer_Exists( "Surfing"))
 	{
 		if (p_currentKey == strGetChar( l_sequence, 0))
 		{
@@ -300,7 +300,7 @@ void TreatKey( char p_currentKey)
 				OverlayElement_GetByName( "InGame/Result")->SetMaterial( "Gagne");
 				Overlay_Show( "InGame/Result");
 				Overlay_Show( "InGame/SubmitScore");
-				l_inGame = false;
+				kazuInGame = false;
 			};
 
 			if (l_nbLife < c_nbLifeMax)
@@ -308,7 +308,7 @@ void TreatKey( char p_currentKey)
 				l_nbLife ++;
 			};
 
-			if (l_inGame)
+			if (kazuInGame)
 			{
 				OverlayElement_GetByName( "InGame/TopLeft/Score")->SetCaption( "Score : " + itoa( g_score));
 				OverlayElement_GetByName( "Menu/Continuer")->Show();
@@ -980,7 +980,7 @@ BindKey( KEYCODE_SPACE, BINDKEY_UP)
 
 BindKey( KEYCODE_ENTER, BINDKEY_UP)
 {
-	if (l_inGame && ! Timer_Exists( "Surfing"))
+	if (kazuInGame && ! Timer_Exists( "Surfing"))
 	{
 		Overlay_Hide( "Menu");
 

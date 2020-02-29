@@ -697,7 +697,7 @@ void EndGame()
 
 	ResetTurn();
 
-	l_inGame = false;
+	kazuInGame = false;
 	l_finished = true;
 	l_position = 1;
 	l_saveScore = 0;
@@ -994,7 +994,7 @@ void InitialiseRace()
 	l_finished = false;
 	l_horsJeu = false;
 	l_inRock = false;
-	l_inGame = false;
+	kazuInGame = false;
 	l_indexRockTaken = -1;
 	l_indexRampTaken = -1;
 	l_speedMax = 130.0;
@@ -1128,7 +1128,7 @@ void BeginGame()
 	{
 		Overlay_Hide( "Jetski/Start");
 		l_beginTime = l_elapsedTime;
-		l_inGame = true;
+		kazuInGame = true;
 
 		OverlayElement_GetByName( "Jetski/OpponentName0")->Show();
 		OverlayElement_GetByName( "Jetski/OpponentName1")->Show();
@@ -1180,7 +1180,7 @@ void BeginGame()
 				(l_nameOv[i])->SetPosition( l_posTmp);
 			};
 
-			if (l_inGame)
+			if (kazuInGame)
 			{
 				CheckRocks();
 				CheckGoldRings();
@@ -1303,7 +1303,7 @@ void BeginGame()
 			l_rootCamera->GetParent()->Yaw( 180.0);
 			l_rootCamera->GetParent()->Pitch( l_currentPitch);
 
-			if (l_inGame)
+			if (kazuInGame)
 			{
 				l_runTime = l_elapsedTime - l_beginTime;
 			}
@@ -1353,7 +1353,7 @@ void BeginGame()
 				l_previousTurboPosY = l_nbSeconde;
 			};
 
-			if (l_inGame)
+			if (kazuInGame)
 			{
 				l_runTime = l_elapsedTime - l_beginTime;
 				l_runTimeSave = l_runTime;
@@ -1959,7 +1959,7 @@ void Initialise()
 	l_finished = false;
 	l_sound = false;
 	l_music = false;
-	l_inGame = false;
+	kazuInGame = false;
 	l_turnLeft = false;
 	l_turnRight = false;
 	l_horsJeu = false;

@@ -16,7 +16,6 @@ Overlay_SetAction( "Menu/Recommencer")
 
 Overlay_SetAction( "Menu/Retour")
 {
-	Timer_KillAll();
 	Sound_Stop_Global( "Haunted");
 	KazuGuiCleanup();
 }
@@ -30,7 +29,7 @@ SetMouseLUpScript()
 {
 	Timer_Kill( "SoundChangeVolume");
 	Timer_Kill( "MusicChangeVolume");
-	if ( l_inGame && l_gameStarted && l_melted && ! l_selected)
+	if ( kazuInGame && kazuGameStarted && l_melted && ! l_selected)
 	{
 		ChooseBox();
 	};

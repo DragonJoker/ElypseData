@@ -1,9 +1,7 @@
-bool l_inGame;
 bool l_paused;
 bool l_inZombie;
 bool l_leftDown;
 bool l_rightDown;
-bool l_gameStarted;
 
 real l_acceleration;
 real l_gravity;
@@ -238,7 +236,7 @@ void LaunchDescent();
 
 void PlayerReady()
 {
-	l_inGame = false;
+	kazuInGame = false;
 	timer ("Pret", TIMERTYPE_CONTINUOUS, 5.0)
 	{
 		if (CURRENTTIMER_TIME_ELAPSED >= 1.0 && CURRENTTIMER_TIME_ELAPSED < 2.0)
@@ -314,7 +312,7 @@ void StartGame()
 	l_statueRetrieved = -1;
 	l_zombieSavaged = -1;
 	l_elapsedTime = 0.0;
-	l_inGame = true;
+	kazuInGame = true;
 	l_paused = false;
 
 	l_runTime = 0.0;
@@ -363,7 +361,7 @@ void WinGame()
 void LaunchDescent()
 {
 	l_beginTime = l_elapsedTime;
-	l_inGame = true;
+	kazuInGame = true;
 
 	timer( "Riding", TIMERTYPE_PERMANENT, 0.0)
 	{
@@ -415,7 +413,7 @@ void LaunchDescent()
 				l_charAnims->StartAnimation( "stand");
 			};
 			OverlayElement_GetByName( "Life" + itoa( l_nbLives))->Show();
-			l_inGame = false;
+			kazuInGame = false;
 			l_currentVelocity	= SetVector3( 0.0, 0.0, 0.0);
 			l_previousVelocity = l_currentVelocity;
 			l_acceleration = 0.0;
@@ -462,7 +460,7 @@ void LaunchDescent()
 			l_charNode->Translate( SetVector3( 100.0 * l_currentVelocity[0] * GENERAL_ELAPSED_TIME, -100.0 * l_currentVelocity[1] * GENERAL_ELAPSED_TIME, 100.0 * l_currentVelocity[1] * GENERAL_ELAPSED_TIME));
 		};
 
-		if (l_inGame)
+		if (kazuInGame)
 		{
 			l_elapsedTime += GENERAL_ELAPSED_TIME;
 			l_runTime = l_elapsedTime - l_beginTime;
@@ -560,7 +558,7 @@ void BeginGame()
 {
 	g_score = 0;
 	UpdateScore();
-	l_gameStarted = true;
+	kazuGameStarted = true;
 
 	l_currentZoom = 15000.0;
 	l_currentPitch = 30.0;
@@ -583,7 +581,7 @@ void BeginGame()
 		StartLevel();
 		timer ("FinPret", TIMERTYPE_ONCE, 5.0)
 		{
-			l_inGame = true;
+			kazuInGame = true;
 			Overlay_Hide( "Start");
 			OverlayElement_GetByName( "Start/Text")->SetCaption( "Level " + itoa( l_currentLevel + 1));
 			LaunchDescent();
@@ -607,8 +605,8 @@ void StopGame()
 	Overlay_Show( "Menu");
 
 	l_paused = false;
-	l_inGame = false;
-	l_gameStarted = false;
+	kazuInGame = false;
+	kazuGameStarted = false;
 
 	OverlayElement_GetByName( "Life1")->Show();
 	OverlayElement_GetByName( "Life2")->Show();
@@ -663,7 +661,7 @@ void ContinueGame()
 
 	Timer_Play( "Pret");
 	Timer_Play( "PlaceCamera");
-	if (l_inGame)
+	if (kazuInGame)
 	{
 		Timer_Play( "Riding");
 	};
@@ -680,7 +678,7 @@ void ContinueGame()
 
 void Initialise()
 {
-	l_inGame = false;
+	kazuInGame = false;
 	l_paused = false;
 	l_currentPitch = 30.0;
 	l_previousPitch = 30.0;

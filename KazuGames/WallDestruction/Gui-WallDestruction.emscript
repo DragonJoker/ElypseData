@@ -2,13 +2,13 @@ SetMouseLUpScript()
 {
 	Timer_Kill( "MusicChangeVolume");
 	Timer_Kill( "SoundChangeVolume");
-	if (l_gameStarted && l_inGame)
+	if (kazuGameStarted && kazuInGame)
 	{
-		if ( ! l_ballLaunched)
+		if ( !l_ballLaunched )
 		{
 			LaunchBall();
 		}
-		elseif ( ! l_shootingBall)
+		elseif ( !l_shootingBall )
 		{
 			ShootBatte();
 		};
@@ -44,16 +44,16 @@ Overlay_SetAction( "Menu/Retour")
 	KazuGuiCleanup();
 }
 
-Overlay_SetAction( "WinGame/Submit")
+Overlay_SetAction( "EndGame/Score/Submit" )
 {
-	_submitHighscore();
-	OverlayElement_GetByName( "WinGame/Submit")->Hide();
+	KazuSubmitScore();
+	OverlayElement_GetByName( "EndGame/Score/Submit")->Hide();
 	EndWallDestruction();
 };
 
-Overlay_SetAction( "LoseGame/Submit")
+Overlay_SetAction( "EndGame/Score/Submit")
 {
-	_submitHighscore();
-	OverlayElement_GetByName( "LoseGame/Submit")->Hide();
+	KazuSubmitScore();
+	OverlayElement_GetByName( "EndGame/Score/Submit")->Hide();
 	EndWallDestruction();
 };
