@@ -1,3 +1,4 @@
+string l_queryRetrieve;
 string l_namesAndScores;
 string l_names;
 string l_scores;
@@ -12,7 +13,10 @@ c_highscorePage = c_baseSite + "/score.php";
 
 void KazuRetrieveHighScores()
 {
-	l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + c_gameName, EMPTY_STRING);
+	l_queryRetrieve = c_highscorePage + "?game=" + c_prvSceneName;
+	Echo( l_queryRetrieve );
+	l_namesAndScores = StringFromUrl( l_queryRetrieve, EMPTY_STRING );
+	Echo( l_namesAndScores );
 
 	l_index = strFind( l_namesAndScores, "<br>");
 
@@ -28,7 +32,9 @@ void KazuRetrieveHighScores()
 
 void KazuSubmitScore()
 {
-	StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + c_gameName + "&player=" + c_playerName);
+	l_queryRetrieve = c_highscorePage + "?score=" + itoa( g_score) + "&game=" + c_prvSceneName + "&name=KazuPlayer";
+	Echo( l_queryRetrieve );
+	StringFromUrl( l_queryRetrieve, EMPTY_STRING );
 }
 
 void KazuWinGame()

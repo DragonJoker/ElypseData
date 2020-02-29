@@ -37,8 +37,6 @@ overlay l_ticSound;
 void KazuPlayGame()
 {
 	Echo( "KazuPlayGame");
-	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=confirm&gamename=" + c_gameName, "");
-	ExecuteJavaScript( "RefreshCredits();");
 }
 
 void LaunchGame()
@@ -78,8 +76,8 @@ void CheckClearToGo()
 		l_index = strFind( l_infos, "<br>");
 		l_names = substr( l_infos, 0, l_index);
 		l_muses = substr( l_infos, l_index + 4, strlen( l_infos));
-		l_name = strSplitOne( l_names, "|");
-		l_muse = strSplitOne( l_muses, "|");
+		l_name = "a";
+		l_muse = "a";
 		l_gameOverlayPosition = SetVector3( 20.0, 20.0, 104.0 );
 
 		while (l_muse != "" && l_name != "")

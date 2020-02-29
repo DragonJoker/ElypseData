@@ -61,12 +61,19 @@ overlay EndGame
 
 	element EndGame/Score/Submit
 	{
-		class MinigameText
+		class PanelZone
 		position 0% 75%
 		size 100% 15%
-		font_size 30.0
-		text Soumettre le score
-		text_align center
+		material Base/Invisible
+
+		element EndGame/Score/Submit/Text
+		{
+			class MinigameText
+			size 100% 100%
+			font_size 30.0
+			text Soumettre le score
+			text_align center
+		}
 	}
 }
 

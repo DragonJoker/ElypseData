@@ -216,6 +216,7 @@ Overlay_SetAction( "Regles/Retour")
 Overlay_SetAction( "Menu/Scores")
 {
 	HideTitle();
+	KazuRetrieveHighScores();
 	Overlay_Show( "Scores");
 	Overlay_Hide( "Menu");
 }
