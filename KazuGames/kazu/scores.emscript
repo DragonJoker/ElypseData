@@ -37,51 +37,58 @@ void KazuSubmitScore()
 	StringFromUrl( l_queryRetrieve, EMPTY_STRING );
 }
 
-void KazuWinGame()
+void KazuDisplayEndScore()
 {
-	OverlayElement_GetByName( "EndGame/End" )->Hide();
-	OverlayElement_GetByName( "EndGame/Win" )->Show();
-	OverlayElement_GetByName( "EndGame/Lose" )->Hide();
-	OverlayElement_GetByName( "EndGame/Score/Title" )->Show();
 	OverlayElement_GetByName( "EndGame/Score/Text" )->SetCaption( itoa( g_score ) );
+	OverlayElement_GetByName( "EndGame/Score/Title" )->Show();
 	OverlayElement_GetByName( "EndGame/Score/Text" )->Show();
 	OverlayElement_GetByName( "EndGame/Score/Submit" )->Show();
-	Overlay_Show( "EndGame" );
 }
 
-void KazuLoseGame( bool submitScore )
+void KazuHideEndScore()
 {
-	OverlayElement_GetByName( "EndGame/End" )->Hide();
-	OverlayElement_GetByName( "EndGame/Win" )->Hide();
-	OverlayElement_GetByName( "EndGame/Lose" )->Show();
 	OverlayElement_GetByName( "EndGame/Score/Title" )->Hide();
 	OverlayElement_GetByName( "EndGame/Score/Text" )->Hide();
-
-	if ( submitScore )
-	{
-		OverlayElement_GetByName( "EndGame/Score/Submit" )->Show();
-	}
-	else
-	{
-		OverlayElement_GetByName( "EndGame/Score/Submit" )->Hide();
-		Overlay_Show( "EndGame" );
-
-		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
-		{
-			Overlay_Hide( "EndGame" );
-			Overlay_Show( "Menu");
-		}
-	}
+	OverlayElement_GetByName( "EndGame/Score/Submit" )->Hide();
 }
 
 void KazuEndGame()
 {
-	OverlayElement_GetByName( "EndGame/End" )->Show();
-	OverlayElement_GetByName( "EndGame/Win" )->Hide();
-	OverlayElement_GetByName( "EndGame/Lose" )->Hide();
-	OverlayElement_GetByName( "EndGame/Score/Title" )->Show();
-	OverlayElement_GetByName( "EndGame/Score/Text" )->SetCaption( itoa( g_score ) );
-	OverlayElement_GetByName( "EndGame/Score/Text" )->Show();
-	OverlayElement_GetByName( "EndGame/Score/Submit" )->Show();
-	Overlay_Show( "EndGame" );
+	KazuDisplayEndScore();
+	KazuGuiEndGame();
+}
+
+void KazuWinGame()
+{
+	KazuDisplayEndScore();
+	KazuGuiWinGame();
+}
+
+void KazuLoseGame( bool submitScore )
+{
+	KazuGuiLoseGame( submitScore );
+
+	if ( submitScore )
+	{
+		KazuDisplayEndScore();
+	}
+	else
+	{
+		KazuHideEndScore();
+	}
+}
+
+Overlay_SetAction( "Menu/Scores")
+{
+	HideTitle();
+	KazuRetrieveHighScores();
+	Overlay_Show( "Scores");
+	Overlay_Hide( "Menu");
+}
+
+Overlay_SetAction( "EndGame/Score/Submit")
+{
+	KazuSubmitScore();
+	Overlay_Hide( "EndGame");
+	Overlay_Show( "Menu");
 }

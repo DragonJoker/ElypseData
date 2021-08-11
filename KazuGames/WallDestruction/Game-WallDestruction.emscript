@@ -71,37 +71,31 @@ int g_nbCoups;
 
 void UpdateScore()
 {
-	if (g_score < 0)
-	{
-		g_score = 500;
-	}
-	OverlayElement_GetByName("InGame/Score/Line1/Text")->SetCaption( itoa( g_score));
+	OverlayElement_GetByName("InGame/Score/Line1/Text")->SetCaption( itoa( g_score ) );
 }
 
 void UpdateNbCoups()
 {
-	OverlayElement_GetByName("InGame/Score/Line2/Text")->SetCaption( itoa( g_nbCoups));
+	OverlayElement_GetByName("InGame/Score/Line2/Text")->SetCaption( itoa( g_nbCoups ) );
 }
 
-void EndWallDestruction()
+void EndWallDestruction( int bonus )
 {
+	g_score = bonus + g_score - (g_nbCoups * 200);
+	UpdateScore();
 	KazuGuiStop();
 }
 
 void WinWallDestruction()
 {
-	g_score = g_score + 50000 - (g_nbCoups * 200);
-	UpdateScore();
+	EndWallDestruction( 50000 );
 	KazuWinGame();
-	KazuGuiStop();
 }
 
 void LoseWallDestruction()
 {
-	g_score = g_score - (g_nbCoups * 200);
-	UpdateScore();
+	EndWallDestruction( 0 );
 	KazuLoseGame( true );
-	KazuGuiStop();
 }
 
 void DestroyWall()
@@ -427,71 +421,82 @@ void BuildWall()
 	}
 }
 
+void HideAndDestroy()
+{
+	for ( l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1 )
+	{
+		for ( l_wallBrique = l_minWallBrique ; l_wallBrique <= l_maxWallBrique ; l_wallBrique = l_wallBrique + 1 )
+		{
+			l_name = "Brique_" + itoa( l_wallLine ) + "_" + itoa( l_wallBrique ) );
+
+			if ( Object_GetByName( l_name )->IsVisible() )
+			{
+				Object_GetByName( l_name )->Hide();
+				PhysicsObject_Destroy( l_name );
+			}
+		}
+	}
+}
+
 void StopWallDestruction()
 {
 	Timer_KillAll();
 	ResetBallAndBatte();
-	for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
-	{
-		for (l_wallBrique = l_minWallBrique ; l_wallBrique <= l_maxWallBrique ; l_wallBrique = l_wallBrique + 1)
-		{
-			l_name = "Brique_" + itoa( l_wallLine) + "_" + itoa( l_wallBrique));
-			if (Object_GetByName( l_name)->IsVisible())
-			{
-				Object_GetByName( l_name)->Hide();
-				PhysicsObject_Destroy( l_name);
-			}
-		}
-	}
+	HideAndDestroy();
 	BuildWall();
 	KazuGuiStop();
-	Overlay_Show( "Menu");
+	Overlay_Show( "Menu" );
 }
 
 void PauseWallDestruction()
 {
 	KazuGuiPause();
-	if (l_bricksFlowing)
+
+	if ( l_bricksFlowing )
 	{
-		for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
+		for ( l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1 )
 		{
-			for (l_wallBrique = l_minWallBrique ; l_wallBrique <= l_maxWallBrique ; l_wallBrique = l_wallBrique + 1)
+			for ( l_wallBrique = l_minWallBrique ; l_wallBrique <= l_maxWallBrique ; l_wallBrique = l_wallBrique + 1 )
 			{
-				l_name = "Brique_" + itoa( l_wallLine) + "_" + itoa( l_wallBrique));
-				if (Object_GetByName( l_name)->IsVisible())
+				l_name = "Brique_" + itoa( l_wallLine ) + "_" + itoa( l_wallBrique ) );
+
+				if ( Object_GetByName( l_name )->IsVisible() )
 				{
-					Object_GetByName( l_name)->GetPhysicsObject()->SetEnabled( false);
+					Object_GetByName( l_name )->GetPhysicsObject()->SetEnabled( false );
 				}
 			}
 		}
 	}
-	if (l_ballLaunched)
+
+	if ( l_ballLaunched )
 	{
-		l_ballePhys->SetEnabled( false);
+		l_ballePhys->SetEnabled( false );
 	}
-	Overlay_Hide( "InGame/Score");
 }
 
 void ContinueWallDestruction()
 {
 	KazuGuiResume();
-	if (l_bricksFlowing)
+
+	if ( l_bricksFlowing )
 	{
-		for (l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1)
+		for ( l_wallLine = l_minWallLine ; l_wallLine <= l_maxWallLine ; l_wallLine = l_wallLine + 1 )
 		{
-			for (l_wallBrique = l_minWallBrique ; l_wallBrique <= l_maxWallBrique ; l_wallBrique = l_wallBrique + 1)
+			for ( l_wallBrique = l_minWallBrique ; l_wallBrique <= l_maxWallBrique ; l_wallBrique = l_wallBrique + 1 )
 			{
-				l_name = "Brique_" + itoa( l_wallLine) + "_" + itoa( l_wallBrique));
-				if (Object_GetByName( l_name)->IsVisible())
+				l_name = "Brique_" + itoa( l_wallLine ) + "_" + itoa( l_wallBrique ) );
+
+				if ( Object_GetByName( l_name )->IsVisible() )
 				{
-					Object_GetByName( l_name)->GetPhysicsObject()->SetEnabled( true);
+					Object_GetByName( l_name )->GetPhysicsObject()->SetEnabled( true );
 				}
 			}
 		}
 	}
-	if (l_ballLaunched)
+
+	if ( l_ballLaunched )
 	{
-		l_ballePhys->SetEnabled( true);
+		l_ballePhys->SetEnabled( true );
 	}
 }
 
@@ -540,8 +545,8 @@ void InitialiseWallDestruction()
 
 	Sound_Play_Global( "Ambiance");
 
-	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "La seule commande a connaitre est le clic gauche de la souris qui lance le balle, et qui permet de frapper avec la batte." );
-	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de detruire le mur en vous servant de la batte. Vous avez 50 coups pour atteindre cet objectif." );
+	OverlayElement_GetByName( "Commandes/Text")->SetCaption( "La seule commande a connaitre est le clic gauche de la souris qui lance la balle, et qui permet de frapper avec la batte." );
+	OverlayElement_GetByName( "Regles/Text")->SetCaption( "Essayez de detruire le mur en vous servant de la batte. Vous avez " + itoa( l_maxTries ) + " coups pour atteindre cet objectif." );
 	OverlayElement_GetByName( "Title")->SetMaterial( "TitreWallDestruction" );
 	OverlayElement_GetByName( "InGame/Score/Line1/Title")->SetCaption( "Score:" );
 	OverlayElement_GetByName( "InGame/Score/Line2/Title")->SetCaption( "NbCoups:" );

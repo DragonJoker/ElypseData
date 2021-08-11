@@ -641,27 +641,12 @@ void CheckCollisionsWithWalls()
 
 void EndFlipper()
 {
-	KazuGuiStop();
-	Overlay_Show( "Menu");
-	Overlay_Hide( "InGame/Score");
+	KazuGuiRestart();
 }
 
 void StopFlipper()
 {
-	l_billePhys->SetEnabled( false);
-	Timer_Kill( "UpdateBille");
-	Timer_Kill( "UnFlipRight");
-	Timer_Kill( "EndUnFlipRight");
-	Timer_Kill( "FlipRight");
-	Timer_Kill( "EndFlipRight");
-	Timer_Kill( "UnFlipLeft");
-	Timer_Kill( "EndUnFlipLeft");
-	Timer_Kill( "FlipLeft");
-	Timer_Kill( "EndFlipLeft");
-	Timer_Kill( "Bump");
-	Timer_Kill( "EndBump");
-	Timer_Kill( "UnBump");
-	Timer_Kill( "EndUnBump");
+	l_billePhys->SetEnabled( false );
 	EndFlipper();
 }
 
@@ -683,13 +668,8 @@ void ContinueFlipper()
 void LoseFlipper()
 {
 	Overlay_Hide( "Tilt");
-	KazuEndGame();
 	l_billePhys->SetEnabled( false);
-	timer( "HideFin", TIMERTYPE_ONCE, 2.0)
-	{
-		Overlay_Hide( "EndGame");
-		StopFlipper();
-	}
+	KazuEndGame();
 }
 
 void UpdateBille()

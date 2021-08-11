@@ -42,30 +42,17 @@ object l_selectedObject;
 
 string l_name;
 
-void EndMockingGhost()
-{
-	Echo( "EndGame " + itoa( l_nbTries ) + "/" + itoa( l_maxTries ) );
-	if (l_nbTries == l_maxTries)
-	{
-		KazuGuiStop();
-		timer( "EndGame", TIMERTYPE_ONCE, 2.0 )
-		{
-			KazuGuiRestart();
-		}
-	}
-}
-
 void LoseMockingGhost()
 {
+	KazuGuiStop();
 	KazuLoseGame( false );
-	EndMockingGhost();
 }
 
 void WinMockingGhost()
 {
-	KazuWinGame();
 	g_score = g_score + 1000;
-	EndMockingGhost();
+	KazuGuiStop();
+	KazuWinGame();
 }
 
 void ChangeSpeed()

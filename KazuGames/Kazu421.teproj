@@ -1,8 +1,8 @@
 project Kazugames
 {
-	resolution 640 480
+	resolution 800 600
 	colour 1 1 1
-	startup_script string c_gameName = "421";string c_sceneName = "421";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "https://www.dragonjoker.org/Elypse";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	startup_script bool c_singleGame = true;string c_gameName = "421";string c_curSceneName = "421";;string c_baseSite = "http://localhost/Kazugame";
 	scene kazu
 	{
 		scene_files
@@ -14,8 +14,8 @@ project Kazugames
 		load_script_files
 		{
 			kazu.emscript
-			scores.emscript
 			gui.emscript
+			scores.emscript
 		}
 		data_files_3d
 		{

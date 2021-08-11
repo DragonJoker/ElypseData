@@ -1,8 +1,8 @@
 project Kazugames
 {
-	resolution		640 480
-	colour			1 1 1
-	startup_script	string c_gameName = "MockingGhost";string c_sceneName = "MockingGhost";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "www.dragonjoker.org/Elypse";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	resolution 800 600
+	colour 1 1 1
+	startup_script bool c_singleGame = true;string c_gameName = "MockingGhost";string c_curSceneName = "MockingGhost";string c_baseSite = "http://localhost/KazuGame";
 	scene kazu
 	{
 		scene_files

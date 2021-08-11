@@ -106,11 +106,7 @@ void BeginGratzPaire()
 
 void EndGratzPaire()
 {
-	KazuGuiStop();
-	timer( "EndGameAndCheckRS", TIMERTYPE_ONCE, 3.0)
-	{
-		KazuGuiRestart();
-	}
+	KazuGuiRestart();
 }
 
 void RevealCard()
@@ -148,8 +144,8 @@ void RevealCard()
 					if (l_totalRevealedCards == 12)
 					{
 						g_score = (l_nbMaxErrors - l_nbTries) * 1000;
+						KazuGuiStop();
 						KazuWinGame();
-						EndGratzPaire();
 					}
 				}
 				else
@@ -172,8 +168,8 @@ void RevealCard()
 					}
 					else
 					{
+						KazuGuiStop();
 						KazuLoseGame( false );
-						EndGratzPaire();
 					}
 				}
 			}

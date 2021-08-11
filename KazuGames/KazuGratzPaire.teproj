@@ -1,9 +1,9 @@
 project Kazugames
 {
-	resolution 640 480
+	resolution 800 600
 	colour 1 1 1
-	startup_script string c_gameName = "Gratz-Paire";string c_sceneName = "Gratz-Paire";string c_baseSite = "https://www.dragonjoker.org/Elypse/";
-	scene kazusplash
+	startup_script bool c_singleGame = true;string c_gameName = "Gratz-Paire";string c_curSceneName = "Gratz-Paire";string c_baseSite = "https://localhost/KaszuGame";
+	scene kazu
 	{
 		scene_files
 		{

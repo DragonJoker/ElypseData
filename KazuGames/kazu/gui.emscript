@@ -1,9 +1,10 @@
 bool kazuScoreShown;
 bool kazuInfoShown;
+bool kazuTitleShown;
 
 void ShowTitle()
 {
-	if (l_titleShown)
+	if ( kazuTitleShown )
 	{
 		Overlay_Show( "Title");
 	}
@@ -11,7 +12,7 @@ void ShowTitle()
 
 void HideTitle()
 {
-	if (l_titleShown)
+	if ( kazuTitleShown )
 	{
 		Overlay_Hide( "Title");
 	}
@@ -33,7 +34,7 @@ void KazuGuiInit( bool showInGameScore, bool inGameScoreLine1, bool inGameScoreL
 	OverlayElement_GetByName( "Menu/Recommencer" )->Hide();
 	Overlay_Show( "Title" );
 	Overlay_Show( "Menu" );
-	l_titleShown = true;
+	kazuTitleShown = true;
 	kazuInGame = false;
 	kazuGameStarted = false;
 	kazuScoreShown = showInGameScore;
@@ -100,7 +101,7 @@ void KazuGuiBegin()
 		Overlay_Show( "InGame/Info" );
 	}
 
-	l_titleShown = false;
+	kazuTitleShown = false;
 	kazuGameStarted = true;
 
 	timer( "BeginGame", TIMERTYPE_ONCE, 0.3 )
@@ -144,18 +145,6 @@ void KazuGuiResume()
 	}
 }
 
-void KazuGuiRestart()
-{
-	OverlayElement_GetByName( "Menu/Jouer" )->Hide();
-	OverlayElement_GetByName( "Menu/Continuer" )->Hide();
-	OverlayElement_GetByName( "Menu/Recommencer" )->Show();
-	Overlay_Hide( "InGame/Menu");
-	Overlay_Hide( "InGame/Score" );
-	Overlay_Hide( "InGame/Info" );
-	Overlay_Hide( "EndGame" );
-	Overlay_Show( "Menu" );
-}
-
 void KazuGuiStop()
 {
 	kazuInGame = false;
@@ -166,6 +155,63 @@ void KazuGuiStop()
 	OverlayElement_GetByName( "Menu/Jouer")->Hide();
 	OverlayElement_GetByName( "Menu/Continuer")->Hide();
 	OverlayElement_GetByName( "Menu/Recommencer")->Show();
+}
+
+void KazuGuiRestart()
+{
+	KazuGuiStop();
+	Timer_KillAll();
+	Overlay_Hide( "EndGame" );
+	Overlay_Show( "Menu" );
+}
+
+void KazuGuiEndNamedGame( string endName )
+{
+	OverlayElement_GetByName( "EndGame/End" )->Hide();
+	OverlayElement_GetByName( "EndGame/Win" )->Hide();
+	OverlayElement_GetByName( "EndGame/Lose" )->Hide();
+	OverlayElement_GetByName( "EndGame/" + endName )->Show();
+
+	Overlay_Show( "EndGame" );
+	Overlay_Hide( "Menu" );
+}
+
+void KazuGuiEndGame()
+{
+	KazuGuiEndNamedGame( "End" );
+	timer( "EndGame", TIMERTYPE_ONCE, 10.0 )
+	{
+		KazuGuiRestart();
+	}
+}
+
+void KazuGuiWinGame()
+{
+	KazuGuiEndNamedGame( "Win" );
+	timer( "EndGame", TIMERTYPE_ONCE, 10.0 )
+	{
+		KazuGuiRestart();
+	}
+}
+
+void KazuGuiLoseGame( bool longTimeout )
+{
+	if ( longTimeout )
+	{
+		KazuGuiEndNamedGame( "Lose" );
+		timer( "EndGame", TIMERTYPE_ONCE, 10.0 )
+		{
+			KazuGuiRestart();
+		}
+	}
+	else
+	{
+		KazuGuiEndNamedGame( "Lose" );
+		timer( "EndGame", TIMERTYPE_ONCE, 3.0 )
+		{
+			KazuGuiRestart();
+		}
+	}
 }
 
 void KazuGuiCleanup()
@@ -213,14 +259,6 @@ Overlay_SetAction( "Regles/Retour")
 	Overlay_Show( "Menu");
 }
 
-Overlay_SetAction( "Menu/Scores")
-{
-	HideTitle();
-	KazuRetrieveHighScores();
-	Overlay_Show( "Scores");
-	Overlay_Hide( "Menu");
-}
-
 Overlay_SetAction( "Scores/Retour")
 {
 	ShowTitle();
@@ -238,13 +276,6 @@ Overlay_SetAction( "Menu/Options")
 Overlay_SetAction( "Menu/Retour")
 {
 	KazuGuiCleanup();
-}
-
-Overlay_SetAction( "EndGame/Score/Submit")
-{
-	KazuSubmitScore();
-	Overlay_Hide( "EndGame");
-	Overlay_Show( "Menu");
 }
 
 Overlay_SetAction( "Options/Retour")

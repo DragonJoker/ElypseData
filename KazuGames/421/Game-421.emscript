@@ -1,14 +1,8 @@
 bool l_dicesLaunched;
 bool l_dicesStopped;
-bool l_dice1Stopped;
-bool l_dice2Stopped;
-bool l_dice3Stopped;
 bool l_speedLower;
 bool l_angularSpeedLower;
 bool l_diceStopped;
-bool l_dice1Kept;
-bool l_dice2Kept;
-bool l_dice3Kept;
 
 int i;
 int l_nbDicesToLaunch;
@@ -23,45 +17,46 @@ real l_zAngle;
 real l_diceX;
 
 vector3 l_result;
-vector3 l_godetStartPosition;
-vector3 l_godetMiddlePosition;
-vector3 l_godetEndPosition;
-vector3 l_godetCurrentPosition;
-vector3 l_godetStartAngle;
-vector3 l_godetMiddleAngle;
-vector3 l_godetEndAngle;
-vector3 l_godetCurrentAngle;
 vector3 l_minSpeed;
 vector3 l_minAngularSpeed;
 
-vector3 l_dice1StartPos;
-vector3 l_dice1CurrentPos;
-vector3 l_dice1EndPos;
-vector3 l_dice2StartPos;
-vector3 l_dice2CurrentPos;
-vector3 l_dice2EndPos;
-vector3 l_dice3StartPos;
-vector3 l_dice3CurrentPos;
-vector3 l_dice3EndPos;
+struct Godet
+{
+	vector3 startPosition;
+	vector3 middlePosition;
+	vector3 endPosition;
+	vector3 currentPosition;
+	vector3 startAngle;
+	vector3 middleAngle;
+	vector3 endAngle;
+	vector3 currentAngle;
+	scene_node node;
+};
 
-vector3 l_dice1StartAngle;
-vector3 l_dice1CurrentAngle;
-vector3 l_dice1EndAngle;
-vector3 l_dice2StartAngle;
-vector3 l_dice2CurrentAngle;
-vector3 l_dice2EndAngle;
-vector3 l_dice3StartAngle;
-vector3 l_dice3CurrentAngle;
-vector3 l_dice3EndAngle;
+struct Dice
+{
+	bool stopped;
+	bool kept;
+	vector3 startPos;
+	vector3 currentPos;
+	vector3 endPos;
+	vector3 startAngle;
+	vector3 currentAngle;
+	vector3 endAngle;
+	quaternion currentOrientation;
+	quaternion previousOrientation;
+	scene_node node;
+	physics_object phys;
+};
+
+Godet l_godet;
+Dice l_dice1;
+Dice l_dice2;
+Dice l_dice3;
+
 vector3 l_axis;
 
 quaternion l_orientation;
-quaternion l_dice1CurrentOrientation;
-quaternion l_dice2CurrentOrientation;
-quaternion l_dice3CurrentOrientation;
-quaternion l_dice1PreviousOrientation;
-quaternion l_dice2PreviousOrientation;
-quaternion l_dice3PreviousOrientation;
 
 string l_name;
 string l_dicesKept;
@@ -69,17 +64,11 @@ string l_dicesToLaunch;
 string l_launchFaces;
 string l_keptFaces;
 string l_checkFaces;
+string fl_faces;
 
 object l_selectedObject;
 
-scene_node l_dice1;
-scene_node l_dice2;
-scene_node l_dice3;
-scene_node l_godet;
-
-physics_object l_dice1Phys;
-physics_object l_dice2Phys;
-physics_object l_dice3Phys;
+int g421BonusPoints = 0;
 
 void Pause421()
 {
@@ -103,10 +92,7 @@ void Initialise421();
 void Stop421()
 {
 	Initialise421();
-	Timer_KillAll();
-	kazuInGame = false;
-	kazuGameStarted = false;
-	Overlay_Hide( "EndGame");
+	KazuGuiRestart();
 	Object_GetByName( "Dice1")->SetSubMaterial( 0, "421/surface");
 	Object_GetByName( "Dice2")->SetSubMaterial( 0, "421/surface");
 	Object_GetByName( "Dice3")->SetSubMaterial( 0, "421/surface");
@@ -116,49 +102,102 @@ void Stop421()
 	l_dicesToLaunch->clear();
 	l_launchFaces->clear();
 	l_checkFaces->clear();
-	l_dice1Kept = false;
-	l_dice2Kept = false;
-	l_dice3Kept = false;
+	l_dice1.kept = false;
+	l_dice2.kept = false;
+	l_dice3.kept = false;
 	SceneNode_GetByName( "Dice1")->SetVisible( false);
 	SceneNode_GetByName( "Dice2")->SetVisible( false);
 	SceneNode_GetByName( "Dice3")->SetVisible( false);
 }
 
-void CheckEndDices()
+void DoComputeBonusPoints()
 {
-	l_keptFaces = l_keptFaces + l_launchFaces;
+	g421BonusPoints = 0;
 
-	Echo( "CheckEndDices - " + l_keptFaces);
-
-	if (l_keptFaces->find( "4") != npos && l_keptFaces->find( "1") != npos && l_keptFaces->find( "2") != npos)
+	if ( l_launchFaces->find( "4" ) != npos
+		&& l_launchFaces->find( "1" ) != npos
+		&& l_launchFaces->find( "2") != npos )
 	{
-		Echo( "CheckEndDices - Win");
-		g_score = 4000 - (l_nbTries * 1000);
+		// 421 on the three dices of the throw.
+		g421BonusPoints = 1000;
+	}
+	elseif ( fl_faces->find( "4" ) != npos
+		&& fl_faces->find( "1" ) != npos
+		&& fl_faces->find( "2") != npos )
+	{
+		// 421 with all three dices of the throw and kept ones.
+		if ( ( l_launchFaces->find( "1" ) != npos && l_launchFaces->find( "2" ) != npos )
+			|| ( l_launchFaces->find( "1" ) != npos && l_launchFaces->find( "4" ) != npos )
+			|| ( l_launchFaces->find( "2" ) != npos && l_launchFaces->find( "4" ) != npos ) )
+		{
+			// Two from the throw.
+			g421BonusPoints = 500;
+		}
+		elseif ( l_launchFaces->find( "1" ) != npos
+			|| l_launchFaces->find( "2" ) != npos
+			|| l_launchFaces->find( "4" ) != npos )
+		{
+			// One from the throw.
+			g421BonusPoints = 200;
+		}
+	}
+}
+
+string DoCheckDices( string p_faces )
+{
+	Echo( "DoCheckDices 1 - " + l_keptFaces + " - " + l_launchFaces );
+	Echo( "DoCheckDices 2 - " + l_keptFaces + l_launchFaces );
+	fl_faces = l_keptFaces + l_launchFaces;
+	DoComputeBonusPoints();
+	Echo( "DoCheckDices 3 - " + fl_faces );
+
+	if ( fl_faces->find( "4" ) != npos
+		&& fl_faces->find( "1" ) != npos
+		&& fl_faces->find( "2") != npos )
+	{
+		Echo( "DoCheckDices - Win" );
+		g_score = l_keptFaces->length() * 100 + g421BonusPoints * ( l_maxTries - l_nbTries ) );
+		KazuGuiStop();
 		KazuWinGame();
 	}
-	else
+	elseif ( l_nbTries == l_maxTries )
 	{
-		Echo( "CheckEndDices - Lose");
+		Echo( "DoCheckDices - Lose" );
 		g_score = 0;
+		KazuGuiStop();
 		KazuLoseGame( false );
 	}
+
+	return fl_faces;
+}
+
+void CheckEndDices()
+{
+	l_keptFaces = DoCheckDices( l_keptFaces );
+}
+
+void CheckDices()
+{
+	l_checkFaces = DoCheckDices( l_checkFaces );
 }
 
 void End421()
 {
-	kazuInGame = false;
-	kazuGameStarted = false;
-	Overlay_Show( "Menu");
+	KazuGuiRestart();
 }
 
 void IsSpeedLower( vector3 p_speed, vector3 p_minSpeed)
 {
-	l_speedLower = (abs(p_speed[0]) < abs(p_minSpeed[0]) && abs(p_speed[1]) < abs(p_minSpeed[1]) && abs(p_speed[2]) < abs(p_minSpeed[2]));
+	l_speedLower = (abs(p_speed[0]) < abs(p_minSpeed[0])
+		&& abs(p_speed[1]) < abs(p_minSpeed[1])
+		&& abs(p_speed[2]) < abs(p_minSpeed[2]));
 }
 
 void IsAngularSpeedLower( vector3 p_angularSpeed, vector3 p_minAngularSpeed, scene_node p_iasDice)
 {
-	l_angularSpeedLower = (abs(p_angularSpeed[0]) < abs(p_minAngularSpeed[0]) && abs(p_angularSpeed[1]) < abs(p_minAngularSpeed[1]) && abs(p_angularSpeed[2]) < abs(p_minAngularSpeed[2]));
+	l_angularSpeedLower = (abs(p_angularSpeed[0]) < abs(p_minAngularSpeed[0])
+		&& abs(p_angularSpeed[1]) < abs(p_minAngularSpeed[1])
+		&& abs(p_angularSpeed[2]) < abs(p_minAngularSpeed[2]));
 }
 
 void DiceStopped( vector3 p_dsSpeed, vector3 p_dsAngularSpeed, scene_node p_dsDice)
@@ -262,80 +301,61 @@ void StopDice( scene_node p_sdDice, physics_object p_sdDicePhys)
 	RetrieveFace( p_sdDice);
 }
 
-void CheckDices()
-{
-	Echo( "CheckDices- " + l_keptFaces + " - " + l_launchFaces);
-	l_checkFaces = l_keptFaces + l_launchFaces;
-	Echo( "CheckDices- " + l_checkFaces);
-	if (l_checkFaces->find( "4") != npos && l_checkFaces->find( "1") != npos && l_checkFaces->find( "2") != npos)
-	{
-		Echo( "CheckDices - Win");
-		g_score = 4000 - (l_nbTries * 1000);
-		KazuGuiStop();
-		KazuWinGame();
-	}
-}
-
 void UpdateDices()
 {
 	for (i = 0 ; i < l_nbDicesToLaunch ; i++)
 	{
-		if (i == 0 && ! l_dice1Stopped)
+		if (i == 0 && ! l_dice1.stopped)
 		{
-			l_dice1CurrentOrientation = l_dice1->GetOrientation();
-			DiceStopped( l_dice1Phys->GetSpeed(), l_dice1Phys->GetAngularSpeed(), l_dice1);
+			l_dice1.currentOrientation = l_dice1.node->GetOrientation();
+			DiceStopped( l_dice1.phys->GetSpeed(), l_dice1.phys->GetAngularSpeed(), l_dice1.node);
 			if (l_diceStopped)
 			{
-				l_dice1Stopped = true;
+				l_dice1.stopped = true;
 				l_diceX = l_diceX + 20.0;
-				StopDice( l_dice1, l_dice1Phys);
+				StopDice( l_dice1.node, l_dice1.phys);
 				l_launchFaces = l_launchFaces + itoa( l_faceValue);
 			}
-			l_dice1PreviousOrientation = l_dice1CurrentOrientation;
+			l_dice1.previousOrientation = l_dice1.currentOrientation;
 		}
-		elseif (i == 1 && ! l_dice2Stopped)
+		elseif (i == 1 && ! l_dice2.stopped)
 		{
-			l_dice2CurrentOrientation = l_dice2->GetOrientation();
-			DiceStopped( l_dice2Phys->GetSpeed(), l_dice2Phys->GetAngularSpeed(), l_dice2);
+			l_dice2.currentOrientation = l_dice2.node->GetOrientation();
+			DiceStopped( l_dice2.phys->GetSpeed(), l_dice2.phys->GetAngularSpeed(), l_dice2.node);
 			if (l_diceStopped)
 			{
-				l_dice2Stopped = true;
+				l_dice2.stopped = true;
 				l_diceX = l_diceX + 20.0;
-				StopDice( l_dice2, l_dice2Phys);
+				StopDice( l_dice2.node, l_dice2.phys);
 				l_launchFaces = l_launchFaces + itoa( l_faceValue);
 			}
-			l_dice2PreviousOrientation = l_dice2CurrentOrientation;
+			l_dice2.previousOrientation = l_dice2.currentOrientation;
 		}
-		elseif (i == 2 && ! l_dice3Stopped)
+		elseif (i == 2 && ! l_dice3.stopped)
 		{
-			l_dice3CurrentOrientation = l_dice3->GetOrientation();
-			DiceStopped( l_dice3Phys->GetSpeed(), l_dice3Phys->GetAngularSpeed(), l_dice3);
+			l_dice3.currentOrientation = l_dice3.node->GetOrientation();
+			DiceStopped( l_dice3.phys->GetSpeed(), l_dice3.phys->GetAngularSpeed(), l_dice3.node);
 			if (l_diceStopped)
 			{
-				l_dice3Stopped = true;
+				l_dice3.stopped = true;
 				l_diceX = l_diceX + 20.0;
-				StopDice( l_dice3, l_dice3Phys);
+				StopDice( l_dice3.node, l_dice3.phys);
 				l_launchFaces = l_launchFaces + itoa( l_faceValue);
 			}
-			l_dice3PreviousOrientation = l_dice3CurrentOrientation;
+			l_dice3.previousOrientation = l_dice3.currentOrientation;
 		}
 	}
 
-	l_dicesStopped = (l_dice1Stopped && l_dice2Stopped && l_dice3Stopped);
+	l_dicesStopped = ( l_dice1.stopped && l_dice2.stopped && l_dice3.stopped );
+
 	if (l_dicesStopped)
 	{
 		Echo( "Dices Stopped");
 		Timer_Kill( "UpdateDices");
 		
-		if (l_nbTries == l_maxTries)
+		if ( l_nbTries == l_maxTries )
 		{
 			CheckEndDices();
-			KazuGuiStop();
-			timer( "EndGame", TIMERTYPE_ONCE, 2.0)
-			{
-				Overlay_Hide( "EndGame" );
-				End421();
-			}
 		}
 		else
 		{
@@ -378,9 +398,9 @@ void LaunchDices()
 	l_currentDice = 1;
 	l_diceX = (l_dicesKept->length() * 20.0) - 40.0;
 
-	l_godet->SetPosition( l_godetStartPosition);
-	l_godet->SetOrientation( SetQuaternion( UNIT_Z, l_godetStartAngle[0]));
-	l_godet->Show();
+	l_godet.node->SetPosition( l_godet.startPosition);
+	l_godet.node->SetOrientation( SetQuaternion( UNIT_Z, l_godet.startAngle[0]));
+	l_godet.node->Show();
 
 	for (i = 0 ; i < l_dicesKept->length() ; i++)
 	{
@@ -393,56 +413,56 @@ void LaunchDices()
 		l_name = "Dice" + strGetChar( l_dicesToLaunch, i);
 		if (i == 0)
 		{
-			l_dice1 = SceneNode_GetByName( l_name);
-			l_dice1Phys = Object_GetByName( l_dice1->GetName())->GetPhysicsObject();
-			LaunchDice( l_dice1, l_dice1Phys, l_godetEndPosition - SetVector3( 15.0, 8.0, 0.0));
+			l_dice1.node = SceneNode_GetByName( l_name);
+			l_dice1.phys = Object_GetByName( l_dice1.node->GetName())->GetPhysicsObject();
+			LaunchDice( l_dice1.node, l_dice1.phys, l_godet.endPosition - SetVector3( 15.0, 8.0, 0.0));
 		}
 		elseif (i == 1)
 		{
-			l_dice2 = SceneNode_GetByName( l_name);
-			l_dice2Phys = Object_GetByName( l_dice2->GetName())->GetPhysicsObject();
-			LaunchDice( l_dice2, l_dice2Phys, l_godetEndPosition);
+			l_dice2.node = SceneNode_GetByName( l_name);
+			l_dice2.phys = Object_GetByName( l_dice2.node->GetName())->GetPhysicsObject();
+			LaunchDice( l_dice2.node, l_dice2.phys, l_godet.endPosition);
 		}
 		else
 		{
-			l_dice3 = SceneNode_GetByName( l_name);
-			l_dice3Phys = Object_GetByName( l_dice3->GetName())->GetPhysicsObject();
-			LaunchDice( l_dice3, l_dice3Phys, l_godetEndPosition + SetVector3( 15.0, 8.0, 0.0));
+			l_dice3.node = SceneNode_GetByName( l_name);
+			l_dice3.phys = Object_GetByName( l_dice3.node->GetName())->GetPhysicsObject();
+			LaunchDice( l_dice3.node, l_dice3.phys, l_godet.endPosition + SetVector3( 15.0, 8.0, 0.0));
 		}
 	}
 
 	timer( "LaunchDices", TIMERTYPE_CONTINUOUS, 0.3)
 	{
-		l_godetCurrentPosition = V3_BezierInterpolation( l_godetStartPosition, l_godetMiddlePosition, l_godetEndPosition, CURRENTTIMER_TIME_ELAPSED / 0.3);
-		l_godet->SetPosition( l_godetCurrentPosition);
-		l_godetCurrentAngle = V3_BezierInterpolation( l_godetStartAngle, l_godetMiddleAngle, l_godetEndAngle,  CURRENTTIMER_TIME_ELAPSED / 0.3);
-		l_godet->SetOrientation( SetQuaternion( UNIT_Z, (l_godetCurrentAngle[0])));
+		l_godet.currentPosition = V3_BezierInterpolation( l_godet.startPosition, l_godet.middlePosition, l_godet.endPosition, CURRENTTIMER_TIME_ELAPSED / 0.3);
+		l_godet.node->SetPosition( l_godet.currentPosition);
+		l_godet.currentAngle = V3_BezierInterpolation( l_godet.startAngle, l_godet.middleAngle, l_godet.endAngle, CURRENTTIMER_TIME_ELAPSED / 0.3);
+		l_godet.node->SetOrientation( SetQuaternion( UNIT_Z, (l_godet.currentAngle[0])));
 	}
 	timer ( "EndDicesLaunch", TIMERTYPE_ONCE, 0.3)
 	{
 		l_dicesLaunched = false;
-		l_godet->Hide();
+		l_godet.node->Hide();
 		for (i = 0 ; i < l_nbDicesToLaunch ; i++)
 		{
 			if (i == 0)
 			{
-				l_dice1Stopped = false;
-				EndDiceLaunch( l_dice1, l_dice1Phys);
+				l_dice1.stopped = false;
+				EndDiceLaunch( l_dice1.node, l_dice1.phys);
 			}
 			elseif (i == 1)
 			{
-				l_dice2Stopped = false;
-				EndDiceLaunch( l_dice2, l_dice2Phys);
+				l_dice2.stopped = false;
+				EndDiceLaunch( l_dice2.node, l_dice2.phys);
 			}
 			else
 			{
-				l_dice3Stopped = false;
-				EndDiceLaunch( l_dice3, l_dice3Phys);
+				l_dice3.stopped = false;
+				EndDiceLaunch( l_dice3.node, l_dice3.phys);
 			}
 		}
-		l_dice1CurrentOrientation = l_dice1->GetOrientation();
-		l_dice2CurrentOrientation = l_dice2->GetOrientation();
-		l_dice3CurrentOrientation = l_dice3->GetOrientation();
+		l_dice1.currentOrientation = l_dice1.node->GetOrientation();
+		l_dice2.currentOrientation = l_dice2.node->GetOrientation();
+		l_dice3.currentOrientation = l_dice3.node->GetOrientation();
 		timer( "UpdateDices", TIMERTYPE_PERMANENT, 0.0)
 		{
 			UpdateDices();
@@ -466,15 +486,15 @@ void SelectDice()
 
 			if (l_selectedObject->GetParent()->GetPosition() == SetVector3( -20.0, 5.0, 75.0))
 			{
-				l_dice1Kept = false;
+				l_dice1.kept = false;
 			}
 			elseif (l_selectedObject->GetParent()->GetPosition() == SetVector3( 0.0, 5.0, 75.0))
 			{
-				l_dice2Kept = false;
+				l_dice2.kept = false;
 			}
 			elseif (l_selectedObject->GetParent()->GetPosition() == SetVector3( 20.0, 5.0, 75.0))
 			{
-				l_dice3Kept = false;
+				l_dice3.kept = false;
 			}
 		}
 		else
@@ -482,23 +502,23 @@ void SelectDice()
 			l_selectedObject->SetSubMaterial( 0, "421/surface/Selected");
 			l_dicesKept = l_dicesKept + l_name;
 			l_keptFaces = l_keptFaces + itoa( l_faceValue);
-			if ( ! l_dice1Kept)
+			if ( !l_dice1.kept )
 			{
-				l_dice1Kept = true;
+				l_dice1.kept = true;
 				l_selectedObject->GetParent()->SetPosition( SetVector3( -20.0, 5.0, 75.0));
 				Reorient( l_selectedObject->GetParent());
 				l_selectedObject->GetPhysicsObject()->ReassertPosition();
 			}
-			elseif ( ! l_dice2Kept)
+			elseif ( !l_dice2.kept )
 			{
-				l_dice2Kept = true;
+				l_dice2.kept = true;
 				l_selectedObject->GetParent()->SetPosition( SetVector3( 0.0, 5.0, 75.0));
 				Reorient( l_selectedObject->GetParent());
 				l_selectedObject->GetPhysicsObject()->ReassertPosition();
 			}
-			elseif ( ! l_dice3Kept)
+			elseif ( !l_dice3.kept )
 			{
-				l_dice3Kept = true;
+				l_dice3.kept = true;
 				l_selectedObject->GetParent()->SetPosition( SetVector3( 20.0, 5.0, 75.0));
 				Reorient( l_selectedObject->GetParent());
 				l_selectedObject->GetPhysicsObject()->ReassertPosition();
@@ -533,29 +553,29 @@ SetMouseRUpScript()
 
 void Initialise421()
 {
-	l_godet = SceneNode_GetByName( "Godet");
+	l_godet.node = SceneNode_GetByName( "Godet");
 
 	l_dicesStopped = true;
 	l_dicesLaunched = false;
-	l_dice1Stopped = false;
-	l_dice2Stopped = false;
-	l_dice3Stopped = false;
+	l_dice1.stopped = false;
+	l_dice2.stopped = false;
+	l_dice3.stopped = false;
+	l_dice1.kept = false;
+	l_dice2.kept = false;
+	l_dice3.kept = false;
 
 	l_maxTries = 3;
-	l_dice1Kept = false;
-	l_dice2Kept = false;
-	l_dice3Kept = false;
 
-	l_godetStartAngle = SetVector3( 0.0, 0.0, 0.0);
-	l_godetMiddleAngle = SetVector3( -90.0, 0.0, 0.0);
-	l_godetEndAngle = SetVector3( -120.0, 0.0, 0.0);
-	
-	l_godetStartPosition = SetVector3( -400.0, 250.0, 0.0);
-	l_godetMiddlePosition = SetVector3( -270.0, 70.0, 0.0);
-	l_godetEndPosition = SetVector3( -150.0, 50.0, 0.0);
+	l_godet.startAngle = SetVector3( 0.0, 0.0, 0.0);
+	l_godet.middleAngle = SetVector3( -90.0, 0.0, 0.0);
+	l_godet.endAngle = SetVector3( -120.0, 0.0, 0.0);
 
-	l_godet->SetPosition( l_godetStartPosition);
-	l_godet->SetOrientation( SetQuaternion( UNIT_Z, l_godetStartAngle[0]));
+	l_godet.startPosition = SetVector3( -400.0, 250.0, 0.0);
+	l_godet.middlePosition = SetVector3( -270.0, 70.0, 0.0);
+	l_godet.endPosition = SetVector3( -150.0, 50.0, 0.0);
+
+	l_godet.node->SetPosition( l_godet.startPosition);
+	l_godet.node->SetOrientation( SetQuaternion( UNIT_Z, l_godet.startAngle[0]));
 
 	Object_GetByName( "Dice1")->GetPhysicsObject()->SetEnabled( false);
 	Object_GetByName( "Dice2")->GetPhysicsObject()->SetEnabled( false);
@@ -567,9 +587,9 @@ void Initialise421()
 	l_minSpeed = SetVector3( 0.2, 0.2, 0.2);
 	l_minAngularSpeed = SetVector3( 0.05, 0.05, 0.05);
 
-	l_dice1EndPos = SetVector3( -20.0, 40.0, 530.0);
-	l_dice2EndPos = SetVector3( -20.0, 50.0, 530.0);
-	l_dice3EndPos = SetVector3( -20.0, 60.0, 530.0);
+	l_dice1.endPos = SetVector3( -20.0, 40.0, 530.0);
+	l_dice2.endPos = SetVector3( -20.0, 50.0, 530.0);
+	l_dice3.endPos = SetVector3( -20.0, 60.0, 530.0);
 
 	Sound_Play_Global( "Ambiance");
 

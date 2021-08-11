@@ -3,7 +3,7 @@ project Kazugames
 	resolution 800 600
 	colour 1 1 1
 	separable true
-	startup_script string c_baseSite = "www.dragonjoker.org/Elypse";
+	startup_script bool c_singleGame = false;string c_baseSite = "http://localhost/Kazugame";
 	scene kazu
 	{
 		scene_files
@@ -15,8 +15,8 @@ project Kazugames
 		load_script_files
 		{
 			kazu.emscript
-			scores.emscript
 			gui.emscript
+			scores.emscript
 		}
 		data_files_3d
 		{

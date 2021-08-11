@@ -41,17 +41,3 @@ Overlay_SetAction( "Menu/Retour")
 	Simulation_ClearObjects( "Main" );
 	KazuGuiCleanup();
 }
-
-Overlay_SetAction( "EndGame/Score/Submit" )
-{
-	KazuSubmitScore();
-	OverlayElement_GetByName( "EndGame/Score/Submit")->Hide();
-	EndWallDestruction();
-};
-
-Overlay_SetAction( "EndGame/Score/Submit")
-{
-	KazuSubmitScore();
-	OverlayElement_GetByName( "EndGame/Score/Submit")->Hide();
-	EndWallDestruction();
-};

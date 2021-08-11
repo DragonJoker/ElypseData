@@ -7,8 +7,6 @@ Overlay_SetAction( "Menu/Recommencer")
 {
 	Stop421();
 	Begin421();
-	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
-	OverlayElement_GetByName( "Menu/Continuer")->Show();
 }
 
 Overlay_SetAction( "Menu/Continuer")

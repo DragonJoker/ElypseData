@@ -22,7 +22,6 @@ string l_muse;
 overlay l_gameOverlay;
 vector3 l_gameOverlayPosition;
 
-bool l_titleShown = true;
 bool l_music = true;
 bool l_sound = true;
 
@@ -45,7 +44,16 @@ void LaunchGame()
 	KazuPlayGame();
 	Overlay_Hide( "Splash/GamesList" );
 	Overlay_Hide( "Splash/Kazu" );
-	OverlayElement_GetByName( "GamesList/Retour" )->Show();
+
+	if ( c_singleGame )
+	{
+		OverlayElement_GetByName( "Menu/Retour" )->Hide();
+	}
+	else
+	{
+		OverlayElement_GetByName( "Menu/Retour" )->Show();
+		OverlayElement_GetByName( "GamesList/Retour" )->Show();
+	}
 
 	if ( c_prvSceneName != "" )
 	{
@@ -64,76 +72,88 @@ void CheckClearToGo()
 	Echo( "CheckClearToGo");
 	g_clearToGo = false;
 	g_fucked = false;
-	l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=info", "");
-	
-	if (l_infos == "tech error")
+
+	if ( c_singleGame )
 	{
-		g_clearToGo = true;
-		g_fucked = true;
-	}
-	elseif (strFind(l_infos, "<br>") != -1)
-	{
-		l_index = strFind( l_infos, "<br>");
-		l_names = substr( l_infos, 0, l_index);
-		l_muses = substr( l_infos, l_index + 4, strlen( l_infos));
-		l_name = "a";
-		l_muse = "a";
-		l_gameOverlayPosition = SetVector3( 20.0, 20.0, 104.0 );
-
-		while (l_muse != "" && l_name != "")
-		{
-			l_name = strSplitOne( l_names, "|");
-			l_muse = strSplitOne( l_muses, "|");
-
-			if (l_muse != "" || l_name != "")
-			{
-				if ( !OverlayElement_Exists( "GamePanel/" + l_muse ) )
-				{
-					l_gameOverlay = OverlayElement_Create("GamePanel/" + l_muse, "MinigameNamePanel", "GamesList/Games");
-					l_gameOverlay->SetPosition( l_gameOverlayPosition );
-					l_gameOverlay->SetMouseOverMaterial( "Base/LowAlphaBrightGrey" );
-					l_gameOverlay = OverlayElement_Create("Game/" + l_muse, "MinigameName", "GamePanel/" + l_muse);
-					l_gameOverlay->SetCaption( l_name );
-					l_gameOverlay->SetFontSize( 25.0 );
-					Overlay_SetAction( "GamePanel/" + l_muse )
-					{
-						l_gameOverlay = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y );
-						l_muse = l_gameOverlay->GetName();
-						l_muse = l_muse->replace( "Panel", "" );
-						l_gameOverlay = OverlayElement_GetByName( l_muse );
-						l_muse = l_gameOverlay->GetName();
-
-						if ( l_muse->find( "Game/" ) == 0 )
-						{
-							l_name = l_gameOverlay->GetCaption();
-							l_muse = l_muse->replace( "Game/", "" );
-							c_curSceneName = l_name;
-
-							if ( Muse_IsDownloaded( l_muse ) )
-							{
-								LaunchGame();
-							}
-							else
-							{
-								Muse_DownloadSeparate( l_muse, LaunchGame() );
-							}
-						}
-					}
-					l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );
-				}
-			}
-		}
-
-		if (l_muse != "" || l_name != "")
-		{
-			g_clearToGo = true;
-			g_fucked = true;
-		}
+		LaunchGame();
 	}
 	else
 	{
-		g_clearToGo = true;
-		g_fucked = true;
+		l_infos = StringFromUrl( c_baseSite + "/connection_game.php?action=info", "");
+		Echo( l_infos );
+
+		if (l_infos == "tech error")
+		{
+			g_clearToGo = false;
+		}
+		elseif (strFind(l_infos, "<br>") != -1)
+		{
+			l_index = strFind( l_infos, "<br>");
+			l_names = substr( l_infos, 0, l_index);
+			l_muses = substr( l_infos, l_index + 4, strlen( l_infos));
+			l_name = "a";
+			l_muse = "a";
+			l_gameOverlayPosition = SetVector3( 20.0, 20.0, 104.0 );
+
+			while (l_muse != "" && l_name != "")
+			{
+				l_name = strSplitOne( l_names, "|");
+				l_muse = strSplitOne( l_muses, "|");
+
+				if (l_muse != "" || l_name != "")
+				{
+					if ( !OverlayElement_Exists( "GamePanel/" + l_muse ) )
+					{
+						l_gameOverlay = OverlayElement_Create("GamePanel/" + l_muse, "MinigameNamePanel", "GamesList/Games");
+						l_gameOverlay->SetPosition( l_gameOverlayPosition );
+						l_gameOverlay->SetMouseOverMaterial( "Base/LowAlphaBrightGrey" );
+						l_gameOverlay = OverlayElement_Create("Game/" + l_muse, "MinigameName", "GamePanel/" + l_muse);
+						l_gameOverlay->SetCaption( l_name );
+						l_gameOverlay->SetFontSize( 25.0 );
+						Overlay_SetAction( "GamePanel/" + l_muse )
+						{
+							l_gameOverlay = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y );
+							l_muse = l_gameOverlay->GetName();
+							l_muse = l_muse->replace( "Panel", "" );
+							l_gameOverlay = OverlayElement_GetByName( l_muse );
+							l_muse = l_gameOverlay->GetName();
+
+							if ( l_muse->find( "Game/" ) == 0 )
+							{
+								l_name = l_gameOverlay->GetCaption();
+								l_muse = l_muse->replace( "Game/", "" );
+								c_curSceneName = l_name;
+
+								if ( Muse_IsDownloaded( l_muse ) )
+								{
+									LaunchGame();
+								}
+								else
+								{
+									Muse_DownloadSeparate( l_muse, LaunchGame() );
+								}
+							}
+						}
+						l_gameOverlayPosition += SetVector3( 0.0, 25.0, 0.0 );
+					}
+				}
+			}
+
+			if (l_muse != "" || l_name != "")
+			{
+				g_clearToGo = false;
+			}
+			else
+			{
+				g_clearToGo = true;
+			}
+		}
+		else
+		{
+			g_clearToGo = false;
+		}
+
+		g_fucked = !g_clearToGo;
 	}
 }
 
